@@ -1,0 +1,7 @@
+{
+  "name": "monopvply_backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
