@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  nginx:
+    build: .
+    volumes:
+      - ./app:/usr/share/nginx/monopvply/app
+    ports:
+      - '80:80'
