@@ -57,6 +57,7 @@ var app = {
         app.canvas.style.width = oldWidth + 'px';
         app.canvas.style.height = oldHeight + 'px';
 
+        app.ratio = ratio;
         app.ctx.scale(ratio, ratio);
 
 
@@ -160,7 +161,7 @@ var app = {
         app.ctx.save();
 
         //app.ctx.scale(app.scale, app.scale);
-        app.ctx.setTransform(app.zoom, 0, 0, app.zoom, app.view.x, app.view.y);
+        app.ctx.setTransform(app.zoom, 0, 0, app.zoom, app.view.x * app.ratio, app.view.y * app.ratio);
 
         if (app.resourcesLoaded != app.resourcesCount) {
             app.ctx.fillText('Loading..', 10, 10);
@@ -182,14 +183,21 @@ var app = {
         app.ctx.lineTo(0, 0);
         app.ctx.stroke();
 
-        app.ctx.fillText('Resources: ' + app.resourcesLoaded + '/' + app.resourcesCount, 10, 20);
-        app.ctx.fillText('Canvas: ' + app.canvas.width + 'x' + app.canvas.height, 10, 30);
-        app.ctx.fillText('Zoom: ' + app.zoom, 10, 40);
-        app.ctx.fillText('View: x ' + Math.round(app.view.x) + ' y ' + Math.round(app.view.y), 10, 50);
-        app.ctx.fillText('Cursor: x ' + Math.round(app.cursor.x) + ' y ' + Math.round(app.cursor.y), 10, 60);
-        app.ctx.fillText('FPS: ' + Math.round(app.fps), 10, 70);
+        var info = [
+            'Resources: ' + app.resourcesLoaded + '/' + app.resourcesCount,
+            'Canvas: ' + app.canvas.width + 'x' + app.canvas.height,
+            'Ratio: ' + app.ratio,
+            'Zoom: ' + app.zoom,
+            'View: x ' + Math.round(app.view.x) + ' y ' + Math.round(app.view.y),
+            'Cursor: x ' + Math.round(app.cursor.x) + ' y ' + Math.round(app.cursor.y),
+            'FPS: ' + Math.round(app.fps)
+        ];
 
-        var i = 0;
+        for(var i = 0; i < info.length; i++) {
+            app.ctx.fillText(info[i], 35, (i + 3) * 10)
+        }
+
+        i = 0;
         while (i <= 20 * 100) {
             app.ctx.fillText(i, i != 0 ? i : 4, 10);
             app.ctx.fillText(i, 4, i);
