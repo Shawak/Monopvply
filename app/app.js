@@ -103,8 +103,8 @@ var app = {
         // track events
         app.canvas.onmousedown = function (e) {
             app.mouseIsDown = true;
-            app.dragOffset.x = -e.x - camera.view.x;
-            app.dragOffset.y = -e.y - camera.view.y;
+            app.dragOffset.x = -e.pageX - camera.view.x;
+            app.dragOffset.y = -e.pageY - camera.view.y;
         };
 
         app.canvas.onmouseup = function (e) {
@@ -119,8 +119,8 @@ var app = {
                 return;
             }
 
-            camera.view.x = -e.x - app.dragOffset.x;
-            camera.view.y = -e.y - app.dragOffset.y;
+            camera.view.x = -e.pageX - app.dragOffset.x;
+            camera.view.y = -e.pageY - app.dragOffset.y;
         };
 
         app.canvas.onmousewheel = function (e) {
@@ -245,7 +245,7 @@ var app = {
             app.ctx.fillText(info[i], 45, (i + 4) * 10)
         }
 
-        for(var i = 1; i < Math.max(app.canvas.width, app.canvas.height); i++) {
+        for(var i = 1; i < Math.max(app.canvas.width, app.canvas.height) / 100; i++) {
             var offset = i * 100;
             var world = camera.screenToWorld({x: offset, y: offset});
             app.ctx.fillText(offset.toString(), offset != 0 ? offset : 4, 10);
