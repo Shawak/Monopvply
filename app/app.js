@@ -51,15 +51,13 @@ var camera = {
     },
 
     transform: function(ctx) {
-        ctx.setTransform(camera.zoom, 0, 0, camera.zoom,
-            -camera.view.x * camera.ratio,
-            -camera.view.y * camera.ratio);
+        ctx.setTransform(camera.zoom, 0, 0, camera.zoom, -camera.view.x, -camera.view.y);
     },
 
     screenToWorld: function(point) {
         return {
-            x: (point.x + camera.view.x) / camera.zoom * camera.ratio,
-            y: (point.y + camera.view.y) / camera.zoom * camera.ratio
+            x: (point.x + camera.view.x / camera.ratio) / camera.zoom * camera.ratio,
+            y: (point.y + camera.view.y / camera.ratio) / camera.zoom * camera.ratio
         };
     },
 
@@ -103,8 +101,8 @@ var app = {
         // track events
         app.canvas.onmousedown = function (e) {
             app.mouseIsDown = true;
-            app.dragOffset.x = -e.pageX - camera.view.x;
-            app.dragOffset.y = -e.pageY - camera.view.y;
+            app.dragOffset.x = -e.pageX * camera.ratio - camera.view.x;
+            app.dragOffset.y = -e.pageY * camera.ratio - camera.view.y;
         };
 
         app.canvas.onmouseup = function (e) {
@@ -120,26 +118,39 @@ var app = {
                 return;
             }
 
-            camera.view.x = -e.pageX - app.dragOffset.x;
-            camera.view.y = -e.pageY - app.dragOffset.y;
+            camera.view.x = -e.pageX * camera.ratio - app.dragOffset.x;
+            camera.view.y = -e.pageY * camera.ratio - app.dragOffset.y;
         };
 
-        app.canvas.onmousewheel = function (e) {
+        app.canvas.onwheel = function (e) {
             e.preventDefault();
 
-            var diff = -e.deltaY * 0.1 / 640;
+            console.log(e);
 
-            if (camera.zoom + diff < 0.1) {
-                diff = 0.1 - camera.zoom;
-            } else if (camera.zoom + diff > 1) {
-                diff = 1 - camera.zoom;
+            var oldZoom = camera.zoom;
+
+            var wheel = e.deltaY > 0 ? -1 : 1;
+            var diff = Math.exp(wheel * 0.1);
+            var newZoom = camera.zoom * diff;
+            if(newZoom <= 0.01 || newZoom >= 1) {
+                return;
             }
 
-            camera.zoom += diff;
+            camera.zoom = newZoom;
 
             // TODO
             // move camera view depending on the current view and the zoom diff
             // to keep the camera centering
+            // current method doesn't work perfectly/flawless
+
+            var scale = 1 / oldZoom;
+            var mouse = {
+                x: e.clientX * camera.ratio - camera.view.x,
+                y: e.clientY * camera.ratio - camera.view.y
+            };
+
+            camera.view.x -= mouse.x / (scale * diff) - mouse.x / scale;
+            camera.view.Y -= mouse.y / (scale * diff) - mouse.y / scale;
         };
 
         camera.view.x = -300;
