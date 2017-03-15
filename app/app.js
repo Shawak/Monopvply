@@ -24,25 +24,27 @@ var camera = {
 
     init: function() {
 
-        // high definition canvas
-        var dpr = window.devicePixelRatio || 1;
-        var bsr = app.ctx.webkitBackingStorePixelRatio ||
-            app.ctx.mozBackingStorePixelRatio ||
-            app.ctx.msBackingStorePixelRatio ||
-            app.ctx.oBackingStorePixelRatio ||
-            app.ctx.backingStorePixelRatio || 1;
+        if(true) {
+            // high definition canvas
+            var dpr = window.devicePixelRatio || 1;
+            var bsr = app.ctx.webkitBackingStorePixelRatio ||
+                app.ctx.mozBackingStorePixelRatio ||
+                app.ctx.msBackingStorePixelRatio ||
+                app.ctx.oBackingStorePixelRatio ||
+                app.ctx.backingStorePixelRatio || 1;
 
-        var ratio = dpr / bsr;
+            var ratio = dpr / bsr;
 
-        var oldWidth = app.canvas.width;
-        var oldHeight = app.canvas.height;
-        app.canvas.width = oldWidth * ratio;
-        app.canvas.height = oldHeight * ratio;
-        app.canvas.style.width = oldWidth + 'px';
-        app.canvas.style.height = oldHeight + 'px';
+            var oldWidth = app.canvas.width;
+            var oldHeight = app.canvas.height;
+            app.canvas.width = oldWidth * ratio;
+            app.canvas.height = oldHeight * ratio;
+            app.canvas.style.width = oldWidth + 'px';
+            app.canvas.style.height = oldHeight + 'px';
 
-        camera.ratio = ratio;
-        app.ctx.scale(ratio, ratio);
+            camera.ratio = ratio;
+            app.ctx.scale(ratio, ratio);
+        }
 
         camera.origin.width = app.canvas.width;
         camera.origin.height = app.canvas.height;
@@ -50,23 +52,23 @@ var camera = {
 
     transform: function(ctx) {
         ctx.setTransform(camera.zoom, 0, 0, camera.zoom,
-            camera.view.x * camera.ratio,
-            camera.view.y * camera.ratio);
+            -camera.view.x * camera.ratio,
+            -camera.view.y * camera.ratio);
     },
 
     screenToWorld: function(point) {
         return {
-            x: point.x * camera.ratio,
-            y: point.y * camera.ratio
+            x: (point.x + camera.view.x) / camera.zoom * camera.ratio,
+            y: (point.y + camera.view.y) / camera.zoom * camera.ratio
         };
     },
 
-    worldToScreen: function (point) {
+    /*worldToScreen: function (point) {
         return {
             x: point.x / camera.ratio,
             y: point.y / camera.ratio
         };
-    }
+    }*/
 
 };
 
@@ -101,8 +103,8 @@ var app = {
         // track events
         app.canvas.onmousedown = function (e) {
             app.mouseIsDown = true;
-            app.dragOffset.x = e.x - camera.view.x;
-            app.dragOffset.y = e.y - camera.view.y;
+            app.dragOffset.x = -e.x - camera.view.x;
+            app.dragOffset.y = -e.y - camera.view.y;
         };
 
         app.canvas.onmouseup = function (e) {
@@ -117,8 +119,8 @@ var app = {
                 return;
             }
 
-            camera.view.x = e.x - app.dragOffset.x;
-            camera.view.y = e.y - app.dragOffset.y;
+            camera.view.x = -e.x - app.dragOffset.x;
+            camera.view.y = -e.y - app.dragOffset.y;
         };
 
         app.canvas.onmousewheel = function (e) {
@@ -139,8 +141,8 @@ var app = {
             // to keep the camera centering
         };
 
-        camera.view.x = app.canvas.height / 2;
-        camera.view.y = 50;
+        camera.view.x = -300;
+        camera.view.y = -20;
         camera.zoom = 0.2;
 
         app.load();
@@ -209,9 +211,8 @@ var app = {
 
 
         app.ctx.beginPath();
-        app.ctx.fillStyle = 'orange';
-        var p = camera.worldToScreen({x: 500, y: 500});
-        app.ctx.arc(p.x, p.y, 5, 0, 2 * Math.PI, false);
+        app.ctx.fillStyle = 'red';
+        app.ctx.arc(2925, 2737.5, 10, 0, 2 * Math.PI, false);
         app.ctx.fill();
         app.ctx.stroke();
 
@@ -241,20 +242,21 @@ var app = {
         ];
 
         for(var i = 0; i < info.length; i++) {
-            app.ctx.fillText(info[i], 35, (i + 3) * 10)
+            app.ctx.fillText(info[i], 45, (i + 4) * 10)
         }
 
-        for(var i = 0; i < Math.max(app.canvas.width, app.canvas.height); i++) {
+        for(var i = 1; i < Math.max(app.canvas.width, app.canvas.height); i++) {
             var offset = i * 100;
-            var world = camera.screenToWorld({x: offset, y: 0}).x;
+            var world = camera.screenToWorld({x: offset, y: offset});
             app.ctx.fillText(offset.toString(), offset != 0 ? offset : 4, 10);
             app.ctx.fillText(offset.toString(), 4, offset);
-            app.ctx.fillText(world.toString(), world != 0 ? offset : 4, 20);
-            app.ctx.fillText(world.toString(), 4, world + 10);
+            app.ctx.fillText(Math.round(world.x).toString(), offset != 0 ? offset : 4, 20);
+            app.ctx.fillText(Math.round(world.y).toString(), 4, offset + 10);
         }
     }
 
 };
 (function () {
+    window.applicationCache.update();
     app.init();
 })();
