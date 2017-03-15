@@ -112,8 +112,9 @@ var app = {
         };
 
         app.canvas.onmousemove = function (e) {
-            app.cursor.x = e.clientX;
-            app.cursor.y = e.clientY;
+            var cursor = camera.screenToWorld({x: e.clientX, y: e.clientY});
+            app.cursor.x = cursor.x;
+            app.cursor.y = cursor.y;
 
             if (!app.mouseIsDown) {
                 return;
