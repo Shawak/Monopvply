@@ -274,7 +274,15 @@ var app = {
 
     },
 
+    preRenderCanvas: document.createElement('canvas'),
+
     draw: function (interp) {
+        app.preRenderCanvas.width = app.canvas.width;
+        app.preRenderCanvas.height = app.canvas.height;
+        app.preRenderCanvas.style.width = app.canvas.style.width + 'px';
+        app.preRenderCanvas.style.height = app.canvas.style.height + 'px';
+        app.ctx = app.preRenderCanvas.getContext('2d');
+
         // reset
         app.ctx.fillStyle = 'rgb(29,29,29)';
         app.ctx.fillRect(0, 0, app.canvas.width, app.canvas.height);
@@ -296,7 +304,6 @@ var app = {
         app.ctx.fillStyle = 'red';
         app.ctx.arc(2925, 2737.5, 10, 0, 2 * Math.PI, false);
         app.ctx.fill();
-        app.ctx.stroke();
 
         if(app.test.length > 0) {
             app.ctx.beginPath();
@@ -344,7 +351,7 @@ var app = {
             'Camera',
             '  Ratio: ' + camera.ratio,
             '  Zoom: ' + camera.zoom,
-            '  View: x ' + Math.round(camera.view.x) + ' y ' + Math.round(camera.view.y),
+            '  View: x ' + camera.view.x + ' y ' + Math.round(camera.view.y),
             'Cursor: x ' + Math.round(app.cursor.x) + ' y ' + Math.round(app.cursor.y),
             'FPS: ' + Math.round(app.fps)
         ];
@@ -361,6 +368,9 @@ var app = {
             app.ctx.fillText(Math.round(world.x).toString(), offset != 0 ? offset : 4, 20);
             app.ctx.fillText(Math.round(world.y).toString(), 4, offset + 10);
         }
+
+        app.ctx = app.canvas.getContext('2d');
+        app.ctx.drawImage(app.preRenderCanvas, 0, 0);
     }
 
 };
