@@ -147,6 +147,8 @@ var app = {
     resourcesCount: 0,
     resourcesLoaded: 0,
 
+    test: [],
+
     init: function () {
         app.canvas = $('canvas')[0];
         app.ctx = app.canvas.getContext('2d');
@@ -156,11 +158,22 @@ var app = {
         camera.init();
 
 
+        app.canvas.oncontextmenu = function(e) {
+            e.preventDefault();
+        };
+
         // track events
         app.canvas.onmousedown = function (e) {
             app.mouseIsDown = true;
-            app.dragOffset.x = -e.pageX * camera.ratio - camera.view.x;
-            app.dragOffset.y = -e.pageY * camera.ratio - camera.view.y;
+            app.mouseButton = e.button;
+            if(app.mouseButton == 0) {
+                app.test.push([]);
+                var cursor = camera.screenToWorld({x: e.clientX * camera.ratio, y: e.clientY * camera.ratio});
+                app.test[app.test.length - 1].push(cursor);
+            } else if(app.mouseButton == 2) {
+                app.dragOffset.x = -e.pageX * camera.ratio - camera.view.x;
+                app.dragOffset.y = -e.pageY * camera.ratio - camera.view.y;
+            }
         };
 
         app.canvas.onmouseup = function (e) {
@@ -169,7 +182,6 @@ var app = {
 
         app.canvas.onmousemove = function (e) {
             var cursor = camera.screenToWorld({x: e.clientX * camera.ratio, y: e.clientY * camera.ratio});
-            console.log(cursor);
             app.cursor.x = cursor.x;
             app.cursor.y = cursor.y;
 
@@ -177,8 +189,12 @@ var app = {
                 return;
             }
 
-            camera.view.x = -e.pageX * camera.ratio - app.dragOffset.x;
-            camera.view.y = -e.pageY * camera.ratio - app.dragOffset.y;
+            if(app.mouseButton == 0) {
+                app.test[app.test.length - 1].push({x: app.cursor.x, y: app.cursor.y});
+            } else if(app.mouseButton == 2) {
+                camera.view.x = -e.pageX * camera.ratio - app.dragOffset.x;
+                camera.view.y = -e.pageY * camera.ratio - app.dragOffset.y;
+            }
         };
 
         app.canvas.onwheel = function (e) {
@@ -281,6 +297,19 @@ var app = {
         app.ctx.arc(2925, 2737.5, 10, 0, 2 * Math.PI, false);
         app.ctx.fill();
         app.ctx.stroke();
+
+        if(app.test.length > 0) {
+            app.ctx.beginPath();
+            app.ctx.strokeStyle = 'orange';
+            app.ctx.lineWidth = 5;
+            for(var i = 0; i < app.test.length; i++) {
+                app.ctx.moveTo(app.test[i][0].x, app.test[i][0].y);
+                for(var k = 1; k < app.test[i].length; k++) {
+                    app.ctx.lineTo(app.test[i][k].x, app.test[i][k].y);
+                }
+                app.ctx.stroke();
+            }
+        }
 
         // end of map drawing
         app.ctx.restore();
