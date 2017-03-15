@@ -168,7 +168,8 @@ var app = {
         };
 
         app.canvas.onmousemove = function (e) {
-            var cursor = camera.screenToWorld({x: e.clientX, y: e.clientY});
+            var cursor = camera.screenToWorld({x: e.clientX * camera.ratio, y: e.clientY * camera.ratio});
+            console.log(cursor);
             app.cursor.x = cursor.x;
             app.cursor.y = cursor.y;
 
