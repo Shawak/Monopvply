@@ -21,8 +21,6 @@ let Street = function(index) {
         'ArmA',
     ];
 
-    console.log(index, 'index');
-    console.log(ex_names.length, 'ex_names.length');
     index = (index >= ex_names.length) ? index - ex_names.length : index;
     this.name = ex_names[index];
 };
