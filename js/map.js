@@ -92,13 +92,13 @@ function Map(konvaStage)
 			currIdx++;
 		}
 			
-		for (var x = 0; x < fieldsPerSide; x++)
+		for (var x = fieldsPerSide-1; x >=0 ; x--)
 		{
 			sideFields[currIdx].construct(layer, x*widthOneSideField+heightOneSideField, widthOneSideField*fieldsPerSide+heightOneSideField, widthOneSideField, heightOneSideField, "bottom");
 			currIdx++;
 		}
 		
-		for (var y = 0; y < fieldsPerSide; y++)
+		for (var y = fieldsPerSide-1; y >=0 ; y--)
 		{
 			sideFields[currIdx].construct(layer, 0, y*widthOneSideField+heightOneSideField, widthOneSideField,heightOneSideField, "left");
 			currIdx++;
