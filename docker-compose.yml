@@ -6,6 +6,7 @@ services:
     volumes:
       - ./public:/usr/src/app/public
       - ./server:/usr/src/app/server
+      - ./shared:/usr/src/app/shared
     ports:
       - '80:80'
       - '1234:1234'
