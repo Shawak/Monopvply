@@ -1,12 +1,13 @@
 let User = require('./_class/user.js');
-let Board = require('./_class/board.js');
+let Game = require('./_class/game.js');
 
 let syc = new User('Syc');
-let board = new Board();
-board.setPlayers(syc);
-board.initializeFields();
+let shadow = new User('Shadow992');
+let game = new Game();
+game.addPlayers([syc, shadow]);
+game.initializeStreets();
 
-console.log(board.getPlayers());
-board.getFields().forEach(function(field) {
-    console.log(field);
+console.log(game.players);
+game.streets.forEach(function(street) {
+    console.log(street);
 });
