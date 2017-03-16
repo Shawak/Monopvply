@@ -9,8 +9,8 @@ function Map(konvaStage)
 	var cornerFields=[];
 	var fieldsPerSide;
 	
-	var widthOneSideField=160;
-	var heightOneSideField=210;
+	var widthOneSideField=200;
+	var heightOneSideField=260;
 	
 	if(isMobileDevice())
 	{
