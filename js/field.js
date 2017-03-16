@@ -1,11 +1,11 @@
    
-function Field(imageSrc, fillColor, text, costs , onClickInformation="", buyable=true)
+function Field(imageSrc, fillColor, text, costs , onClickCallback=undefined, buyable=true)
 {
 	var rect;
 	var img;
 	var imageSrc=imageSrc;
 	var fillColor=fillColor;
-	var onClickInformation=onClickInformation;
+	var onClickCallback=onClickCallback;
 	var buyable=buyable;
 	var costs=costs;
 	var text=text;
@@ -138,7 +138,10 @@ function Field(imageSrc, fillColor, text, costs , onClickInformation="", buyable
 					
 			rect.on("click", function()
 			{
-				updateInformation(onClickInformation);
+				if(onClickCallback!=undefined && onClickCallback!="")
+				{
+					onClickCallback();
+				}
 			});
 			
 			konvaLayer.add(rect);
@@ -166,7 +169,10 @@ function Field(imageSrc, fillColor, text, costs , onClickInformation="", buyable
 		
 		img.on("click", function()
 		{
-			updateInformation(onClickInformation);
+			if(onClickCallback!=undefined && onClickCallback!="")
+			{
+				onClickCallback();
+			}
 		});
 		
 		// add the shapes to the layer
@@ -301,7 +307,7 @@ function Field(imageSrc, fillColor, text, costs , onClickInformation="", buyable
 			x: x,
 			y: y,
 			text: costs+" e*gold",
-			fontSize: 18,
+			fontSize: 22,
 			fontFamily: 'Calibri',
 			fill: '#FFF',
 			width: width,

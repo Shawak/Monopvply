@@ -38,12 +38,38 @@ function Map(konvaStage)
 			return false;
 		}
 		
-		layer = new Konva.Layer();
+		layer = new Konva.Layer(
+		{
+            draggable: true
+        });
         stage.add(layer);
 		
-		loadBackground();
+        window.addEventListener('wheel', (e) => 
+		{
+			var scaleBy = 0.9;
+            e.preventDefault();
+            var oldScale = layer.scaleX();
+            var mousePointTo = 
+			{
+                x: stage.getPointerPosition().x / oldScale - layer.x() / oldScale,
+                y: stage.getPointerPosition().y / oldScale - layer.y() / oldScale,
+            };
+            var newScale = e.deltaY > 0 ? oldScale * scaleBy : oldScale / scaleBy;
+            layer.scale({ x: newScale, y: newScale });
+            var newPos = 
+			{
+                x: -(mousePointTo.x - stage.getPointerPosition().x / newScale) * newScale,
+                y: -(mousePointTo.y - stage.getPointerPosition().y / newScale) * newScale
+            };
+            layer.position(newPos);
+            layer.batchDraw();
+        });
+		
+		
 		setSideFieldPositions();
 		setCornerFieldPositions();
+		loadBackground();
+		
 		return true;
 	}
 	
@@ -55,6 +81,13 @@ function Map(konvaStage)
 		imageObj.onload = function() 
 		{
 			layer.draw();
+			setTimeout(function()
+			{ 
+				stage.height(Math.max(fieldsPerSide*widthOneSideField+heightOneSideField*2,stage.height()));
+				stage.width(Math.max(fieldsPerSide*widthOneSideField+heightOneSideField*2,stage.width()));
+				layer.cache();
+				stage.draw();
+			}, 200);  
 		};
 		
 		innerBackground = new Konva.Image(
