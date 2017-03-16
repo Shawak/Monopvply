@@ -99,7 +99,6 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 		
 		layer.add(menuBackground);
 		menuBackground.moveToBottom();
-		stage.draw();
 	}
 	
 	this.addFieldCard = function(x, y, width, height, text, color, callback)
@@ -120,7 +119,6 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 			opacity: 0.9,
 			height: rectHeight
 		});
-		
 		
 		var textObj = new Konva.Text(
 		{
@@ -230,7 +228,7 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 		{
 			var imageObj = new Image();
 			imageObj.src = imgSrc;
-		
+			
 			imageObj.onload = function() 
 			{
 				layer.draw();
@@ -279,9 +277,9 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 				fill: '#DDD',
 				listening : false
 			}));
-	
+			
 			tooltipLayer.add(tooltip);
-	
+			
 			var tooltipFuncHover=function()
 			{
 				var mousePos = stage.getPointerPosition();
@@ -302,14 +300,14 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 				rect.fill("#999");
 				layer.batchDraw();
 			};
-	
+			
 			var changeColor=function()
 			{
 				rect.fill(hoverColor);
 				document.body.style.cursor = 'pointer';
 				layer.batchDraw();
 			};
-	
+			
 			rect.on("mousemove", tooltipFuncHover);
 			rect.on("mouseout", tooltipFuncOut);
 			rect.on("mouseenter", changeColor);
@@ -321,7 +319,7 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 			};
 			
 			rect.on("mousedown", downAction);
-
+			
 			var upAction=function()
 			{
 				rect.fill(buttonColor);
@@ -337,6 +335,24 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 		
 		layer.add(innerObj);
 		buttons.push([rect,innerObj]);
-		stage.draw();
+	}
+	
+	this.addText = function(x, y, width, text)
+	{
+		var textObj = new Konva.Text(
+		{
+			x: x,
+			y: y,
+			text: text,
+			fontSize: 18,
+			fontFamily: 'Calibri',
+			fill: textColor,
+			width: width,
+			padding: 4,
+			align: 'center',
+			listening : false
+		});
+
+		layer.add(textObj);
 	}
 }
