@@ -115,7 +115,7 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 		
 		var textObj = new Konva.Text(
 		{
-			x: x,
+			x: x+2,
 			y: y+rectHeight,
 			text: text,
 			fontSize: 16,
@@ -150,7 +150,7 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 			
 			var rectText = new Konva.Rect(
 			{
-				x: x,
+				x: x+2,
 				y: y+rectHeight,
 				stroke: '#999',
 				strokeWidth: 1,
