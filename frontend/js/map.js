@@ -9,8 +9,8 @@ function Map(konvaStage)
 	var cornerFields=[];
 	var fieldsPerSide;
 	
-	var widthOneSideField=200;
-	var heightOneSideField=270;
+	var widthOneSideField=160;
+	var heightOneSideField=220;
 	
 	var innerBackground;
 	
@@ -65,9 +65,11 @@ function Map(konvaStage)
             layer.batchDraw();
         });
 		
-		loadBackground();
+		
 		setSideFieldPositions();
 		setCornerFieldPositions();
+		loadBackground();
+		
 		return true;
 	}
 	
@@ -79,6 +81,13 @@ function Map(konvaStage)
 		imageObj.onload = function() 
 		{
 			layer.draw();
+			setTimeout(function()
+			{ 
+				stage.height(Math.max(fieldsPerSide*widthOneSideField+heightOneSideField*2,stage.height()));
+				stage.width(Math.max(fieldsPerSide*widthOneSideField+heightOneSideField*2,stage.width()));
+				layer.cache();
+				stage.draw();
+			}, 200);  
 		};
 		
 		innerBackground = new Konva.Image(
