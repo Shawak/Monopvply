@@ -101,13 +101,32 @@ function Map(konvaStage)
 		{
 			setTimeout(function()
 			{ 
+				var container = document.querySelector('#stage-parent');
+				var containerWidth = container.offsetWidth;
+				var containerHeight = container.offsetHeight;
+				
 				stage.height(Math.max(fieldsPerSide*widthOneSideField+heightOneSideField*2,stage.height()));
 				stage.width(Math.max(fieldsPerSide*widthOneSideField+heightOneSideField*2,stage.width()));
 				stage.show(true);
 				layer.draw();
 				layer.cache();
+
+				var scaleX = containerWidth / stage.getWidth();
+				var scaleY = containerHeight / stage.getHeight();
+				var scale = (scaleX < scaleY ? scaleX : scaleY)-0.05 ;
+				layer.scale({ x: scale, y: scale});
+				
+				var newPos = 
+				{
+					x: (containerWidth-stage.width()*scale)/2,
+					y: (containerHeight-stage.height()*scale)/2
+				};
+				layer.position(newPos);
+				
+				layer.draw();
+				
 				document.getElementById("overlayDiv").style.display="none";
-			}, 100);  
+			}, 500);  
 		};
 		
 		innerBackground = new Konva.Image(

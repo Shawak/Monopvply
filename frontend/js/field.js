@@ -1,8 +1,10 @@
    
-function Field(imageSrc, fillColor, text, costs , onClickCallback)
+function Field(imageSrc, fillColor, text, costs , onClickCallback, costsColor, textColor)
 {
 	onClickCallback = typeof onClickCallback !== 'undefined' ? onClickCallback : undefined;
-	
+	costsColor = typeof costsColor !== 'undefined' ? costsColor : '#FFF';
+	textColor = typeof textColor !== 'undefined' ? textColor : "#DDD";
+
 	var rect;
 	var img;
 	var imageSrc=imageSrc;
@@ -243,7 +245,7 @@ function Field(imageSrc, fillColor, text, costs , onClickCallback)
 			text: text,
 			fontSize: 18,
 			fontFamily: 'Calibri',
-			fill: '#DDD',
+			fill: textColor,
 			width: width,
 			padding: 8,
 			align: 'center',
@@ -258,10 +260,6 @@ function Field(imageSrc, fillColor, text, costs , onClickCallback)
 			fill: '#262626',
 			width: width,
 			height: fieldText.getHeight(),
-			shadowColor: 'black',
-			shadowBlur: 10,
-			shadowOffset: [10, 10],
-			shadowOpacity: 0.2,
 			opacity:0.8,
 			cornerRadius: 10,
 			rotation: rotation
@@ -307,7 +305,11 @@ function Field(imageSrc, fillColor, text, costs , onClickCallback)
 			text: costs+" e*gold",
 			fontSize: 22,
 			fontFamily: 'Calibri',
-			fill: '#FFF',
+			fill: costsColor,
+			shadowColor: 'black',
+			shadowBlur: 4,
+			shadowOffset: [10, 10],
+			shadowOpacity: 0.9,
 			width: width,
 			padding: 8,
 			align: 'center',

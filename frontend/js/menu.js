@@ -66,10 +66,6 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 				width: width,
 				height: height,
 				listening : false,
-				shadowColor: 'black',
-				shadowBlur: 10,
-				shadowOffset: [10, 10],
-				shadowOpacity: 0.2,
 				opacity: 0.5,
 				cornerRadius: 4,
 				stroke: strokeColorMenu,
@@ -87,10 +83,6 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 				fill: fillColorMenu,
 				width: width,
 				height: height,
-				shadowColor: 'black',
-				shadowBlur: 10,
-				shadowOffset: [10, 10],
-				shadowOpacity: 0.2,
 				opacity: 0.5,
 				cornerRadius: 4,
 				listening:false
@@ -101,10 +93,11 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 		menuBackground.moveToBottom();
 	}
 	
-	this.addFieldCard = function(x, y, width, height, text, color, callback)
+	this.addFieldCard = function(x, y, width, height, text, color, callback, imgSrc)
 	{
 		callback = typeof callback !== 'undefined' ? callback : undefined;
 		color = typeof color !== 'undefined' ? color : "gray";
+		imgSrc = typeof imgSrc !== 'undefined' ? imgSrc : "";
 		
 		var rectHeight=height/5;
 		
@@ -128,7 +121,7 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 			fontSize: 16,
 			fontFamily: 'Calibri',
 			fill: textColor,
-			width: width,
+			width: width-4,
 			padding: 4,
 			align: 'center',
 			strokeWidth: 1,
@@ -136,20 +129,58 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 			listening:false
 		});
 		
-		var rect2 = new Konva.Rect(
-		{
-			x: x,
-			y: y+rectHeight,
-			stroke: "black",
-			strokeWidth: 1,
-			fill: buttonColor,
-			width: width,
-			opacity: 0.9,
-			height: Math.max(textObj.getHeight(),height-rectHeight)
-		});
-		
 		layer.add(rect);
-		layer.add(rect2);
+		var rect2; 
+		
+		if(imgSrc!="")
+		{
+			var imageObj = new Image();
+			imageObj.src = imgSrc;
+		
+			rect2 = new Konva.Image(
+			{
+				image: imageObj,
+				x: x,
+				y: y+rectHeight,
+				width: width,
+				height: Math.max(textObj.getHeight(),height-rectHeight),
+				stroke: 'black',
+				strokeWidth: 1
+			});
+			
+			var rectText = new Konva.Rect(
+			{
+				x: x,
+				y: y+rectHeight,
+				stroke: '#999',
+				strokeWidth: 1,
+				fill: '#262626',
+				width: width-4,
+				height: textObj.getHeight(),
+				opacity:0.8,
+				cornerRadius: 10,
+				listening:false
+			});
+			
+			layer.add(rect2);
+			layer.add(rectText);
+		}
+		else
+		{	
+			rect2 = new Konva.Rect(
+			{
+				x: x,
+				y: y+rectHeight,
+				stroke: "black",
+				strokeWidth: 1,
+				fill: buttonColor,
+				width: width,
+				opacity: 0.9,
+				height: Math.max(textObj.getHeight(),height-rectHeight)
+			});
+			layer.add(rect2);
+		}
+		
 		layer.add(textObj);
 		
 		var changePointerEnter=function()
@@ -157,6 +188,7 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 			document.body.style.cursor = 'help';
 			rect.moveToTop();
 			rect2.moveToTop();
+			rectText.moveToTop();
 			textObj.moveToTop();
 			layer.draw();
 		};
@@ -199,11 +231,6 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 			fill: buttonColor,
 			width: width,
 			height: height,
-			shadowColor: 'black',
-			shadowBlur: 10,
-			shadowOffset: [10, 10],
-			shadowOpacity: 0.2,
-			opacity: 0.9,
 			cornerRadius: 4,
 		});
 		layer.add(rect);
@@ -261,10 +288,6 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 				pointerWidth: 10,
 				pointerHeight: 10,
 				lineJoin: 'round',
-				shadowColor: 'black',
-				shadowBlur: 10,
-				shadowOffset: 10,
-				shadowOpacity: 0.5,
 				listening : false
 			}));
 			
@@ -349,6 +372,10 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 			fill: textColor,
 			width: width,
 			padding: 4,
+			shadowColor: 'black',
+			shadowBlur: 4,
+			shadowOffset: [10, 10],
+			shadowOpacity: 0.9,
 			align: 'center',
 			listening : false
 		});
