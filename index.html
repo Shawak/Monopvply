@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.rawgit.com/konvajs/konva/1.4.0/konva.min.js"></script>
+	<script src="./js/map.js"></script>
+	<script src="./js/field.js"></script>
+    <meta charset="utf-8">
+	<meta http-equiv="cache-control" content="max-age=0" />
+<meta http-equiv="cache-control" content="no-cache" />
+<meta http-equiv="expires" content="0" />
+<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+<meta http-equiv="pragma" content="no-cache" />
+    <title>Konva Zoom Relative to Stage Demo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #F0F0F0;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <script>
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+        var stage = new Konva.Stage({
+            container: 'container',
+            width: width,
+            height: height,
+			draggable: true
+        });
+		
+		var gameMap=new Map(stage);
+		gameMap.addSideField(new Field("./img/test.jpg", "blue", "Feld 1", 100));
+		gameMap.addSideField(new Field("./img/Testing.jpg", "blue", "Feld 2", 120));
+		
+		gameMap.addSideField(new Field("./img/test.jpg", "green", "Shadow", 500));
+		gameMap.addSideField(new Field("./img/test.jpg", "green", "Eisenbahn", 400));
+		
+		gameMap.addSideField(new Field("./img/Testing.jpg", "red", "Lulz", 200));
+		gameMap.addSideField(new Field("./img/Testing.jpg", "red", "Rolf", 130));
+		
+		gameMap.addSideField(new Field("./img/test.jpg", "orange", "Feld der Verschwörung", 180));
+		gameMap.addSideField(new Field("./img/Testing.jpg", "orange", "RIP", 150,"",false));
+		
+		gameMap.addCornerField(new Field("./img/corner.jpg", "", "Let's go!", 300,"",false));
+		gameMap.addCornerField(new Field("./img/corner.jpg", "", "Dead", 300,"",false));
+		gameMap.addCornerField(new Field("./img/corner.jpg", "", "Busted", 300,"",false));
+		gameMap.addCornerField(new Field("./img/corner.jpg", "", "Hmm...", 300,"",false));
+		
+		gameMap.setUp();
+		
+		window.addEventListener('contextmenu', (e) => 
+		{
+            //e.preventDefault();
+			//background.rotate(90);
+			//layer.draw();
+		});
+		
+        var scaleBy = 0.9;
+        window.addEventListener('wheel', (e) => 
+		{
+            e.preventDefault();
+            var oldScale = stage.scaleX();
+            var mousePointTo = 
+			{
+                x: stage.getPointerPosition().x / oldScale - stage.x() / oldScale,
+                y: stage.getPointerPosition().y / oldScale - stage.y() / oldScale,
+            };
+            var newScale = e.deltaY > 0 ? oldScale * scaleBy : oldScale / scaleBy;
+            stage.scale({ x: newScale, y: newScale });
+            var newPos = 
+			{
+                x: -(mousePointTo.x - stage.getPointerPosition().x / newScale) * newScale,
+                y: -(mousePointTo.y - stage.getPointerPosition().y / newScale) * newScale
+            };
+            stage.position(newPos);
+            stage.batchDraw();
+        });
+    </script>
+</body>
+</html>
