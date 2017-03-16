@@ -1,6 +1,9 @@
    
-function Field(imageSrc, fillColor, text, costs , onClickCallback=undefined, buyable=true)
+function Field(imageSrc, fillColor, text, costs , onClickCallback, buyable)
 {
+	onClickCallback = typeof onClickCallback !== 'undefined' ? onClickCallback : undefined;
+	buyable = typeof buyable !== 'undefined' ? buyable : true;
+	
 	var rect;
 	var img;
 	var imageSrc=imageSrc;
@@ -13,8 +16,10 @@ function Field(imageSrc, fillColor, text, costs , onClickCallback=undefined, buy
 	var rectText;
 	var fieldCosts;
 	
-	this.construct = function (konvaLayer, x, y, width, height, side, corner=false)
+	this.construct = function (konvaLayer, x, y, width, height, side, corner)
 	{
+		corner = typeof corner !== 'undefined' ? corner : false;
+		
 		var heightRect;
 		var widthRect;
 		

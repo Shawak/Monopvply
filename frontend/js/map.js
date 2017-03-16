@@ -9,11 +9,14 @@ function Map(konvaStage)
 	var cornerFields=[];
 	var fieldsPerSide;
 	
-	//var widthOneSideField=160;
-	//var heightOneSideField=220;
-	
 	var widthOneSideField=160;
-	var heightOneSideField=220;
+	var heightOneSideField=210;
+	
+	if(isMobileDevice())
+	{
+		widthOneSideField=100;
+		heightOneSideField=130;
+	}
 	
 	var innerBackground;
 	
@@ -26,7 +29,20 @@ function Map(konvaStage)
 	{
 		cornerFields.push(field);
 	}	
-		
+	
+	this.hideAll = function (hide)
+	{
+		if(hide==false)
+		{
+			layer.show();
+			layer.draw();
+		}
+		else
+		{
+			layer.hide();
+		}
+	}
+	
 	this.setUp = function ()
 	{
 		if(sideFields.length%4!=0)
@@ -45,9 +61,10 @@ function Map(konvaStage)
 		{
             draggable: true
         });
-        stage.add(layer);
 		
-        window.addEventListener('wheel', (e) => 
+		stage.add(layer);
+		
+        window.addEventListener('wheel', function(e)
 		{
 			var scaleBy = 0.9;
             e.preventDefault();
@@ -68,11 +85,10 @@ function Map(konvaStage)
             layer.batchDraw();
         });
 		
-		
 		setSideFieldPositions();
 		setCornerFieldPositions();
 		loadBackground();
-		
+		layer.moveToBottom();
 		return true;
 	}
 	
@@ -83,15 +99,15 @@ function Map(konvaStage)
 		
 		imageObj.onload = function() 
 		{
-			layer.draw();
 			setTimeout(function()
 			{ 
-				stage.draw();
 				stage.height(Math.max(fieldsPerSide*widthOneSideField+heightOneSideField*2,stage.height()));
 				stage.width(Math.max(fieldsPerSide*widthOneSideField+heightOneSideField*2,stage.width()));
+				stage.show(true);
+				layer.draw();
 				layer.cache();
-				stage.draw();
-			}, 200);  
+				document.getElementById("overlayDiv").style.display="none";
+			}, 100);  
 		};
 		
 		innerBackground = new Konva.Image(
