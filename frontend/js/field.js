@@ -1,15 +1,13 @@
    
-function Field(imageSrc, fillColor, text, costs , onClickCallback, buyable)
+function Field(imageSrc, fillColor, text, costs , onClickCallback)
 {
 	onClickCallback = typeof onClickCallback !== 'undefined' ? onClickCallback : undefined;
-	buyable = typeof buyable !== 'undefined' ? buyable : true;
 	
 	var rect;
 	var img;
 	var imageSrc=imageSrc;
 	var fillColor=fillColor;
 	var onClickCallback=onClickCallback;
-	var buyable=buyable;
 	var costs=costs;
 	var text=text;
 	var fieldText;
@@ -37,7 +35,7 @@ function Field(imageSrc, fillColor, text, costs , onClickCallback, buyable)
 		
 		if(side=="top")
 		{
-			if(buyable)
+			if(fillColor!="")
 			{
 				heightRect=height/5;
 				widthRect=width;
@@ -61,7 +59,7 @@ function Field(imageSrc, fillColor, text, costs , onClickCallback, buyable)
 		}
 		else if(side=="left")
 		{
-			if(buyable)
+			if(fillColor!="")
 			{
 				heightRect=width;
 				widthRect=height/5;
@@ -84,7 +82,7 @@ function Field(imageSrc, fillColor, text, costs , onClickCallback, buyable)
 		}
 		else if(side=="bottom")
 		{
-			if(buyable)
+			if(fillColor!="")
 			{
 				heightRect=height/5;
 				widthRect=width;
@@ -106,7 +104,7 @@ function Field(imageSrc, fillColor, text, costs , onClickCallback, buyable)
 		}
 		else if(side=="right")
 		{
-			if(buyable)
+			if(fillColor!="")
 			{
 				heightRect=width;
 				widthRect=height/5;
@@ -128,7 +126,7 @@ function Field(imageSrc, fillColor, text, costs , onClickCallback, buyable)
 			rotationImg=270;
 		}
 		
-		if(buyable)
+		if(fillColor!="")
 		{
 			rect=new Konva.Rect(
 			{
@@ -275,7 +273,7 @@ function Field(imageSrc, fillColor, text, costs , onClickCallback, buyable)
 	
 	function addCosts(konvaLayer,x, y, width, height, marginSide, rotation, side)
 	{
-		if(costs==0)
+		if(costs<=0)
 		{
 			return;
 		}
