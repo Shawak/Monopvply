@@ -1,30 +1,74 @@
 
-function Map(konvaStage, fieldsPerSide)
+function Map(konvaStage)
 {
 	var width=konvaStage.getWidth();
 	var height=konvaStage.getHeight();
 	var stage=konvaStage;
 	var layer;
 	var sideFields=[];
-	var fieldsPerSide=fieldsPerSide;
+	var cornerFields=[];
+	var fieldsPerSide;
 	
-	var widthOneField=200;
-	var heightOneField=270;
+	var widthOneSideField=200;
+	var heightOneSideField=270;
 	
 	var innerBackground;
 	
 	this.addSideField = function(field)
 	{
 		sideFields.push(field);
+	}
+
+	this.addCornerField = function(field)
+	{
+		cornerFields.push(field);
 	}	
 		
 	this.setUp = function ()
 	{
-		layer = new Konva.Layer();
+		if(sideFields.length%4!=0)
+		{
+			return false;
+		}
+		
+		fieldsPerSide=sideFields.length/4;
+		
+		if(cornerFields.length != 4)
+		{
+			return false;
+		}
+		
+		layer = new Konva.Layer(
+		{
+            draggable: true
+        });
         stage.add(layer);
 		
+        window.addEventListener('wheel', (e) => 
+		{
+			var scaleBy = 0.9;
+            e.preventDefault();
+            var oldScale = layer.scaleX();
+            var mousePointTo = 
+			{
+                x: stage.getPointerPosition().x / oldScale - layer.x() / oldScale,
+                y: stage.getPointerPosition().y / oldScale - layer.y() / oldScale,
+            };
+            var newScale = e.deltaY > 0 ? oldScale * scaleBy : oldScale / scaleBy;
+            layer.scale({ x: newScale, y: newScale });
+            var newPos = 
+			{
+                x: -(mousePointTo.x - stage.getPointerPosition().x / newScale) * newScale,
+                y: -(mousePointTo.y - stage.getPointerPosition().y / newScale) * newScale
+            };
+            layer.position(newPos);
+            layer.batchDraw();
+        });
+		
 		loadBackground();
-		return setSideFieldPositions();
+		setSideFieldPositions();
+		setCornerFieldPositions();
+		return true;
 	}
 	
 	function loadBackground()
@@ -40,49 +84,51 @@ function Map(konvaStage, fieldsPerSide)
 		innerBackground = new Konva.Image(
 		{
             image: imageObj,
-            x: heightOneField,
-            y: heightOneField,
-            width: widthOneField*fieldsPerSide,
-            height: widthOneField*fieldsPerSide,
+            x: heightOneSideField,
+            y: heightOneSideField,
+            width: widthOneSideField*fieldsPerSide,
+            height: widthOneSideField*fieldsPerSide,
         });
 		
 		layer.add(innerBackground);
 	}
 	
+	function setCornerFieldPositions()
+	{
+		cornerFields[0].construct(layer, 0, 0, heightOneSideField, heightOneSideField, "top",true);
+		cornerFields[1].construct(layer, widthOneSideField*fieldsPerSide+heightOneSideField, 0, heightOneSideField, heightOneSideField, "right",true);
+		cornerFields[2].construct(layer, widthOneSideField*fieldsPerSide+heightOneSideField, widthOneSideField*fieldsPerSide+heightOneSideField, heightOneSideField, heightOneSideField, "bottom",true);
+		cornerFields[3].construct(layer, 0, widthOneSideField*fieldsPerSide+heightOneSideField, heightOneSideField, heightOneSideField, "left",true);
+	}
+	
 	function setSideFieldPositions()
 	{
-		if(sideFields.length != fieldsPerSide*4)
-		{
-			return false;
-		}
-		
 		var currIdx=0;
 		for (var x = 0; x < fieldsPerSide; x++)
 		{
-			sideFields[currIdx].construct(layer, x*widthOneField+heightOneField, 0, widthOneField, heightOneField, "top");
+			sideFields[currIdx].construct(layer, x*widthOneSideField+heightOneSideField, 0, widthOneSideField, heightOneSideField, "top");
 			currIdx++;
 		}
 		
 		for (var y = 0; y < fieldsPerSide; y++)
 		{
-			sideFields[currIdx].construct(layer, fieldsPerSide*widthOneField+heightOneField, y*widthOneField+heightOneField, widthOneField,heightOneField, "right");
+			sideFields[currIdx].construct(layer, fieldsPerSide*widthOneSideField+heightOneSideField, y*widthOneSideField+heightOneSideField, widthOneSideField,heightOneSideField, "right");
 			currIdx++;
 		}
 			
-		for (var x = 0; x < fieldsPerSide; x++)
+		for (var x = fieldsPerSide-1; x >=0 ; x--)
 		{
-			sideFields[currIdx].construct(layer, x*widthOneField+heightOneField, widthOneField*fieldsPerSide+heightOneField, widthOneField, heightOneField, "bottom");
+			sideFields[currIdx].construct(layer, x*widthOneSideField+heightOneSideField, widthOneSideField*fieldsPerSide+heightOneSideField, widthOneSideField, heightOneSideField, "bottom");
 			currIdx++;
 		}
 		
-		for (var y = 0; y < fieldsPerSide; y++)
+		for (var y = fieldsPerSide-1; y >=0 ; y--)
 		{
-			sideFields[currIdx].construct(layer, 0, y*widthOneField+heightOneField, widthOneField,heightOneField, "left");
+			sideFields[currIdx].construct(layer, 0, y*widthOneSideField+heightOneSideField, widthOneSideField,heightOneSideField, "left");
 			currIdx++;
 		}
 		
 		layer.draw();
 		
-		return true;
 	}
 }

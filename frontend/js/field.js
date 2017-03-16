@@ -1,11 +1,11 @@
    
-function Field(imageSrc, fillColor, text, costs , onClickInformation="", buyable=true)
+function Field(imageSrc, fillColor, text, costs , onClickCallback=undefined, buyable=true)
 {
 	var rect;
 	var img;
 	var imageSrc=imageSrc;
 	var fillColor=fillColor;
-	var onClickInformation=onClickInformation;
+	var onClickCallback=onClickCallback;
 	var buyable=buyable;
 	var costs=costs;
 	var text=text;
@@ -13,7 +13,7 @@ function Field(imageSrc, fillColor, text, costs , onClickInformation="", buyable
 	var rectText;
 	var fieldCosts;
 	
-	this.construct = function (konvaLayer, x, y, width, height, side)
+	this.construct = function (konvaLayer, x, y, width, height, side, corner=false)
 	{
 		var heightRect;
 		var widthRect;
@@ -97,6 +97,7 @@ function Field(imageSrc, fillColor, text, costs , onClickInformation="", buyable
 			
 			xImg=x;
 			yImg=y+heightRect;
+			rotationImg=0;
 		}
 		else if(side=="right")
 		{
@@ -113,7 +114,7 @@ function Field(imageSrc, fillColor, text, costs , onClickInformation="", buyable
 				heightRect=0;
 				widthRect=0;
 			}
-			heightImg=height;
+			heightImg=height-widthRect;
 			widthImg=width;
 			
 			xImg=x+widthRect;
@@ -137,7 +138,10 @@ function Field(imageSrc, fillColor, text, costs , onClickInformation="", buyable
 					
 			rect.on("click", function()
 			{
-				updateInformation(onClickInformation);
+				if(onClickCallback!=undefined && onClickCallback!="")
+				{
+					onClickCallback();
+				}
 			});
 			
 			konvaLayer.add(rect);
@@ -165,37 +169,70 @@ function Field(imageSrc, fillColor, text, costs , onClickInformation="", buyable
 		
 		img.on("click", function()
 		{
-			updateInformation(onClickInformation);
+			if(onClickCallback!=undefined && onClickCallback!="")
+			{
+				onClickCallback();
+			}
 		});
 		
 		// add the shapes to the layer
 		konvaLayer.add(img);
 		
 		var marginSide=10;
-		addText(konvaLayer, xImg, yImg, widthImg-marginSide*2,marginSide, rotationImg, side);
-		addCosts(konvaLayer, xImg, yImg, widthImg-marginSide*2, heightImg ,marginSide, rotationImg, side);
+		addText(konvaLayer, xImg, yImg, widthImg-marginSide*2,marginSide, rotationImg, side, corner);
+		if(corner==false)
+		{
+			addCosts(konvaLayer, xImg, yImg, widthImg-marginSide*2, heightImg ,marginSide, rotationImg, side);
+		}
 	}
 	
-	function addText(konvaLayer,x, y, width, marginSide, rotation, side)
+	function addText(konvaLayer,x, y, width, marginSide, rotation, side, corner)
 	{
+		if(text=="")
+		{
+			return;
+		}
+		
+		var marginSideY=marginSide;
+
 		if(side=="top")
 		{
-			y-=marginSide;
+			if(corner)
+			{
+				rotation-=45;
+				marginSideY=width-width/4;
+			}
+			y-=marginSideY;
 			x-=marginSide;
 		}
 		else if(side=="left")
 		{
-			y+=marginSide;
+			if(corner)
+			{
+				rotation-=45;
+				marginSide=width-width/4;
+			}
+			y+=marginSideY;
 			x-=marginSide;
 		}
 		else if(side=="bottom")
 		{
-			y+=marginSide;
+			if(corner)
+			{
+				rotation-=45;
+				marginSideY=width-width/4;
+			}
+			y+=marginSideY;
 			x+=marginSide;
 		}
 		else if(side=="right")
 		{
-			y-=marginSide;
+			if(corner)
+			{
+				rotation-=45;
+				marginSide=width-width/4;
+			}
+			y-=marginSideY;
 			x+=marginSide;
 		}
 		
@@ -238,6 +275,11 @@ function Field(imageSrc, fillColor, text, costs , onClickInformation="", buyable
 	
 	function addCosts(konvaLayer,x, y, width, height, marginSide, rotation, side)
 	{
+		if(costs==0)
+		{
+			return;
+		}
+		
 		var marginBot=44;
 		if(side=="top")
 		{
@@ -265,7 +307,7 @@ function Field(imageSrc, fillColor, text, costs , onClickInformation="", buyable
 			x: x,
 			y: y,
 			text: costs+" e*gold",
-			fontSize: 18,
+			fontSize: 22,
 			fontFamily: 'Calibri',
 			fill: '#FFF',
 			width: width,
