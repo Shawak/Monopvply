@@ -150,11 +150,6 @@ function Field(imageSrc, fillColor, text, costs , onClickCallback=undefined, buy
 		var imageObj = new Image();
 		imageObj.src = imageSrc;
 		
-		imageObj.onload = function() 
-		{
-			konvaLayer.draw();
-		};
-		
 		img = new Konva.Image(
 		{
             image: imageObj,

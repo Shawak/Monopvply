@@ -9,6 +9,9 @@ function Map(konvaStage)
 	var cornerFields=[];
 	var fieldsPerSide;
 	
+	//var widthOneSideField=160;
+	//var heightOneSideField=220;
+	
 	var widthOneSideField=160;
 	var heightOneSideField=220;
 	
@@ -83,6 +86,7 @@ function Map(konvaStage)
 			layer.draw();
 			setTimeout(function()
 			{ 
+				stage.draw();
 				stage.height(Math.max(fieldsPerSide*widthOneSideField+heightOneSideField*2,stage.height()));
 				stage.width(Math.max(fieldsPerSide*widthOneSideField+heightOneSideField*2,stage.width()));
 				layer.cache();
