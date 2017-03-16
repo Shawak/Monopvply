@@ -1,6 +1,7 @@
 class Client {
 
-    constructor(socket) {
+    constructor(id, socket) {
+        this.id = id;
         this.socket = socket;
         this.user = null;
     }
@@ -15,10 +16,6 @@ class Client {
 
     send(data) {
         this.socket.send(data);
-    }
-
-    onData(data) {
-        let packet = packet.packetManager.parse(data);
     }
 
 }

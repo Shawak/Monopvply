@@ -1,7 +1,9 @@
 const express = require('express'),
     app = express(),
     http = require('http'),
-    net = require('net');
+    io = require('socket.io');
+
+const crypto = require('crypto');
 
 const packets = require('./../shared/packets.js');
 const User = require('./../shared/user.js');
@@ -9,9 +11,7 @@ const User = require('./../shared/user.js');
 const Client = require('./client');
 
 // Database
-let db = {
-
-};
+let db = {};
 
 // Web Server
 class WebServer {
@@ -20,7 +20,8 @@ class WebServer {
         this.server = http.createServer(app);
 
         app.use(express.static(__dirname + '/../public'));
-        app.use(express.static(__dirname + '/../shared'));
+        app.use('/shared', express.static(__dirname + '/../shared'));
+        app.use('/socket-io', express.static(__dirname + '/../node_modules/socket.io-client/dist'));
     }
 
     start() {
@@ -35,25 +36,43 @@ class GameServer {
 
     constructor() {
         this.clients = [];
-        this.server = net.createServer((socket) => {
+        this.server = io();
+        this.server.on('connection', (socket) => {
 
-            console.log('client #' + this.clients.length + ' has connected!');
-            let client = new Client(socket);
+            let id = 0;
+            do {
+                id = crypto.randomBytes(4).toString('hex');;
+            } while (this.clients.find((client) => client.id != id));
+
+            let client = new Client(id, socket);
             this.clients.push(client);
+            console.log('client ' + id + ' has connected!');
 
-            socket.on('data', (data) => {
-                client.onData(data);
+            socket.on('packet', (data) => {
+                try {
+                    this.onPacket(data);
+                } catch(ex) {
+                    console.log(ex);
+                }
             });
 
-            socket.on('end', () => {
+            socket.on('disconnect', () => {
                 let client = this.clients.find((client) => client.socket == socket);
                 let index = this.clients.indexOf(client);
                 this.clients.splice(index, 1);
-                console.log('client #' + index + ' has disconnected!');
+                console.log('client ' + client.id + ' has disconnected!');
             });
 
-
         });
+    }
+
+    onPacket(data) {
+        let packet = packets.packetManager.parse(data);
+        switch (packet.type) {
+            case packets.loginPacket:
+                console.log(packet.username);
+                break;
+        }
     }
 
     start() {

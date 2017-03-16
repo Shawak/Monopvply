@@ -1,21 +1,33 @@
 function Client() {
 
-    this.connection = new WebSocket('ws://localhost:1234');
+    var self = this;
 
-    this.connection.onopen = function() {
-        console.log('onopen');
-    };
+    this.socket = io('localhost:1234');
+    window.socket = this.socket;
 
-    this.connection.onerror = function(e) {
-        console.log('onerror' + e);
-    };
+    this.socket.on('connect', function () {
+        console.log('connect');
+        var packet = new window.exports.loginPacket('Shawak', 'test');
+        console.log(packet);
+        self.sendPacket(packet);
+    });
 
-    this.connection.onmessage = function(e) {
-        console.log('onmessage' + e);
+    this.socket.on('packet', function (data) {
+        console.log(data);
+    });
+
+    this.socket.on('disconnect', function () {
+        console.log('disconnect');
+    });
+
+    this.sendPacket = function(packet) {
+        this.socket.emit('packet', window.exports.packetManager.pack(packet));
     };
 
 }
 
-(function() {
+(function () {
+
     new Client();
+
 })();

@@ -1,12 +1,12 @@
 var packetManager = {
-    
+
     lookup: {},
     aid: 0,
-    
+
     add: function(T) {
-        this.lookup[this.aid++] = Object.getPrototypeOf(new T({}));
+        this.lookup[this.aid++] = [T, Object.getPrototypeOf(new T())];
     },
-    
+
     pack: function (packet) {
         return JSON.stringify({
             id: 0,
@@ -17,10 +17,11 @@ var packetManager = {
     parse: function(data) {
         var parsed = JSON.parse(data);
         var id = parsed.id;
-        var o = Object.create(this.lookup[id]);
+        var o = Object.create(this.lookup[id][1]);
         for(var prop in parsed.data) {
             o[prop] = parsed.data[prop];
         }
+        o.type = this.lookup[id][0];
         return o;
     }
 
