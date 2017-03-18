@@ -8,8 +8,16 @@ var packetManager = {
     },
 
     pack: function (packet) {
+        var id = 0;
+        var type = Object.getPrototypeOf(packet);
+        for(var i = 0; i < lookup.length; i++) {
+            if(this.lookup[i][1] == type) {
+                id = i;
+                break;
+	    }
+	}
         return JSON.stringify({
-            id: 0,
+            id: id,
             data: packet
         });
     },
@@ -21,10 +29,10 @@ var packetManager = {
         for(var prop in parsed.data) {
             o[prop] = parsed.data[prop];
         }
-		return {
-			type: this.lookup[id][0],
-			packet: o
-		};
+        return {
+            type: this.lookup[id][0],
+            packet: o
+        };
     }
 
 };
