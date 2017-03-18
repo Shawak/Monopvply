@@ -21,6 +21,7 @@ function setUpStandardMenu(ingameMenu, gameMap, user, enemyArray)
 	ingameMenu.addButton(containerWidth/2+50, margin, 70, 30, ">>", gameMap.rotateRight, "Rotate whole map by +90°");
 	ingameMenu.addButton(containerWidth/2-50, margin, 70, 30, "<<", gameMap.rotateLeft, "Rotate whole map by -90°");
 	
+	user.createCardManager(containerWidth/4, containerHeight-140-marginHeight, 100, 140);
 	
 	for(var i=0;i<enemyArray.length;i++)
 	{
@@ -37,18 +38,4 @@ function setUpStandardMenu(ingameMenu, gameMap, user, enemyArray)
 	var boundAlert2=myAlert.bind(null,"Yay, you clicked Field Card 'Last Chaos'!");
 	ingameMenu.addFieldCard(50, 80, 70, 80, "Last Chaos", "lightblue", boundAlert2,"./img/streets/2_mmorpg/2_last_chaos.jpg");
 	*/
-	
-	var myAlert=function(txt)
-	{
-		alert(txt);
-	}
-	var boundAlert2=myAlert.bind(null,"Yay, you clicked Field Card 'Tera'!");
-	ingameMenu.addFieldCard(containerWidth/2-50, containerHeight-140-marginHeight, 100, 140, "Tera", "lightblue", boundAlert2,"./img/streets/2_mmorpg/3_tera.jpg");
-	
-	var myAlert=function(txt)
-	{
-		alert(txt);
-	}
-	var boundAlert3=myAlert.bind(null,"Yay, you clicked Field Card 'Last Chaos'!");
-	ingameMenu.addFieldCard(containerWidth/2-50+50, containerHeight-140-marginHeight, 100, 140, "Last Chaos", "lightblue", boundAlert3,"./img/streets/2_mmorpg/2_last_chaos.jpg");
 }

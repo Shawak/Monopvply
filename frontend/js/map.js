@@ -11,7 +11,8 @@ function Map(konvaStage)
 	var fieldsPerSide;
 	var containerWidth;
 	var containerHeight;
-				
+	var innerBackground;
+	
 	var widthOneSideField=200;
 	var heightOneSideField=260;
 	
@@ -21,7 +22,17 @@ function Map(konvaStage)
 		heightOneSideField=130;
 	}
 	
-	var innerBackground;
+	this.getFieldByText = function(name)
+	{
+		for(var i=0;i<sideFields.length;i++)
+		{
+			if(name==sideFields[i].getText())
+			{
+				return sideFields[i];
+			}
+		}	
+		return undefined;
+	}
 	
 	this.rotateRight = function()
 	{

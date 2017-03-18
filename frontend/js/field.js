@@ -16,6 +16,26 @@ function Field(imageSrc, fillColor, text, costs , onClickCallback, costsColor, t
 	var rectText;
 	var fieldCosts;
 	
+	this.getText =function()
+	{
+		return text;
+	}
+		
+	this.getImgSrc =function()
+	{
+		return imageSrc;
+	}
+	
+	this.getCosts =function()
+	{
+		return costs;
+	}
+	
+	this.getColor =function()
+	{
+		return fillColor;
+	}
+	
 	this.construct = function (konvaLayer, x, y, width, height, side, corner)
 	{
 		corner = typeof corner !== 'undefined' ? corner : false;

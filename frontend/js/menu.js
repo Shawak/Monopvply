@@ -4,7 +4,6 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 	var stage=konvaStage;
 	var layer;
 	var tooltipLayer;
-	var buttons=[];
 	var buttonColor=typeof buttonColor !== 'undefined' ? buttonColor : '#999';
 	var strokeColor=typeof strokeColor !== 'undefined' ? strokeColor : '#262626';
 	var textColor=typeof textColor !== 'undefined' ? textColor : '#FFF';
@@ -23,6 +22,11 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 		stage.add(tooltipLayer);
 		layer.moveToTop();
 		tooltipLayer.moveToTop();
+	}
+	
+	this.getLayer = function()
+	{
+		return layer;
 	}
 	
 	this.hideAll = function (hide)
@@ -62,6 +66,7 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 		});
 	
 		layer.add(img);
+		return img;
 	}
 	
 	this.addMenuBackground = function(x, y, width, height, imgSrc)
@@ -109,15 +114,21 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 		
 		layer.add(menuBackground);
 		menuBackground.moveToBottom();
+		return menuBackground;
 	}
 	
 	this.addFieldCard = function(x, y, width, height, text, color, callback, imgSrc)
 	{
 		callback = typeof callback !== 'undefined' ? callback : undefined;
-		color = typeof color !== 'undefined' ? color : "gray";
+		color = typeof color !== 'undefined' ? color : "";
 		imgSrc = typeof imgSrc !== 'undefined' ? imgSrc : "";
 		
 		var rectHeight=height/5;
+		
+		if(color=="")
+		{
+			rectHeight=0;
+		}
 		
 		var rect = new Konva.Rect(
 		{
@@ -128,13 +139,14 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 			fill: color,
 			width: width,
 			opacity: 0.9,
-			height: rectHeight
+			height: rectHeight,
+			listening:false
 		});
 		
 		var textObj = new Konva.Text(
 		{
 			x: x+2,
-			y: y+rectHeight,
+			y: y+rectHeight+2,
 			text: text,
 			fontSize: 16,
 			fontFamily: 'Calibri',
@@ -163,13 +175,13 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 				width: width,
 				height: Math.max(textObj.getHeight(),height-rectHeight),
 				stroke: 'black',
-				strokeWidth: 1
+				strokeWidth: 2
 			});
 			
 			var rectText = new Konva.Rect(
 			{
 				x: x+2,
-				y: y+rectHeight,
+				y: y+rectHeight+2,
 				stroke: '#999',
 				strokeWidth: 1,
 				fill: '#262626',
@@ -231,6 +243,8 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 		
 		rect.on("mouseup", upAction);
 		rect2.on("mouseup", upAction);
+		
+		return rect2;
 	}
 	
 	this.addButton = function(x, y, width, height, text,  callback, tooltipText,imgSrc)
@@ -370,7 +384,7 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 		}
 		
 		layer.add(innerObj);
-		buttons.push([rect,innerObj]);
+		return [rect,innerObj];
 	}
 	
 	this.addText = function(x, y, width, text)
@@ -394,5 +408,6 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 		});
 
 		layer.add(textObj);
+		return textObj;
 	}
 }
