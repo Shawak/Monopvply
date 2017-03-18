@@ -3,7 +3,7 @@ function Client() {
     var self = this;
 
     this.start = function() {
-        this.socket = io('localhost:1234');
+        this.socket = io(location.host + ':1234');
 
         this.socket.on('connect', function () {
             console.log('connect');

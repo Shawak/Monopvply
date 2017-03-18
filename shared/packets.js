@@ -10,7 +10,7 @@ var packetManager = {
     pack: function (packet) {
         var id = 0;
         var type = Object.getPrototypeOf(packet);
-        for(var i = 0; i < lookup.length; i++) {
+        for(var i = 0; i < this.lookup.length; i++) {
             if(this.lookup[i][1] == type) {
                 id = i;
                 break;
