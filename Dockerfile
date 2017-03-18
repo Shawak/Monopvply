@@ -7,6 +7,7 @@ WORKDIR ${DIR}
 
 COPY package.json ${DIR}
 RUN npm install
+RUN npm i nodemon -g
 
 EXPOSE 80 1234
 
