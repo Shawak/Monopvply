@@ -16,6 +16,4 @@ description
     
 ### Updating
 
-    docker-compose stop
-    git reset --hard && git pull
-    docker-compose up --build
+    git pull
