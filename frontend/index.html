@@ -2,8 +2,10 @@
 <html>
 <head>
     <script src="https://cdn.rawgit.com/konvajs/konva/1.4.0/konva.min.js"></script>
+	<script src="./js/player.js?ar=1"></script>
 	<script src="./js/map.js?ar=1"></script>
 	<script src="./js/predefinedMaps.js?ra=1"></script>
+	<script src="./js/predefinedMenus.js?ra=1"></script>
 	<script src="./js/field.js?ar=1"></script>
 	<script src="./js/menu.js?ar=1"></script>
 	<script src="./js/globalFuncs.js?ar=1"></script>
@@ -41,7 +43,7 @@
 	</div>
 	
 	<div id="stage-parent">
-		<div id="container" moz-opaque></div>
+		<div id="container" moz-opaque style="background:#262626"></div>
 	</div>
     <script>
 		
@@ -61,24 +63,16 @@
 		
 		function startRendering()
 		{
-			ingameMenu=new Menu(stage);
-			ingameMenu.addMenuBackground(30, 20, 240, 500);
-			var myAlert=function(txt)
-			{
-				alert(txt);
-			}
-			var boundAlert=myAlert.bind(null,"Yay, you clicked Button 1!");
-			ingameMenu.addButton(50, 40, 80, 30, "Button1", boundAlert, "Some information");
-			
-			var boundAlert2=myAlert.bind(null,"Yay, you clicked Field Card 'Last Chaos'!");
-			ingameMenu.addFieldCard(50, 80, 70, 80, "Last Chaos", "lightblue", boundAlert2,"./img/streets/2_mmorpg/2_last_chaos.jpg");
-			
-			var boundAlert3=myAlert.bind(null,"Yay, you clicked Field Card 'Tera'!");
-			ingameMenu.addFieldCard(80, 80, 70, 80, "Tera", "lightblue", boundAlert3,"./img/streets/2_mmorpg/3_tera.jpg");
-			
-			ingameMenu.addText(40, 480, 100, "1500 e*gold");
-			
 			gameMap=new Map(stage);
+			ingameMenu=new Menu(stage);
+
+			user=new Player(1500,"./img/test.jpg");
+			var enemies=[];
+			enemies.push(new Player(1500,"./img/Testing.jpg"));
+			enemies.push(new Player(1500,"./img/Testing.jpg"));
+			enemies.push(new Player(1500,"./img/Testing.jpg"));
+			
+			setUpStandardMenu(ingameMenu,gameMap,user,enemies);
 			setUpStandardMap(gameMap);
 		}
 		

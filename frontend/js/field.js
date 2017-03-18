@@ -179,7 +179,7 @@ function Field(imageSrc, fillColor, text, costs , onClickCallback, costsColor, t
 		konvaLayer.add(img);
 		
 		var marginSide=10;
-		addText(konvaLayer, xImg, yImg, widthImg-marginSide*2,marginSide, rotationImg, side, corner);
+		addText(konvaLayer, xImg, yImg, widthImg,marginSide, rotationImg, side, corner);
 		if(corner==false)
 		{
 			addCosts(konvaLayer, xImg, yImg, widthImg-marginSide*2, heightImg ,marginSide, rotationImg, side);
@@ -194,7 +194,34 @@ function Field(imageSrc, fillColor, text, costs , onClickCallback, costsColor, t
 		}
 		
 		var marginSideY=marginSide;
-
+		var newWidth=Math.min(width-marginSide*2,text.length*20);
+		
+		if(!corner)
+		{
+			if(side=="top")
+			{
+				marginSide=(width-newWidth)/2;
+			}
+			else if(side=="bottom")
+			{
+				marginSide=(width-newWidth)/2;
+			}
+			else if(side=="right")
+			{
+				marginSide=marginSideY;
+				marginSideY=(width-newWidth)/2;
+			}
+			else if(side=="left")
+			{
+				marginSide=marginSideY;
+				marginSideY=(width-newWidth)/2;
+			}
+		}
+		else
+		{
+			newWidth=width-2*marginSide;
+		}
+		
 		if(side=="top")
 		{
 			if(corner)
@@ -246,25 +273,27 @@ function Field(imageSrc, fillColor, text, costs , onClickCallback, costsColor, t
 			fontSize: 18,
 			fontFamily: 'Calibri',
 			fill: textColor,
-			width: width,
+			width: newWidth,
 			padding: 8,
 			align: 'center',
-			rotation: rotation
+			rotation: rotation,
+			listening:false
 		});
 		rectText = new Konva.Rect(
 		{
 			x: x,
 			y: y,
 			stroke: '#999',
-			strokeWidth: 5,
+			strokeWidth: 3,
 			fill: '#262626',
-			width: width,
+			width: newWidth,
 			height: fieldText.getHeight(),
-			opacity:0.8,
+			opacity:0.7,
 			cornerRadius: 10,
-			rotation: rotation
+			rotation: rotation,
+			listening:false,
+			perfectDrawEnabled : false
 		});
-		
 		konvaLayer.add(rectText);
 		konvaLayer.add(fieldText);
 	}
@@ -313,7 +342,8 @@ function Field(imageSrc, fillColor, text, costs , onClickCallback, costsColor, t
 			width: width,
 			padding: 8,
 			align: 'center',
-			rotation: rotation
+			rotation: rotation,
+			listening:false
 		});
 		
 		konvaLayer.add(fieldCosts);

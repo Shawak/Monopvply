@@ -41,6 +41,29 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 		}
 	}
 	
+	this.addImage = function(x, y, width, height, imgSrc)
+	{
+		var imageObj = new Image();
+		imageObj.src = imgSrc;
+		
+		var img = new Konva.Image(
+		{
+			image: imageObj,
+			x: x,
+			y: y,
+			align: 'center',
+			width: width,
+			height: height,
+			listening : false,
+			opacity: 0.9,
+			cornerRadius: 4,
+			stroke: strokeColorMenu,
+			strokeWidth: 1,
+		});
+	
+		layer.add(img);
+	}
+	
 	this.addMenuBackground = function(x, y, width, height, imgSrc)
 	{
 		imgSrc = typeof imgSrc !== 'undefined' ? imgSrc : "";
@@ -52,11 +75,6 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 			var imageObj = new Image();
 			imageObj.src = imgSrc;
 			
-			imageObj.onload = function() 
-			{
-				layer.draw();
-			};
-			
 			menuBackground = new Konva.Image(
 			{
 				image: imageObj,
@@ -66,7 +84,7 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 				width: width,
 				height: height,
 				listening : false,
-				opacity: 0.5,
+				opacity: 0.7,
 				cornerRadius: 4,
 				stroke: strokeColorMenu,
 				strokeWidth: 1,
@@ -83,7 +101,7 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 				fill: fillColorMenu,
 				width: width,
 				height: height,
-				opacity: 0.5,
+				opacity: 0.7,
 				cornerRadius: 4,
 				listening:false
 			});
@@ -255,11 +273,6 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 		{
 			var imageObj = new Image();
 			imageObj.src = imgSrc;
-			
-			imageObj.onload = function() 
-			{
-				layer.draw();
-			};
 			
 			innerObj = new Konva.Image(
 			{
