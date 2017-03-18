@@ -21,8 +21,10 @@ var packetManager = {
         for(var prop in parsed.data) {
             o[prop] = parsed.data[prop];
         }
-        o.type = this.lookup[id][0];
-        return o;
+		return {
+			type: this.lookup[id][0],
+			packet: o
+		};
     }
 
 };

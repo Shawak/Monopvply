@@ -50,7 +50,8 @@ class GameServer {
 
             socket.on('packet', (data) => {
                 try {
-                    this.onPacket(data);
+					let parsed = packets.packetManager.parse(data);
+                    this.onPacket(parsed.type, parsed.packet);
                 } catch(ex) {
                     console.log(ex);
                 }
@@ -66,9 +67,8 @@ class GameServer {
         });
     }
 
-    onPacket(data) {
-        let packet = packets.packetManager.parse(data);
-        switch (packet.type) {
+    onPacket(type, packet) {
+        switch (type) {
             case packets.loginPacket:
                 console.log(packet.username);
                 break;
