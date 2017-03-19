@@ -5,7 +5,7 @@ const express = require('express'),
 
 const crypto = require('crypto');
 
-const packets = require('./../shared/packets.js');
+const Packets = require('./../shared/packets.js');
 const User = require('./../shared/user.js');
 
 const Client = require('./client');
@@ -41,21 +41,12 @@ class GameServer {
 
             let id = 0;
             do {
-                id = crypto.randomBytes(4).toString('hex');;
+                id = crypto.randomBytes(4).toString('hex');
             } while (this.clients.find((client) => client.id != id));
 
             let client = new Client(id, socket);
             this.clients.push(client);
             console.log('client ' + id + ' has connected!');
-
-            socket.on('packet', (data) => {
-                try {
-					let parsed = packets.packetManager.parse(data);
-                    this.onPacket(parsed.type, parsed.packet);
-                } catch(ex) {
-                    console.log(ex);
-                }
-            });
 
             socket.on('disconnect', () => {
                 let client = this.clients.find((client) => client.socket == socket);
@@ -67,21 +58,13 @@ class GameServer {
         });
     }
 
-    onPacket(type, packet) {
-        switch (type) {
-            case packets.loginPacket:
-                console.log(packet.username);
-                break;
-        }
-    }
-
     start() {
         this.server.listen(1234);
     }
 
-    broadcast(data) {
+    broadcast(packet) {
         this.clients.forEach((client) => {
-            client.send(data);
+            client.send(packet);
         });
     }
 }

@@ -1,49 +1,44 @@
-var packetManager = {
+var PacketManager = {
 
     lookup: {},
+    reserve : {},
+
     aid: 0,
 
-    add: function(T) {
-        this.lookup[this.aid++] = [T, Object.getPrototypeOf(new T())];
+    add: function (T) {
+        var type = Object.getPrototypeOf(new T());
+        var id= this.aid++;
+        this.reserve[id] = type;
+        this.lookup[type] = id;
     },
 
     pack: function (packet) {
-        var id = 0;
         var type = Object.getPrototypeOf(packet);
-        for(var i = 0; i < this.lookup.length; i++) {
-            if(this.lookup[i][1] == type) {
-                id = i;
-                break;
-	    }
-	}
         return JSON.stringify({
-            id: id,
+            id: this.lookup[type],
             data: packet
         });
     },
 
-    parse: function(data) {
+    parse: function (data) {
         var parsed = JSON.parse(data);
         var id = parsed.id;
-        var o = Object.create(this.lookup[id][1]);
-        for(var prop in parsed.data) {
-            o[prop] = parsed.data[prop];
+        var packet = Object.create(this.reserve[id]);
+        for (var prop in parsed.data) {
+            packet[prop] = parsed.data[prop];
         }
-        return {
-            type: this.lookup[id][0],
-            packet: o
-        };
+        return packet;
     }
 
 };
 
-exports.packetManager = packetManager;
+exports.PacketManager = PacketManager;
 
 
-function loginPacket(username, password) {
+function LoginPacket(username, password) {
     this.username = username;
     this.password = password;
     return this;
 }
-packetManager.add(loginPacket);
-exports.loginPacket = loginPacket;
+PacketManager.add(LoginPacket);
+exports.LoginPacket = LoginPacket;
