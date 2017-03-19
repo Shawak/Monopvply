@@ -1,21 +1,24 @@
 var PacketManager = {
 
     lookup: {},
-    reserve : {},
-
     aid: 0,
 
     add: function (T) {
         var type = Object.getPrototypeOf(new T());
-        var id= this.aid++;
-        this.reserve[id] = type;
-        this.lookup[type] = id;
+        this.lookup[this.aid++] = type;
     },
 
     pack: function (packet) {
         var type = Object.getPrototypeOf(packet);
+        var id = -1;
+        for(var i = 0; i < this.aid; i++) {
+            if(this.lookup[i] == type) {
+                id = i;
+                break;
+            }
+        }
         return JSON.stringify({
-            id: this.lookup[type],
+            id: id,
             data: packet
         });
     },
@@ -23,7 +26,7 @@ var PacketManager = {
     parse: function (data) {
         var parsed = JSON.parse(data);
         var id = parsed.id;
-        var packet = Object.create(this.reserve[id]);
+        var packet = Object.create(this.lookup[id]);
         for (var prop in parsed.data) {
             packet[prop] = parsed.data[prop];
         }
@@ -49,3 +52,17 @@ function PingPacket() {
 }
 PacketManager.add(PingPacket);
 exports.PingPacket = PingPacket;
+
+function GameStartPacket() {
+    return this;
+}
+PacketManager.add(GameStartPacket);
+exports.GameStartPacket = GameStartPacket;
+
+function NextTurnPacket(player, turnTime) {
+    this.player = player;
+    this.turnTime = turnTime;
+}
+
+PacketManager.add(NextTurnPacket);
+exports.NextTurnPacket = NextTurnPacket;

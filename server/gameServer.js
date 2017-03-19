@@ -2,6 +2,7 @@ const io = require('socket.io'),
     crypto = require('crypto');
 
 const Client = require('./client');
+const Game = require('./game');
 
 class GameServer {
 

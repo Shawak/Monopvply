@@ -1,10 +1,10 @@
-function Player(user, money) {
+function Player(name, money) {
 
-    this.user = user;
+    this.name = name;
     this.money = money;
 
-    this.getUser = function() {
-        return this.user;
+    this.getName = function() {
+        return this.name;
     };
 
     this.getMoney = function() {

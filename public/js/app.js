@@ -22,6 +22,7 @@ function Client() {
         this.socket.on('packet', function (data) {
             try {
                 let packet = PacketManager.parse(data);
+                console.log(packet);
                 self.network.dispatch(self, packet);
             } catch(ex) {
                 console.log(ex);

@@ -1,6 +1,9 @@
 const EventHandler = require('./../shared/eventHandler.js');
 const Packets = require('./../shared/packets.js');
 
+const User = require('./user.js');
+const Game = require('./game.js');
+
 class Client {
 
     constructor(id, socket) {
@@ -16,20 +19,19 @@ class Client {
             }
         });
 
-        this.user = null;
-
+        let that = this;
         this.network.link(Packets.LoginPacket, (sender, packet) => {
-            console.log(packet.username);
+            console.log(packet.username + ' logged in!');
+            that.user = new User(this);
+            that.user.name = packet.username;
+
+            let game = new Game([this.getUser()]);
+            game.start();
         });
 
-        var that = this;
         setInterval(() => {
-            that.send(new Packets.PingPacket());
+            //that.send(new Packets.PingPacket());
         }, 1000);
-    }
-
-    getSocket() {
-        return this.socket;
     }
 
     getUser() {
@@ -37,6 +39,7 @@ class Client {
     }
 
     send(packet) {
+        // console.log('[' + (this.user ? this.user.getName() : this.id) + '] ' + Packets.PacketManager.pack(packet));
         this.socket.emit('packet', Packets.PacketManager.pack(packet));
     }
 
