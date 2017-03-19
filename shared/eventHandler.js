@@ -1,13 +1,13 @@
 function EventHandler() {
 
-    this.handler = [];
+    this.handler = {};
 
     this.link = function(cls, func) {
         if(typeof(cls) !== 'function' || typeof(func) !== 'function') {
             throw 'link: cls or func is not a function';
         }
-        var T = Object.getPrototypeOf(new cls());
-        if(!this.handler[T]) {
+        var T = Object.getPrototypeOf(new cls()).constructor.name;
+        if(!this.handler.hasOwnProperty(T)) {
             this.handler[T] = [];
         }
         this.handler[T].push(func);
@@ -29,7 +29,7 @@ function EventHandler() {
     };
 
     this.dispatch = function(sender, obj) {
-        var T = Object.getPrototypeOf(obj);
+        var T = Object.getPrototypeOf(obj).constructor.name;
         if(!this.handler[T]) {
             return 0;
         }
