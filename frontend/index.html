@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.rawgit.com/konvajs/konva/1.4.0/konva.min.js"></script>
+	<script src="./js/player.js?ar=1"></script>
+	<script src="./js/map.js?ar=1"></script>
+	<script src="./js/predefinedMaps.js?ra=1"></script>
+	<script src="./js/predefinedMenus.js?ra=1"></script>
+	<script src="./js/field.js?ar=1"></script>
+	<script src="./js/menu.js?ar=1"></script>
+	<script src="./js/globalFuncs.js?ar=1"></script>
+	<script src="./js/cardManager.js?ar=1"></script>
+    <meta charset="utf-8">
+    <title>Monopvply</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #F0F0F0;
+        }
+		.overlay 
+		{
+			background: white;  
+			display: inline-block;       
+			position: absolute;  
+			top: 0px;                
+			left: 0px;
+			z-index:100;
+			width:100%;
+			height:100%;
+		}
+		
+		#stage-parent {
+            width: 100%;
+			height:100%;
+        }
+    </style>
+</head>
+<body>
+	
+	<div class="overlay" id="overlayDiv">
+		<img style="display: block;margin: auto;" id="loading-img" src="./img/Loading.gif"></img>
+	</div>
+	
+	<div id="stage-parent">
+		<div id="container" moz-opaque style="background:#262626"></div>
+	</div>
+    <script>
+		
+		document.getElementById("loading-img").addEventListener('load', startRendering)
+		
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+        var stage = new Konva.Stage(
+		{
+            container: 'container',
+            width: width,
+            height: height
+        });
+		stage.hide(true);
+		var gameMap;
+		var ingameMenu;
+		var generalMenu;
+		
+		var iterations=0;
+		
+		var testFunc=function()
+		{ 
+			if(iterations==0)
+				user.buyCard(0);
+			if(iterations==1)
+				user.buyCard(2);
+			if(iterations==2)
+				user.buyCard(4);
+			if(iterations==3)
+				user.buyCard(5);
+			if(iterations==4)
+				user.moveTo(6);
+			if(iterations==5)
+				acceptWindow(generalMenu, "Do you really want to buy Nostale (lightblue) for 100eg?", undefined, undefined);
+			
+			iterations++;
+			if(iterations<6)
+				setTimeout(testFunc, 1000);  
+		}
+		
+		function startRendering()
+		{
+			gameMap=new Map(stage);
+			ingameMenu=new Menu(stage);
+			generalMenu=new Menu(stage);
+
+			user=new Player(gameMap,ingameMenu.getLayer(),1500,"./img/test.jpg","./img/test.jpg");
+			var enemies=[];
+			enemies.push(new Player(gameMap,ingameMenu.getLayer(),1500,"./img/Testing.jpg","./img/Testing.jpg"));
+			enemies.push(new Player(gameMap,ingameMenu.getLayer(),1500,"./img/Testing.jpg","./img/Testing.jpg"));
+			enemies.push(new Player(gameMap,ingameMenu.getLayer(),1500,"./img/Testing.jpg","./img/Testing.jpg"));
+			
+
+			setUpStandardMenu(ingameMenu,gameMap,user,enemies);
+			setUpStandardMap(gameMap);
+			
+			user.addBoardFigure("","green");
+
+			setTimeout(testFunc, 2000);  
+		}
+		
+		
+		
+		/*
+		window.addEventListener('contextmenu', (e) => 
+		{
+            //e.preventDefault();
+			//background.rotate(90);
+			//layer.draw();
+		});
+		*/
+
+    </script>
+</body>
+</html>
