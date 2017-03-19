@@ -5,7 +5,9 @@ function Map(konvaStage)
 	var height=konvaStage.getHeight();
 	var stage=konvaStage;
 	var layer;
+	var gameGroup;
 	var mapGroup;
+	var detailsGroup;
 	var sideFields=[];
 	var cornerFields=[];
 	var fieldsPerSide;
@@ -13,13 +15,40 @@ function Map(konvaStage)
 	var containerHeight;
 	var innerBackground;
 	
-	var widthOneSideField=200;
-	var heightOneSideField=260;
+	var widthOneSideField=160;
+	var heightOneSideField=210;
 	
 	if(isMobileDevice())
 	{
-		widthOneSideField=100;
-		heightOneSideField=130;
+		widthOneSideField=130;
+		heightOneSideField=160;
+	}
+	
+	this.draw =function()
+	{
+		layer.draw();
+	}
+
+	this.getWidthField = function()
+	{
+		return widthOneSideField;
+	}
+
+	this.getHeightField = function()
+	{
+		return heightOneSideField;
+	}
+
+	this.getFieldById = function(id)
+	{
+		for(var i=0;i<sideFields.length;i++)
+		{
+			if(id==sideFields[i].getId())
+			{
+				return sideFields[i];
+			}
+		}	
+		return undefined;
 	}
 	
 	this.getFieldByText = function(name)
@@ -34,10 +63,16 @@ function Map(konvaStage)
 		return undefined;
 	}
 	
+	this.addKonvaObj = function(konvaObj)
+	{
+		detailsGroup.add(konvaObj);
+	}
+
 	this.rotateRight = function()
 	{
 		var rotation=mapGroup.getRotation()%360;
 		var newPos;
+		var newRotation;
 		if(rotation==0)
 		{
 			newPos = 
@@ -45,7 +80,7 @@ function Map(konvaStage)
 				x: (mapGroup.x()+stage.width()*mapGroup.scaleX())|0,
 				y: (mapGroup.y())|0
 			};
-			mapGroup.rotation(90);
+			newRotation=90;
 		}
 		else if(rotation==90)
 		{
@@ -54,7 +89,7 @@ function Map(konvaStage)
 				x: (mapGroup.x())|0,
 				y: (mapGroup.y()+stage.height()*mapGroup.scaleY())|0
 			};
-			mapGroup.rotation(180);
+			newRotation=180;
 		}
 		else if(rotation==180)
 		{
@@ -63,7 +98,7 @@ function Map(konvaStage)
 				x: (mapGroup.x()-stage.width()*mapGroup.scaleX())|0,
 				y: (mapGroup.y())|0
 			};
-			mapGroup.rotation(270);
+			newRotation=270;
 		}
 		else if(rotation==270)
 		{
@@ -72,11 +107,14 @@ function Map(konvaStage)
 				x: (mapGroup.x())|0,
 				y: (mapGroup.y()-stage.height()*mapGroup.scaleY())|0
 			};
-			mapGroup.rotation(0);
+			newRotation=0;
 		}
+		mapGroup.rotation(newRotation);
+		detailsGroup.rotation(newRotation);
 		mapGroup.position(newPos);
+		detailsGroup.position(newPos);
 
-		layer.cache();
+		gameGroup.cache();
 		layer.draw();
 	}
 	
@@ -84,6 +122,7 @@ function Map(konvaStage)
 	{
 		var rotation=mapGroup.getRotation()%360;
 		var newPos;
+		var newRotation;
 		if(rotation==0)
 		{
 			newPos = 
@@ -91,7 +130,7 @@ function Map(konvaStage)
 				x: (mapGroup.x())|0,
 				y: (mapGroup.y()+stage.height()*mapGroup.scaleY())|0
 			};
-			mapGroup.rotation(270);
+			newRotation=270;
 		}
 		else if(rotation==90)
 		{
@@ -100,7 +139,7 @@ function Map(konvaStage)
 				x: (mapGroup.x()-stage.width()*mapGroup.scaleX())|0,
 				y: (mapGroup.y())|0
 			};
-			mapGroup.rotation(0);
+			newRotation=0;
 		}
 		else if(rotation==180)
 		{
@@ -109,7 +148,7 @@ function Map(konvaStage)
 				x: (mapGroup.x())|0,
 				y: (mapGroup.y()-stage.height()*mapGroup.scaleY())|0
 			};
-			mapGroup.rotation(90);
+			newRotation=90;
 		}
 		else if(rotation==270)
 		{
@@ -118,11 +157,14 @@ function Map(konvaStage)
 				x: (mapGroup.x()+stage.width()*mapGroup.scaleX())|0,
 				y: (mapGroup.y())|0
 			};
-			mapGroup.rotation(180);
+			newRotation=180;
 		}
+		mapGroup.rotation(newRotation);
+		detailsGroup.rotation(newRotation);
 		mapGroup.position(newPos);
+		detailsGroup.position(newPos);
 
-		layer.cache();
+		gameGroup.cache();
 		layer.draw();
 	}
 	
@@ -168,8 +210,8 @@ function Map(konvaStage)
             draggable: true
         });
 		
-		mapGroup= new Konva.Group();
-
+		mapGroup = new Konva.Group();
+		gameGroup = new Konva.Group();
 		
         window.addEventListener('wheel', function(e)
 		{
@@ -202,7 +244,19 @@ function Map(konvaStage)
 		setCornerFieldPositions();
 		loadBackground();
 		
-		layer.add(mapGroup);
+		gameGroup.add(mapGroup);
+		layer.add(gameGroup);
+		
+		detailsGroup = new Konva.Group(
+		{
+			offset: 
+			{
+				x: mapGroup.getWidth()/2,
+				y: mapGroup.getHeight()/2
+			}
+		});
+		
+		layer.add(detailsGroup);
 		stage.add(layer);
 		layer.moveToBottom();
 		
@@ -225,8 +279,9 @@ function Map(konvaStage)
 				stage.height(Math.max(fieldsPerSide*widthOneSideField+heightOneSideField*2,stage.height()));
 				stage.width(Math.max(fieldsPerSide*widthOneSideField+heightOneSideField*2,stage.width()));
 				stage.show(true);
+				gameGroup.cache();
 				layer.draw();
-				layer.cache();
+				
 
 				var scaleX = containerWidth / stage.getWidth();
 				var scaleY = containerHeight / stage.getHeight();

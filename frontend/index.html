@@ -61,29 +61,35 @@
 		stage.hide(true);
 		var gameMap;
 		var ingameMenu;
+		var generalMenu;
 		
 		var iterations=0;
 		
 		var testFunc=function()
 		{ 
 			if(iterations==0)
-				user.buyCard("Flyff");
+				user.buyCard(0);
 			if(iterations==1)
-				user.buyCard("John Dread");
+				user.buyCard(2);
 			if(iterations==2)
-				user.buyCard("Nostale");
+				user.buyCard(4);
 			if(iterations==3)
-				user.buyCard("Aion");
+				user.buyCard(5);
+			if(iterations==4)
+				user.moveTo(6);
+			if(iterations==5)
+				acceptWindow(generalMenu, "Do you really want to buy Nostale (lightblue) for 100eg?", undefined, undefined);
 			
 			iterations++;
-			if(iterations<5)
-				setTimeout(testFunc, 2000);  
+			if(iterations<6)
+				setTimeout(testFunc, 1000);  
 		}
 		
 		function startRendering()
 		{
 			gameMap=new Map(stage);
 			ingameMenu=new Menu(stage);
+			generalMenu=new Menu(stage);
 
 			user=new Player(gameMap,ingameMenu.getLayer(),1500,"./img/test.jpg","./img/test.jpg");
 			var enemies=[];
@@ -91,9 +97,12 @@
 			enemies.push(new Player(gameMap,ingameMenu.getLayer(),1500,"./img/Testing.jpg","./img/Testing.jpg"));
 			enemies.push(new Player(gameMap,ingameMenu.getLayer(),1500,"./img/Testing.jpg","./img/Testing.jpg"));
 			
+
 			setUpStandardMenu(ingameMenu,gameMap,user,enemies);
 			setUpStandardMap(gameMap);
 			
+			user.addBoardFigure("","green");
+
 			setTimeout(testFunc, 2000);  
 		}
 		

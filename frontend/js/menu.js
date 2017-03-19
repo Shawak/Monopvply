@@ -63,15 +63,17 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 			cornerRadius: 4,
 			stroke: strokeColorMenu,
 			strokeWidth: 1,
+			perfectDrawEnabled : false
 		});
 	
 		layer.add(img);
 		return img;
 	}
 	
-	this.addMenuBackground = function(x, y, width, height, imgSrc)
+	this.addMenuBackground = function(x, y, width, height, imgSrc, color)
 	{
 		imgSrc = typeof imgSrc !== 'undefined' ? imgSrc : "";
+		color = typeof color !== 'undefined' ? color : fillColorMenu;
 		
 		var menuBackground;
 		
@@ -93,6 +95,7 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 				cornerRadius: 4,
 				stroke: strokeColorMenu,
 				strokeWidth: 1,
+			perfectDrawEnabled : false
 			});
 		}
 		else
@@ -103,12 +106,13 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 				y: y,
 				stroke: strokeColorMenu,
 				strokeWidth: 1,
-				fill: fillColorMenu,
+				fill: color,
 				width: width,
 				height: height,
 				opacity: 0.7,
 				cornerRadius: 4,
-				listening:false
+				listening:false,
+			perfectDrawEnabled : false
 			});
 		}
 		
@@ -140,7 +144,8 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 			width: width,
 			opacity: 0.9,
 			height: rectHeight,
-			listening:false
+			listening:false,
+			perfectDrawEnabled : false
 		});
 		
 		var textObj = new Konva.Text(
@@ -156,7 +161,8 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 			align: 'center',
 			strokeWidth: 1,
 			opacity: 0.9,
-			listening:false
+			listening:false,
+			perfectDrawEnabled : false
 		});
 		
 		layer.add(rect);
@@ -175,7 +181,8 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 				width: width,
 				height: Math.max(textObj.getHeight(),height-rectHeight),
 				stroke: 'black',
-				strokeWidth: 2
+				strokeWidth: 2,
+			perfectDrawEnabled : false
 			});
 			
 			var rectText = new Konva.Rect(
@@ -189,7 +196,8 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 				height: textObj.getHeight(),
 				opacity:0.8,
 				cornerRadius: 10,
-				listening:false
+				listening:false,
+			perfectDrawEnabled : false
 			});
 			
 			layer.add(rect2);
@@ -206,7 +214,8 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 				fill: buttonColor,
 				width: width,
 				opacity: 0.9,
-				height: Math.max(textObj.getHeight(),height-rectHeight)
+				height: Math.max(textObj.getHeight(),height-rectHeight),
+			perfectDrawEnabled : false
 			});
 			layer.add(rect2);
 		}
@@ -241,8 +250,8 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 			}
 		};
 		
-		rect.on("mouseup", upAction);
-		rect2.on("mouseup", upAction);
+		rect.on("click", upAction);
+		rect2.on("click", upAction);
 		
 		return rect2;
 	}
@@ -264,6 +273,7 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 			width: width,
 			height: height,
 			cornerRadius: 4,
+			perfectDrawEnabled : false
 		});
 		layer.add(rect);
 		
@@ -280,7 +290,8 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 				width: width,
 				padding: 4,
 				align: 'center',
-				listening : false
+				listening : false,
+			perfectDrawEnabled : false
 			});
 		}
 		else
@@ -297,7 +308,8 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 				align: 'center',
 				width: width,
 				height: height,
-				listening : false
+				listening : false,
+			perfectDrawEnabled : false
 			});
 		}
 		
@@ -315,7 +327,8 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 				pointerWidth: 10,
 				pointerHeight: 10,
 				lineJoin: 'round',
-				listening : false
+				listening : false,
+			perfectDrawEnabled : false
 			}));
 			
 			tooltip.add(new Konva.Text(
@@ -325,7 +338,8 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 				fontSize: 16,
 				padding: 5,
 				fill: '#DDD',
-				listening : false
+				listening : false,
+			perfectDrawEnabled : false
 			}));
 			
 			tooltipLayer.add(tooltip);
@@ -380,7 +394,46 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 				}
 			};
 			
-			rect.on("mouseup", upAction);
+			rect.on("click", upAction);
+		}
+		else
+		{
+			var tooltipFuncOut=function()
+			{
+				document.body.style.cursor = 'default';
+				rect.fill("#999");
+				layer.batchDraw();
+			};
+			
+			var changeColor=function()
+			{
+				rect.fill(hoverColor);
+				document.body.style.cursor = 'pointer';
+				layer.batchDraw();
+			};
+			
+			rect.on("mouseout", tooltipFuncOut);
+			rect.on("mouseenter", changeColor);
+			
+			var downAction=function()
+			{
+				rect.fill(clickColor);
+				layer.batchDraw();
+			};
+			
+			rect.on("mousedown", downAction);
+			
+			var upAction=function()
+			{
+				rect.fill(buttonColor);
+				layer.batchDraw();
+				if(callback!=undefined && callback!="")
+				{
+					callback();
+				}
+			};
+			
+			rect.on("click", upAction);
 		}
 		
 		layer.add(innerObj);
@@ -404,7 +457,8 @@ function Menu(konvaStage,fillColorMenu,strokeColorMenu,buttonColor,strokeColor,t
 			shadowOffset: [10, 10],
 			shadowOpacity: 0.9,
 			align: 'center',
-			listening : false
+			listening : false,
+			perfectDrawEnabled : false
 		});
 
 		layer.add(textObj);

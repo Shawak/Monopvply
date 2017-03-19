@@ -1,5 +1,5 @@
    
-function Field(imageSrc, fillColor, text, costs , onClickCallback, costsColor, textColor)
+function Field(id,imageSrc, fillColor, text, costs , onClickCallback, costsColor, textColor)
 {
 	onClickCallback = typeof onClickCallback !== 'undefined' ? onClickCallback : undefined;
 	costsColor = typeof costsColor !== 'undefined' ? costsColor : '#FFF';
@@ -15,10 +15,33 @@ function Field(imageSrc, fillColor, text, costs , onClickCallback, costsColor, t
 	var fieldText;
 	var rectText;
 	var fieldCosts;
-	
+	var fieldX;
+	var fieldY;
+	var id=id;
+
+	this.getX=function()
+	{
+		return fieldX;
+	}
+
+	this.getY=function()
+	{
+		return fieldY;
+	}
+
+	this.getImgObj = function()
+	{
+		return img;
+	}
+
 	this.getText =function()
 	{
 		return text;
+	}
+	
+	this.getId =function()
+	{
+		return id;
 	}
 		
 	this.getImgSrc =function()
@@ -38,6 +61,9 @@ function Field(imageSrc, fillColor, text, costs , onClickCallback, costsColor, t
 	
 	this.construct = function (konvaLayer, x, y, width, height, side, corner)
 	{
+		fieldX=x;
+		fieldY=y;
+
 		corner = typeof corner !== 'undefined' ? corner : false;
 		
 		var heightRect;
@@ -351,7 +377,7 @@ function Field(imageSrc, fillColor, text, costs , onClickCallback, costsColor, t
 		{
 			x: x,
 			y: y,
-			text: costs+" e*gold",
+			text: costs+" eg",
 			fontSize: 22,
 			fontFamily: 'Calibri',
 			fill: costsColor,

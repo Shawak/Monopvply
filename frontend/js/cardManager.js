@@ -25,9 +25,9 @@ function CardManager(gameMap, ingameMenu, xStart, yStart, cardWidth, cardHeight)
 		cardBackground.width(cardBackground.width()+cardWidth/overlapFactor);
 	}
 	
-	this.addCardByText = function(text)
+	this.addCardById = function(id)
 	{
-		var field=gameMap.getFieldByText();
+		var field=gameMap.getFieldById(id);
 		if(field==undefined)
 		{
 			return false;
