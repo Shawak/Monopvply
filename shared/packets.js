@@ -62,7 +62,13 @@ exports.GameStartPacket = GameStartPacket;
 function NextTurnPacket(player, turnTime) {
     this.player = player;
     this.turnTime = turnTime;
+    return this;
 }
-
 PacketManager.add(NextTurnPacket);
 exports.NextTurnPacket = NextTurnPacket;
+
+function PlayerEndTurnPacket() {
+    return this;
+}
+PacketManager.add(PlayerEndTurnPacket);
+exports.PlayerEndTurnPacket = PlayerEndTurnPacket;

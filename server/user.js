@@ -9,6 +9,10 @@ class User {
         this.client.send(packet);
     }
 
+    getClient() {
+        return this.client;
+    }
+
     getName() {
         return this.name;
     }
