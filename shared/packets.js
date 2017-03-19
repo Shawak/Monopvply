@@ -42,3 +42,10 @@ function LoginPacket(username, password) {
 }
 PacketManager.add(LoginPacket);
 exports.LoginPacket = LoginPacket;
+
+function PingPacket() {
+    this.sent = new Date().getTime();
+    return this;
+}
+PacketManager.add(PingPacket);
+exports.PingPacket = PingPacket;

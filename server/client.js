@@ -21,6 +21,11 @@ class Client {
         this.network.link(Packets.LoginPacket, (sender, packet) => {
             console.log(packet.username);
         });
+
+        var that = this;
+        setInterval(() => {
+            that.send(new Packets.PingPacket());
+        }, 1000);
     }
 
     getSocket() {
