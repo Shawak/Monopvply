@@ -17,6 +17,10 @@
         });
     }
 
+    function onNextTurnPacket(sender, packet) {
+
+    }
+
     function startGame() {
         document.getElementById("loading-img").addEventListener('load', startRendering)
 
@@ -79,6 +83,7 @@
     var client = new Client();
     client.network.link(PingPacket, onPingPacket);
     client.network.link(GameStartPacket, onGameStartPacket);
+    client.network.link(NextTurnPacket, onNextTurnPacket);
     client.start();
 
 })();

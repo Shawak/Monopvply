@@ -1,6 +1,6 @@
 const Packets = require('./../shared/packets.js');
-const Player = require('./../shared/player.js');
 
+const Player = require('./player.js');
 const User = require('./user.js');
 
 class Game {
@@ -8,19 +8,16 @@ class Game {
     constructor(users) {
         this.users = users;
         this.playerInfo = [];
+        this.currentPlayerIndex = 0;
         for (let user of this.users) {
-            let player = new Player(user.getName());
+            let player = new Player(user.getName(), 1500);
             this.playerInfo.push({player: player, user: user});
+            let network = user.getClient().network;
+            network.link(Packets.PlayerEndTurnPacket, this.onPlayerEndTurnPacket)
         }
     }
 
     start() {
-        this.currentPlayerIndex = 0;
-        for (let info of this.playerInfo) {
-            let network = info.user.getClient().network;
-            network.link(Packets.PlayerEndTurnPacket, this.onPlayerEndTurnPacket)
-        }
-
         let gameStartPacket = new Packets.GameStartPacket();
         this.broadcast(gameStartPacket);
         this.nextTurn();
