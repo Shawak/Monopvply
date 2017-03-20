@@ -16,7 +16,6 @@ function Client() {
 
         this.socket.on('connect', function () {
             console.log('connect');
-            self.sendPacket(new LoginPacket('Shawak', 'test'));
         });
 
         this.socket.on('packet', function (data) {
@@ -38,7 +37,7 @@ function Client() {
         });
     };
 
-    this.sendPacket = function (packet) {
+    this.send = function (packet) {
         this.socket.emit('packet', PacketManager.pack(packet));
     };
 

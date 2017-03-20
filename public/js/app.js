@@ -12,8 +12,8 @@
         $.ajax({
             url: '/game.html'
         }).done(function (data) {
-            /*$('body').html(data);
-             startGame();*/
+            $('body').html(data);
+            startGame();
         });
     }
 
@@ -71,6 +71,10 @@
             setTimeout(testFunc, 2000);
         }
     }
+
+    window.login = function() {
+        client.send(new LoginPacket('User', ''));
+    };
 
     var client = new Client();
     client.network.link(PingPacket, onPingPacket);
