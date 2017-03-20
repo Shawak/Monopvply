@@ -1,4 +1,5 @@
 const EventHandler = require('./../shared/eventHandler.js');
+const PacketManager = require('./../shared/packetManager.js');
 const Packets = require('./../shared/packets.js');
 
 const User = require('./user.js');
@@ -12,7 +13,7 @@ class Client {
         this.socket = socket;
         this.socket.on('packet', (data) => {
             try {
-                let packet = Packets.PacketManager.parse(data);
+                let packet = PacketManager.parse(data);
                 this.network.dispatch(this, packet);
             } catch(ex) {
                 console.log(ex);
@@ -40,7 +41,7 @@ class Client {
 
     send(packet) {
         // console.log('[' + (this.user ? this.user.getName() : this.id) + '] ' + Packets.PacketManager.pack(packet));
-        this.socket.emit('packet', Packets.PacketManager.pack(packet));
+        this.socket.emit('packet',  PacketManager.pack(packet));
     }
 
 }
