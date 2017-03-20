@@ -1,135 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="monopvply">
+    <meta name="author" content="monopvply">
+    <link rel="icon" href="../../favicon.ico">
+
     <title>Monopvply</title>
 
-	<script src="https://cdn.rawgit.com/konvajs/konva/1.4.0/konva.min.js"></script>
-	<script src="socket-io/socket.io.min.js"></script>
-	<script src="js/player.js?ar=1"></script>
-	<script src="js/map.js?ar=1"></script>
-	<script src="js/predefinedMaps.js?ra=1"></script>
-	<script src="js/predefinedMenus.js?ra=1"></script>
-	<script src="js/field.js?ar=1"></script>
-	<script src="js/menu.js?ar=1"></script>
-	<script src="js/globalFuncs.js?ar=1"></script>
-	<script src="js/cardManager.js?ar=1"></script>
+    <!-- Libs -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdn.rawgit.com/konvajs/konva/1.4.0/konva.min.js"></script>
+    <script src="socket-io/socket.io.min.js"></script>
 
-	<!-- do not change the order! -->
-	<script>window.exports = {}; window.module = {}</script>
-	<script src="shared/packetManager.js"></script>
-	<script src="shared/packets.js"></script>
-	<script>PacketManager.initialize(window.exports);</script>
-	<!-- // -->
+    <!-- GUI JS -->
+    <script src="js/player.js?ar=1"></script>
+    <script src="js/map.js?ar=1"></script>
+    <script src="js/predefinedMaps.js?ra=1"></script>
+    <script src="js/predefinedMenus.js?ra=1"></script>
+    <script src="js/field.js?ar=1"></script>
+    <script src="js/menu.js?ar=1"></script>
+    <script src="js/globalFuncs.js?ar=1"></script>
+    <script src="js/cardManager.js?ar=1"></script>
 
-	<script src="shared/eventHandler.js"></script>
-	<script src="js/app.js"></script>
+    <!-- do not change the order! -->
+    <script>
+        window.exports = {};
+        window.module = {}
+    </script>
+    <script src="shared/packetManager.js"></script>
+    <script src="shared/packets.js"></script>
+    <script>PacketManager.initialize(window.exports);</script>
+    <!-- // -->
 
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: #F0F0F0;
-        }
-		.overlay 
-		{
-			background: white;  
-			display: inline-block;       
-			position: absolute;  
-			top: 0px;                
-			left: 0px;
-			z-index:100;
-			width:100%;
-			height:100%;
-		}
-		
-		#stage-parent {
-            width: 100%;
-			height:100%;
-        }
-    </style>
+    <!-- Shared -->
+    <script src="shared/eventHandler.js"></script>
+
+    <!-- JS -->
+    <script src="js/client.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+
+    <!-- Style -->
+    <link href="css/standard.css" rel="stylesheet">
 </head>
 <body>
-	
-	<div class="overlay" id="overlayDiv">
-		<img style="display: block;margin: auto;" id="loading-img" src="./img/Loading.gif"></img>
-	</div>
-	
-	<div id="stage-parent">
-		<div id="container" moz-opaque style="background:#262626"></div>
-	</div>
-    <script>
-		
-		document.getElementById("loading-img").addEventListener('load', startRendering)
-		
-        var width = window.innerWidth;
-        var height = window.innerHeight;
-        var stage = new Konva.Stage(
-		{
-            container: 'container',
-            width: width,
-            height: height
-        });
-		stage.hide(true);
-		var gameMap;
-		var ingameMenu;
-		var generalMenu;
-		
-		var iterations=0;
-		
-		var testFunc=function()
-		{ 
-			if(iterations==0)
-				user.buyCard(0);
-			if(iterations==1)
-				user.buyCard(2);
-			if(iterations==2)
-				user.buyCard(4);
-			if(iterations==3)
-				user.buyCard(5);
-			if(iterations==4)
-				user.moveTo(6);
-			if(iterations==5)
-				acceptWindow(generalMenu, "Do you really want to buy Nostale (lightblue) for 100eg?", undefined, undefined);
-			
-			iterations++;
-			if(iterations<6)
-				setTimeout(testFunc, 1000);  
-		}
-		
-		function startRendering()
-		{
-			gameMap=new Map(stage);
-			ingameMenu=new Menu(stage);
-			generalMenu=new Menu(stage);
 
-			user=new Player(gameMap,ingameMenu.getLayer(),1500,"./img/test.jpg","./img/test.jpg");
-			var enemies=[];
-			enemies.push(new Player(gameMap,ingameMenu.getLayer(),1500,"./img/Testing.jpg","./img/Testing.jpg"));
-			enemies.push(new Player(gameMap,ingameMenu.getLayer(),1500,"./img/Testing.jpg","./img/Testing.jpg"));
-			enemies.push(new Player(gameMap,ingameMenu.getLayer(),1500,"./img/Testing.jpg","./img/Testing.jpg"));
-			
+    <div class="container" style="padding: 40px 0px;">
+        <form class="form-signin">
+            <h2 class="form-signin-heading">Please sign in</h2>
+            <label for="inputUsername" class="sr-only">Username</label>
+            <input type="text" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" value="remember-me"> Remember me
+                </label>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        </form>
+    </div>
 
-			setUpStandardMenu(ingameMenu,gameMap,user,enemies);
-			setUpStandardMap(gameMap);
-			
-			user.addBoardFigure("","green");
-
-			setTimeout(testFunc, 2000);  
-		}
-		
-		
-		
-		/*
-		window.addEventListener('contextmenu', (e) => 
-		{
-            //e.preventDefault();
-			//background.rotate(90);
-			//layer.draw();
-		});
-		*/
-
-    </script>
 </body>
 </html>
