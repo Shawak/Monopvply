@@ -1,89 +1,105 @@
-(function () {
+(function ()
+{
 
-    for (var prop in window.exports) {
-        window[prop] = window.exports[prop];
-    }
+	for (var prop in window.exports)
+	{
+		window[prop] = window.exports[prop];
+	}
 
-    function onPingPacket(sender, packet) {
-        console.log(new Date().getTime() - packet.sent)
-    }
+	function onPingPacket(sender, packet)
+	{
+		console.log(new Date().getTime() - packet.sent)
+	}
 
-    function onGameStartPacket(sender, packet) {
-        $.ajax({
-            url: '/game.html'
-        }).done(function (data) {
-            $('body').html(data);
-            startGame();
-        });
-    }
+	function onGameStartPacket(sender, packet)
+	{
+		$.ajax(
+		{
+			url: '/game.html'
+		}
+		).done(function (data)
+		{
+			$('body').html(data);
+			startGame();
+		}
+		);
+	}
 
-    function onNextTurnPacket(sender, packet) {
+	function onNextTurnPacket(sender, packet)  {}
 
-    }
+	function startGame()
+	{
+		document.getElementById("loading-img").addEventListener('load', startRendering)
 
-    function startGame() {
-        document.getElementById("loading-img").addEventListener('load', startRendering)
+		var width = window.innerWidth;
+		var height = window.innerHeight;
+		var stage = new Konva.Stage(
+			{
+				container: 'container',
+				width: width,
+				height: height
+			}
+			);
+		stage.hide(true);
 
-        var width = window.innerWidth;
-        var height = window.innerHeight;
-        var stage = new Konva.Stage(
-            {
-                container: 'container',
-                width: width,
-                height: height
-            });
-        stage.hide(true);
+		var iterations = 0;
 
-        var iterations = 0;
+		var testFunc=function()
+		{ 
+			if(iterations==0)
+				user.buyCard(0);
+			if(iterations==1)
+				user.buyCard(2);
+			if(iterations==2)
+				user.buyCard(4);
+			if(iterations==3)
+				user.buyCard(5);
+			if(iterations==4)
+				user.buyCard(7);
+			if(iterations==5)
+				user.buyCard(8);
+			if(iterations==6)
+				user.moveTo(6);
+			if(iterations==8)
+				houseBuildingWindow(generalMenu, gameMap, 5, user, "Accept", undefined, true)
+			
+			iterations++;
+			if(iterations<9)
+				setTimeout(testFunc, 800);  
+		}
+		
+		function startRendering()
+		{
+			gameMap=new Map(stage);
+			ingameMenu=new Menu(stage);
+			generalMenu=new Menu(stage);
 
-        var testFunc = function () {
-            if (iterations == 0)
-                user.buyCard(0);
-            if (iterations == 1)
-                user.buyCard(2);
-            if (iterations == 2)
-                user.buyCard(4);
-            if (iterations == 3)
-                user.buyCard(5);
-            if (iterations == 4)
-                user.moveTo(6);
-            if (iterations == 5)
-                acceptWindow(generalMenu, "Do you really want to buy Nostale (lightblue) for 100eg?", undefined, undefined);
+			user=new Player(gameMap,ingameMenu.getLayer(),1500,"./img/test.jpg","./img/test.jpg");
+			var enemies=[];
+			enemies.push(new Player(gameMap,ingameMenu.getLayer(),1500,"./img/Testing.jpg","./img/Testing.jpg"));
+			enemies.push(new Player(gameMap,ingameMenu.getLayer(),1500,"./img/Testing.jpg","./img/Testing.jpg"));
+			enemies.push(new Player(gameMap,ingameMenu.getLayer(),1500,"./img/Testing.jpg","./img/Testing.jpg"));
+			
 
-            iterations++;
-            if (iterations < 6)
-                setTimeout(testFunc, 1000);
-        };
+			setUpStandardMenu(ingameMenu,gameMap,user,enemies);
+			setUpStandardMap(gameMap);
+			
+			user.addBoardFigure("","green");
 
-        function startRendering() {
-            window.gameMap = new Map(stage);
-            window.ingameMenu = new Menu(stage);
-            window.generalMenu = new Menu(stage);
+			setTimeout(testFunc, 2000);  
+		}
+	}
 
-            window.user = new Player(gameMap, ingameMenu.getLayer(), 1500, "./img/test.jpg", "./img/test.jpg");
-            var enemies = [];
-            enemies.push(new Player(gameMap, ingameMenu.getLayer(), 1500, "./img/Testing.jpg", "./img/Testing.jpg"));
-            enemies.push(new Player(gameMap, ingameMenu.getLayer(), 1500, "./img/Testing.jpg", "./img/Testing.jpg"));
-            enemies.push(new Player(gameMap, ingameMenu.getLayer(), 1500, "./img/Testing.jpg", "./img/Testing.jpg"));
+	window.login = function ()
+	{
+		client.send(new LoginPacket('User', ''));
+	};
 
+	var client = new Client();
+	client.network.link(PingPacket, onPingPacket);
+	client.network.link(GameStartPacket, onGameStartPacket);
+	client.network.link(NextTurnPacket, onNextTurnPacket);
+	client.start();
 
-            setUpStandardMenu(ingameMenu, gameMap, user, enemies);
-            setUpStandardMap(gameMap);
-
-            user.addBoardFigure("", "green");
-
-            setTimeout(testFunc, 2000);
-        }
-    }
-
-    window.login = function() {
-        client.send(new LoginPacket('User', ''));
-    };
-
-    var client = new Client();
-    client.network.link(PingPacket, onPingPacket);
-    client.network.link(GameStartPacket, onGameStartPacket);
-    client.network.link(NextTurnPacket, onNextTurnPacket);
-    client.start();
-
-})();
+}
+)();
