@@ -1,16 +1,9 @@
 class Player {
 
-    constructor(name, money) {
+    constructor(name) {
         this.name = name;
-        this.money = money;
-    }
-
-    getName() {
-        return this.name;
-    }
-
-    getMoney() {
-        return this.money;
+        this.money = 0;
+        this.position = 0;
     }
 
 }

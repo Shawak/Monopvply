@@ -1,58 +1,65 @@
-function Client()
-{
+function Client() {
 
-	this.network = new EventHandler();
+    this.network = new EventHandler();
 
-	var self = this;
+    var self = this;
 
-	this.start = function ()
-	{
-		this.socket = io(location.host + ':1234',
-			{
-				// using websocket for now because polling
-				// sometimes freezes without any reason
-				transports: ['websocket'],
-				upgrade: false
-			}
-			);
+    this.start = function () {
+        var queue = [];
+        var isDone = true;
 
-		this.socket.on('connect', function ()
-		{
-			console.log('connect');
-		}
-		);
+        function dispatch() {
+            if(isDone && queue.length > 0) {
+                isDone = false;
+                var data = queue.shift();
+                try {
+                    let packet = PacketManager.parse(data);
+                    console.log(packet);
+                    packet.done = function() { isDone = true; };
+                    self.network.dispatch(self, packet);
+                }
+                catch (ex) {
+                    console.log(ex);
+                    isDone = true;
+                }
+            }
+            setTimeout(function () {
+                dispatch()
+            }, 100);
+        }
 
-		this.socket.on('packet', function (data)
-		{
-			try
-			{
-				let packet = PacketManager.parse(data);
-				console.log(packet);
-				self.network.dispatch(self, packet);
-			}
-			catch (ex)
-			{
-				console.log(ex);
-			}
-		}
-		);
+        setTimeout(function () {
+            dispatch()
+        }, 100);
 
-		this.socket.on('error', function (e)
-		{
-			console.log(e);
-		}
-		);
+        this.socket = io(location.host + ':1234',
+            {
+                // using websocket for now because polling
+                // sometimes freezes without any reason
+                transports: ['websocket'],
+                upgrade: false
+            }
+        );
 
-		this.socket.on('disconnect', function ()
-		{
-			console.log('disconnect');
-		}
-		);
-	};
+        this.socket.on('connect', function () {
+            console.log('connect');
+        });
 
-	this.send = function (packet)
-	{
-		this.socket.emit('packet', PacketManager.pack(packet));
-	};
+        this.socket.on('packet', function (data) {
+            queue.push(data);
+        });
+
+        this.socket.on('error', function (e) {
+            console.log(e);
+        });
+
+        this.socket.on('disconnect', function () {
+            console.log('disconnect');
+        });
+    };
+
+    this.send = function (packet) {
+        this.socket.emit('packet', PacketManager.pack(packet));
+    };
 
 }
