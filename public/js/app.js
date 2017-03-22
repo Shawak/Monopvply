@@ -39,8 +39,6 @@
                 queue.add(user.buyCard.bind(user, 8));
             if (iterations == 6)
                 queue.add(user.moveTo.bind(user, 6));
-            if (iterations == 7)
-                user.moveTo(6);
 
             iterations++;
             if (iterations < 9)
@@ -51,7 +49,8 @@
             gameMap = new Map(stage);
             window.ingameMenu = new Menu(stage, queue);
             generalMenu = new Menu(stage, queue);
-
+			var informationMenu=new Menu(stage,queue);
+			
             window.user = new Player(gameMap, ingameMenu.getLayer(), 1500, "./img/test.jpg", "./img/test.jpg");
             var enemies = [];
             enemies.push(new Player(gameMap, ingameMenu.getLayer(), 1500, "./img/Testing.jpg", "./img/Testing.jpg"));
@@ -60,12 +59,12 @@
 
             var houseBuildingMenu = houseBuildingWindow.bind(null, generalMenu, gameMap, 5, user, "Accept", "Cancel");
 
-            setUpStandardMenu(ingameMenu, gameMap, user, enemies, houseBuildingMenu);
-            setUpStandardMap(gameMap);
+			setUpStandardMenu(ingameMenu,gameMap,user,enemies,houseBuildingMenu);
+			setUpStandardMap(queue,gameMap,informationMenu);
 
             user.addBoardFigure("", "green");
             queue.start();
-            setTimeout(testFunc, 2000);
+            setTimeout(testFunc, 3000);
         }
     }
 

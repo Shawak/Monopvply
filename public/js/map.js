@@ -24,6 +24,12 @@ function Map(konvaStage)
 		heightOneSideField=160;
 	}
 	
+		
+	this.getLastCreatedSideField =function()
+	{
+		return sideFields[sideFields.length-1];
+	}
+	
 	this.getSideFields =function()
 	{
 		return sideFields;

@@ -53,6 +53,11 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 	{
 		return layer;
 	}
+	
+	this.draw = function()
+	{
+		layer.draw();
+	}
 
 	this.clear = function()
 	{
@@ -124,11 +129,11 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 				width: width,
 				height: height,
 				listening : listening,
-				opacity: 0.8,
+				opacity: 0.9,
 				cornerRadius: 4,
 				stroke: strokeColorMenu,
 				strokeWidth: 1,
-			perfectDrawEnabled : false,
+				perfectDrawEnabled : false,
 				transformsEnabled : 'position'
 			});
 		}
@@ -143,10 +148,10 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 				fill: color,
 				width: width,
 				height: height,
-				opacity: 0.8,
+				opacity: 0.9,
 				cornerRadius: 4,
 				listening:listening,
-			perfectDrawEnabled : false,
+				perfectDrawEnabled : false,
 				transformsEnabled : 'position'
 			});
 		}
@@ -380,20 +385,21 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 		{
 			var tooltip = new Konva.Label(
 			{
-				opacity: 0.75
+				opacity: 0.9
 			});
 			
-			tooltip.add(new Konva.Tag(
+			var tag=new Konva.Tag(
 			{
 				fill: '#262626',
 				pointerDirection: 'down',
 				pointerWidth: 10,
-				pointerHeight: 10,
+				pointerHeight: 20,
 				lineJoin: 'round',
 				listening : false,
 				perfectDrawEnabled : false,
 				transformsEnabled : 'position'
-			}));
+			});
+			tooltip.add(tag);
 			
 			tooltip.add(new Konva.Text(
 			{
@@ -406,17 +412,24 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 				perfectDrawEnabled : false,
 				transformsEnabled : 'position'
 			}));
-			
+			tooltip.hide();
 			tooltipLayer.add(tooltip);
 			
 			var tooltipFuncHover=function()
 			{
 				var mousePos = stage.getPointerPosition();
 				
+				tag.pointerDirection("down");
+				if(mousePos.y<tag.getHeight()*2)
+				{
+					tag.pointerDirection("up");
+					mousePos.y+=tag.getHeight()+40;
+				}
+				
 				tooltip.position(
 				{
 					x : mousePos.x,
-					y : mousePos.y - 5
+					y : mousePos.y
 				});
 				tooltip.show();
 				tooltipLayer.batchDraw();

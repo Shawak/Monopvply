@@ -1,3 +1,55 @@
+function fieldInformationWindow(informationMenu, houseText1, houseText2, hypothekText, closeText, field)
+{
+	if(informationMenu.isBusy())
+	{ 
+		return;
+	}
+	informationMenu.clear();
+	informationMenu.setDraggable(true);
+	informationMenu.hideAll(false);
+	
+	var width = window.innerWidth;
+    var height = window.innerHeight;
+	
+	var menuWidth=width/5;
+	
+	var menuOffsetX=width/2-menuWidth/2;
+	var menuOffsetY=height/6;
+	
+	var margin=16;
+	
+	var fieldRect=informationMenu.addTextInRect(menuOffsetX,menuOffsetY,menuWidth, field.getText(), field.getColor(),true);
+
+	var rent=field.getRent();
+	var currY=menuOffsetY+margin/2+fieldRect[0].getHeight();
+	
+	var text=informationMenu.addText(menuOffsetX, currY, menuWidth, field.getCosts()+" eg", false);
+	currY+=text.getHeight()+margin*1.5;
+	for(var i=0;i<rent.length;i++)
+	{
+		text= informationMenu.addText(menuOffsetX, currY, menuWidth/1.5, houseText1+" "+i+" "+houseText2, false);
+		text=informationMenu.addText(menuOffsetX+menuWidth/1.5+margin, currY, menuWidth/3, rent[i]+" eg", false);
+		currY+=text.getHeight()+margin;
+	}
+	 
+	currY+=margin;
+	text=informationMenu.addText(menuOffsetX, currY, menuWidth, hypothekText+" "+field.getHypothekWorth()+" eg", false);
+	currY+=text.getHeight()+margin;
+	  
+	var menuHeight=currY-menuOffsetY;
+	informationMenu.addMenuBackground(menuOffsetX-8,menuOffsetY-8,menuWidth+16,menuHeight+54,"","black",true);
+	
+	var callbackClose=function()
+	{
+		informationMenu.hideAll(true);
+		return true;
+	}
+
+	informationMenu.addButton(menuOffsetX+menuWidth/2-45, currY, 90, 30, closeText, callbackClose);
+	
+	informationMenu.draw();
+}
+
 function houseBuildingWindow(generalMenu, gameMap, maxHouses, playerObj, textAccept,textCancel,  acceptCallback, cancelCallback,showSellButton)
 {
 	if(generalMenu.isBusy() || playerObj.isBusy())
@@ -132,7 +184,7 @@ function houseBuildingWindow(generalMenu, gameMap, maxHouses, playerObj, textAcc
 	generalMenu.addButton((maxHouses-3)*houseWidth/3+width/2-menuWidth/2+houseWidth-8, currHeight+height/7+8, Math.max(houseWidth/3,70), 30, textAccept, callbackAccept, "Confirm bought/sold houses");
 	generalMenu.addButton((maxHouses-1)*houseWidth/3+width/2-menuWidth/2+houseWidth, currHeight+height/7+8, Math.max(houseWidth/3,70), 30, textCancel, callbackCancel, "Cancel buying/selling houses");
 
-	generalMenu.getLayer().draw();
+	generalMenu.draw();
 }
 
 function acceptWindow(generalMenu, text, yesCallback, noCallback)
@@ -187,7 +239,7 @@ function acceptWindow(generalMenu, text, yesCallback, noCallback)
 	generalMenu.addButton(width/2-menuWidth/2+20, height/3+textObj.getHeight()+16, 60, 30, "Yes", okCallbackHide, "");
 	generalMenu.addButton(width/2+menuWidth/2-80, height/3+textObj.getHeight()+16, 60, 30, "No", notOkCallbackHide, "");
 	
-	generalMenu.getLayer().draw();
+	generalMenu.draw();
 }
 
 function setUpStandardMenu(ingameMenu, gameMap, user, enemyArray, buildingMenuCallback)

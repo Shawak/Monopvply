@@ -1,17 +1,20 @@
    
-function Field(id, streeGroup,imageSrc, fillColor, text, costs, costsPerHouse, sellPerHouseRatio , onClickCallback, costsColor, textColor)
+function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, costsPerHouse, sellPerHouseRatio, hypothekRatio , onClickCallback, costsColor, textColor)
 {
 	sellPerHouseRatio = typeof sellPerHouseRatio !== 'undefined' ? sellPerHouseRatio : 0.90;
+	hypothekRatio = typeof hypothekRatio !== 'undefined' ? hypothekRatio : 0.90;
 	onClickCallback = typeof onClickCallback !== 'undefined' ? onClickCallback : undefined;
 	costsColor = typeof costsColor !== 'undefined' ? costsColor : '#FFF';
 	textColor = typeof textColor !== 'undefined' ? textColor : "#DDD";
 
+	var queueManager=queueManager;
 	var rect;
 	var img;
 	var imageSrc=imageSrc;
 	var fillColor=fillColor;
 	var onClickCallback=onClickCallback;
 	var costs=costs;
+	var hypothekWorth=costs*hypothekRatio;
 	var text=text;
 	var fieldText;
 	var rectText;
@@ -24,6 +27,33 @@ function Field(id, streeGroup,imageSrc, fillColor, text, costs, costsPerHouse, s
 	var maxHouses=5;
 	var costsPerHouse=costsPerHouse;
 	var sellPerHouse=(costsPerHouse*sellPerHouseRatio)|0;
+	var rent=[0,0,0,0,0];
+	var colisionRect;
+	
+	this.onClick =function(callback)
+	{
+		onClickCallback=callback;
+				
+		var clickAction=function(evt)
+		{
+			evt.cancelBubble = true;
+			if(onClickCallback!=undefined && onClickCallback!="")
+			{
+				queueManager.add(onClickCallback);
+			}
+		};
+		colisionRect.on("click", clickAction);
+	}
+	
+	this.getRent = function () 
+	{
+        return rent;
+    };
+	
+	this.getHypothekWorth = function () 
+	{
+        return hypothekWorth;
+    };
 	
 	this.getHouseCosts = function (amount) 
 	{
@@ -228,14 +258,6 @@ function Field(id, streeGroup,imageSrc, fillColor, text, costs, costsPerHouse, s
 				strokeWidth: strokeWidth,
 				listening: false
 			});
-					
-			rect.on("click", function()
-			{
-				if(onClickCallback!=undefined && onClickCallback!="")
-				{
-					onClickCallback();
-				}
-			});
 			
 			konvaLayer.add(rect);
 		}
@@ -256,14 +278,6 @@ function Field(id, streeGroup,imageSrc, fillColor, text, costs, costsPerHouse, s
 			listening: false
         });
 		
-		img.on("click", function()
-		{
-			if(onClickCallback!=undefined && onClickCallback!="")
-			{
-				onClickCallback();
-			}
-		});
-		
 		// add the shapes to the layer
 		konvaLayer.add(img);
 		
@@ -274,7 +288,7 @@ function Field(id, streeGroup,imageSrc, fillColor, text, costs, costsPerHouse, s
 			addCosts(konvaLayer, xImg, yImg, widthImg-marginSide*2, heightImg ,marginSide, rotationImg, side);
 		}
 			
-		var colisionRect = new Konva.Image(
+		colisionRect = new Konva.Rect(
 		{
             x: xImg,
             y: yImg,
@@ -293,11 +307,12 @@ function Field(id, streeGroup,imageSrc, fillColor, text, costs, costsPerHouse, s
 			document.body.style.cursor = 'default';
 		};
 		
-		var clickAction=function()
+		var clickAction=function(evt)
 		{
-			if(callback!=undefined && callback!="")
+			evt.cancelBubble = true;
+			if(onClickCallback!=undefined && onClickCallback!="")
 			{
-				queueManager.add(callback);
+				queueManager.add(onClickCallback);
 			}
 		};
 		
