@@ -42,6 +42,9 @@ function ChatMessagePacket(from, message) {
     this.message = message;
 }
 
+function CreateLobbyPacket() {
+}
+
 exports.LoginPacket = LoginPacket;
 exports.PingPacket = PingPacket;
 exports.GameStartPacket = GameStartPacket;
@@ -52,3 +55,4 @@ exports.PlayerBuyPacket = PlayerBuyPacket;
 exports.UpdatePlayerPacket = UpdatePlayerPacket;
 exports.UpdateFieldPacket = UpdateFieldPacket;
 exports.ChatMessagePacket = ChatMessagePacket;
+exports.CreateLobbyPacket = CreateLobbyPacket;

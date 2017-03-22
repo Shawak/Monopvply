@@ -47,7 +47,7 @@ class Monopvply {
 
         let id = 0;
         this.fields = [
-            new Field(id++, 'Start', 'img/corner/1_start.jpg', (player) => player.addMoney(1)),
+            new Field(id++, 'Start', 'img/corner/1_start.jpg', (game, player) => { player.money += 1; game.update(player); }),
             new Street(id++, 'Metin2', 'img/streets/7_major_3/2_metin_2.jpg', 0, 'brown', 120),
             new CommunityField(id++, 'img/events/2_community.jpg'),
             new Street(id++, 'Flyff', 'img/streets/7_major_3/1_flyff.jpg', 0, 'brown', 140),

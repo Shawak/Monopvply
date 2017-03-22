@@ -1,8 +1,8 @@
 class User {
 
-    constructor(client) {
+    constructor(client, name) {
         this.client = client;
-        this.name = null;
+        this.name = name;
     }
 
     send(packet) {

@@ -1,13 +1,14 @@
 const io = require('socket.io'),
     crypto = require('crypto');
 
-const Client = require('./client');
-const Game = require('./game');
-
+const Client = require('./client.js');
+const Game = require('./game.js');
+const Lobby = require('./lobby.js');
 class GameServer {
 
     constructor() {
         this.clients = [];
+
         this.server = io();
         this.server.on('connection', (socket) => {
 
@@ -16,7 +17,7 @@ class GameServer {
                 id = crypto.randomBytes(4).toString('hex');
             } while (this.clients.find((client) => client.id != id));
 
-            let client = new Client(id, socket);
+            let client = new Client(this, id, socket);
             this.clients.push(client);
             console.log('client ' + id + ' has connected!');
 
@@ -39,6 +40,11 @@ class GameServer {
             client.send(packet);
         });
     }
+
+    createLobby(user) {
+        let lobby = new Lobby(user);
+    }
+
 }
 
 module.exports = GameServer;
