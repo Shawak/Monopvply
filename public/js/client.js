@@ -5,33 +5,6 @@ function Client() {
     var self = this;
 
     this.start = function () {
-        var queue = [];
-        var isDone = true;
-
-        function dispatch() {
-            if(isDone && queue.length > 0) {
-                isDone = false;
-                var data = queue.shift();
-                try {
-                    let packet = PacketManager.parse(data);
-                    console.log(packet);
-                    packet.done = function() { isDone = true; };
-                    self.network.dispatch(self, packet);
-                }
-                catch (ex) {
-                    console.log(ex);
-                    isDone = true;
-                }
-            }
-            setTimeout(function () {
-                dispatch()
-            }, 100);
-        }
-
-        setTimeout(function () {
-            dispatch()
-        }, 100);
-
         this.socket = io(location.host + ':1234',
             {
                 // using websocket for now because polling
@@ -46,7 +19,14 @@ function Client() {
         });
 
         this.socket.on('packet', function (data) {
-            queue.push(data);
+            try {
+                let packet = PacketManager.parse(data);
+                console.log(packet);
+                self.network.dispatch(self, packet);
+            }
+            catch (ex) {
+                console.log(ex);
+            }
         });
 
         this.socket.on('error', function (e) {

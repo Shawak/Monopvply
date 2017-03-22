@@ -25,12 +25,21 @@ function DiceResultPacket(player, rollResult) {
     this.rollResult = rollResult;
 }
 
-function UpdatePlayersPacket(players) {
-    this.players = players;
-}
-
 function PlayerBuyPacket(fieldID) {
     this.fieldID = fieldID;
+}
+
+function UpdateFieldPacket(field) {
+    this.field = field;
+}
+
+function UpdatePlayerPacket(player) {
+    this.player = player;
+}
+
+function ChatMessagePacket(from, message) {
+    this.from = from;
+    this.message = message;
 }
 
 exports.LoginPacket = LoginPacket;
@@ -39,5 +48,7 @@ exports.GameStartPacket = GameStartPacket;
 exports.NextTurnPacket = NextTurnPacket;
 exports.PlayerEndTurnPacket = PlayerEndTurnPacket;
 exports.DiceResultPacket = DiceResultPacket;
-exports.UpdatePlayersPacket = UpdatePlayersPacket;
 exports.PlayerBuyPacket = PlayerBuyPacket;
+exports.UpdatePlayerPacket = UpdatePlayerPacket;
+exports.UpdateFieldPacket = UpdateFieldPacket;
+exports.ChatMessagePacket = ChatMessagePacket;

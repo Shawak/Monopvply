@@ -1,5 +1,4 @@
 const Player = require('./../player.js');
-
 const Field = require('./../field.js');
 const Street = require('./../street.js');
 
@@ -10,8 +9,9 @@ class TaxField extends Field {
         this.price = price;
     }
 
-    onEnter(player) {
-        player.pay(this.price);
+    onEnter(game, player) {
+        player.money -= this.price;
+        game.update(player);
     }
 }
 
@@ -20,7 +20,7 @@ class ActionField extends Field {
         super(id, img, 'Action Field');
     }
 
-    onEnter(player) {
+    onEnter(game, player) {
 
     }
 }
@@ -30,7 +30,7 @@ class CommunityField extends Field {
         super(id, img, 'Community Field');
     }
 
-    onEnter(player) {
+    onEnter(game, player) {
 
     }
 }
@@ -46,7 +46,7 @@ class Monopvply {
         }
 
         let id = 0;
-        this.field = [
+        this.fields = [
             new Field(id++, 'Start', 'img/corner/1_start.jpg', (player) => player.addMoney(1)),
             new Street(id++, 'Metin2', 'img/streets/7_major_3/2_metin_2.jpg', 0, 'brown', 120),
             new CommunityField(id++, 'img/events/2_community.jpg'),
@@ -97,22 +97,28 @@ class Monopvply {
 
     }
 
-    onMove(game, player, steps) {
-        player.position = (player.position + steps) % this.field.length;
+    onTurn(game, player) {
+        let rolls = [game.random(1, 6), game.random(1, 6)];
+        game.sendDices(rolls);
 
-        let field = this.field[player.position];
+        let steps = rolls[0] + rolls[1];
+        player.position = (player.position + steps) % this.fields.length;
+
+        let field = this.fields[player.position];
         if(field.onEnter) {
-            field.onEnter(player);
+            field.onEnter(game, player);
         }
     }
 
     onBuy(game, player, fieldID) {
-        let field = this.field[fieldID];
+        let field = this.fields[fieldID];
         if(player.money < field.price)
             return;
 
         player.money -= field.price;
+        game.update(player);
         field.owner = player;
+        game.update(field);
     }
 
 }

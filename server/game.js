@@ -20,13 +20,14 @@ class Game {
             let network = user.getClient().network;
             network.link(Packets.PlayerEndTurnPacket, this.onPlayerEndTurnPacket);
             network.link(Packets.PlayerBuyPacket, this.onPlayerBuyPacket);
+            network.link(Packets.ChatMessagePacket, this.onChatMessagePacket);
         }
         this.map = new Monopvply(this, players);
     }
 
     start() {
         this.map.onStart(this);
-        this.broadcast(new Packets.GameStartPacket(this.map.players, this.map.field));
+        this.broadcast(new Packets.GameStartPacket(this.map.players, this.map.fields));
         this.nextTurn();
     }
 
@@ -43,6 +44,11 @@ class Game {
         return this.playerInfo[this.currentPlayerIndex].player;
     }
 
+    // min & max inclusive
+    static random(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
     nextTurn() {
         this.playerCanEndTurn = false;
         if (this.turnTimeout) {
@@ -50,27 +56,19 @@ class Game {
         }
 
         let turnTime = 5 * 60 * 1000;
-        let that = this;
-        this.turnTimeout = setTimeout(() => {
-            that.nextTurn();
-        }, turnTime);
+        this.turnTimeout = setTimeout(() => this.nextTurn(), turnTime);
 
         this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.playerInfo.length;
-        this.broadcast(new Packets.NextTurnPacket(this.getCurrentPlayer(), turnTime));
+        let player = this.getCurrentPlayer();
 
-        setTimeout(() => {
-            let player = that.getCurrentPlayer();
-            let rollResult = [Game.random(1, 6), Game.random(1, 6)];
-            this.broadcast(new Packets.DiceResultPacket(player, rollResult));
-            that.map.onMove(that, player, rollResult[0] + rollResult[1]);
-            this.broadcast(new Packets.UpdatePlayersPacket(that.map.players));
-            that.playerCanEndTurn = true;
-        }, 2000);
+        this.broadcast(new Packets.NextTurnPacket(player, turnTime));
+        this.map.onTurn(this, player);
+
+        setTimeout(() => this.playerCanEndTurn = true, 2000);
     }
 
-    // min & max inclusive
-    static random(min, max) {
-        return Math.floor(Math.random() * (max - min + 1) + min);
+    sendDices(rolls) {
+        this.broadcast(new Packets.DiceResultPacket(this.getCurrentPlayer(), rolls));
     }
 
     broadcast(packet) {
@@ -79,11 +77,23 @@ class Game {
         }
     }
 
+    update(obj) {
+        switch(Object.getPrototypeOf(obj)) {
+            case Player:
+                this.broadcast(new Packets.UpdatePlayerPacket(obj));
+                break;
+            case Field:
+                this.broadcast(new Packets.UpdateFieldPacket(obj));
+                break;
+        }
+    }
+
     onPlayerEndTurnPacket(sender, packet) {
         let player = this.senderToPlayer(sender);
-        if (player == this.getCurrentPlayer() && this.playerCanEndTurn) {
-            this.nextTurn();
-        }
+        if(player != this.getCurrentPlayer() || !this.playerCanEndTurn)
+            return;
+
+        this.nextTurn();
     }
 
     onPlayerBuyPacket(sender, packet) {
@@ -92,7 +102,14 @@ class Game {
             return;
 
         this.map.onBuy(this, player, packet.fieldID);
-        this.broadcast(new Packets.UpdatePlayersPacket(this.map.players));
+    }
+
+    onChatMessagePacket(sender, packet) {
+        let player = this.senderToPlayer(sender);
+        if(!player)
+            return;
+
+        this.broadcast(new Packets.ChatMessagePacket(player, packet.message));
     }
 
 }
