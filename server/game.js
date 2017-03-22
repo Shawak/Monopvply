@@ -45,7 +45,7 @@ class Game {
     }
 
     // min & max inclusive
-    static random(min, max) {
+    random(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
