@@ -47,25 +47,25 @@
 		
         var testFunc = function () {
             if (iterations == 0)
-                user.buyCard(0);
+				queue.add(user.buyCard.bind(user,0));
             if (iterations == 1)
-                user.buyCard(2);
+                queue.add(user.buyCard.bind(user,2));
             if (iterations == 2)
-                user.buyCard(4);
+                queue.add(user.buyCard.bind(user,4));
             if (iterations == 3)
-                user.buyCard(5);
+                queue.add(user.buyCard.bind(user,5));
             if (iterations == 4)
-                user.buyCard(7);
+               queue.add(user.buyCard.bind(user,7));
             if (iterations == 5)
-                user.buyCard(8);
+                queue.add(user.buyCard.bind(user,8));
             if (iterations == 6)
+				queue.add(user.moveTo.bind(user,6)); 
+			if (iterations == 7)
                 user.moveTo(6);
-            if (iterations == 8)
-                houseBuildingWindow(generalMenu, gameMap, 5, user, "Accept", undefined, true)
-
+				
             iterations++;
             if (iterations < 9)
-                setTimeout(testFunc, 800);
+                setTimeout(testFunc, 100);
         };
 
         function startRendering() {
