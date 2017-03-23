@@ -1,7 +1,7 @@
 
-function Player(gameMap, ingameMenuLayer, money, profileImgSrc)
+function Player(gameMap, ingameMenuLayer, informationMenu, money, profileImgSrc)
 {
-
+	var informationMenu=informationMenu;
 	var layer=ingameMenuLayer;
 	var money=money;
 	var textBox;
@@ -95,7 +95,7 @@ function Player(gameMap, ingameMenuLayer, money, profileImgSrc)
 	
 	this.createCardManager = function(xStart, yStart, cardWidth, cardHeight)
 	{
-		fieldCardManager=new CardManager(gameMap, ingameMenu, xStart, yStart, cardWidth, cardHeight);
+		fieldCardManager=new CardManager(gameMap, ingameMenu, informationMenu, xStart, yStart, cardWidth, cardHeight);
 	}
 	
 	this.setMoneyTextbox = function(moneyText)

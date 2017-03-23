@@ -51,11 +51,11 @@
             generalMenu = new Menu(stage, queue);
 			var informationMenu=new Menu(stage,queue);
 			
-            window.user = new Player(gameMap, ingameMenu.getLayer(), 1500, "./img/test.jpg", "./img/test.jpg");
+            window.user = new Player(gameMap, ingameMenu.getLayer(),informationMenu, 1500, "./img/test.jpg", "./img/test.jpg");
             var enemies = [];
-            enemies.push(new Player(gameMap, ingameMenu.getLayer(), 1500, "./img/Testing.jpg", "./img/Testing.jpg"));
-            enemies.push(new Player(gameMap, ingameMenu.getLayer(), 1500, "./img/Testing.jpg", "./img/Testing.jpg"));
-            enemies.push(new Player(gameMap, ingameMenu.getLayer(), 1500, "./img/Testing.jpg", "./img/Testing.jpg"));
+            enemies.push(new Player(gameMap, ingameMenu.getLayer(),informationMenu, 1500, "./img/Testing.jpg", "./img/Testing.jpg"));
+            enemies.push(new Player(gameMap, ingameMenu.getLayer(),informationMenu, 1500, "./img/Testing.jpg", "./img/Testing.jpg"));
+            enemies.push(new Player(gameMap, ingameMenu.getLayer(),informationMenu, 1500, "./img/Testing.jpg", "./img/Testing.jpg"));
 
             var houseBuildingMenu = houseBuildingWindow.bind(null, generalMenu, gameMap, 5, user, "Accept", "Cancel");
 

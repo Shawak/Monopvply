@@ -1,7 +1,8 @@
 
-function CardManager(gameMap, ingameMenu, xStart, yStart, cardWidth, cardHeight)
+function CardManager(gameMap, ingameMenu, informationMenu, xStart, yStart, cardWidth, cardHeight)
 {
 	var ingameMenu=ingameMenu;
+	var informationMenu=informationMenu;
 	var gameMap=gameMap;
 	var xStart=xStart;
 	var yStart=yStart;
@@ -59,12 +60,13 @@ function CardManager(gameMap, ingameMenu, xStart, yStart, cardWidth, cardHeight)
 		}
 		ownedFields.push(field);
 
-		var myAlert=function(txt)
-		{
-			alert(txt);
-		}
-		var boundAlert2=myAlert.bind(null,"Card Manager: You clicked '"+field.getText()+"'!");
-		ingameMenu.addFieldCard(currX, currY, cardWidth, cardHeight, field.getText(), field.getColor(), boundAlert2,field.getImgSrc());
+		var text1="Charge with";
+		var text2="houses";
+		var text3="This field can be charged to get";
+		var text4="Close";
+		var cardMenu=fieldInformationWindow.bind(null,informationMenu, text1, text2, text3, text4, field);
+		
+		ingameMenu.addFieldCard(currX, currY, cardWidth, cardHeight, field.getText(), field.getColor(), cardMenu,field.getImgSrc());
 		
 		nextPlace();
 		return true;
