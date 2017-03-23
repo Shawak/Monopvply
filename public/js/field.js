@@ -29,6 +29,11 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 	var sellPerHouse=(costsPerHouse*sellPerHouseRatio)|0;
 	var rent=[0,0,0,0,0];
 	var colisionRect;
+	var charged=false;
+	var chargeObj;
+	var fieldGroup;
+	var layer;
+	var parentLayer;
 	
 	this.onClick =function(callback)
 	{
@@ -43,6 +48,28 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 			}
 		};
 		colisionRect.on("click", clickAction);
+	}
+	
+	this.isCharged = function()
+	{
+		return charged;
+	}
+	
+	this.setCharged = function(charge)
+	{
+		if(charge==true)
+		{
+			chargeObj.show();
+		}
+		else
+		{
+			chargeObj.hide();
+		}
+		fieldGroup.cache();
+		layer.cache();
+		layer.draw();
+		parentLayer.draw();
+		charged=charge;
 	}
 	
 	this.getRent = function () 
@@ -128,8 +155,10 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 		return fillColor;
 	}
 	
-	this.construct = function (konvaLayer, x, y, width, height, side, corner, callback)
+	this.construct = function (parentParentLayer,parentLayerIn,konvaLayer, x, y, width, height, side, corner, callback)
 	{
+		layer=parentLayerIn;
+		parentLayer=parentParentLayer;
 		callback = typeof callback !== 'undefined' ? callback : undefined;
 		
 		fieldX=x;
@@ -152,105 +181,62 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 		var strokeWidth=3;
 		var rotationImg;
 		
+		if(fillColor!="")
+		{
+			heightRect=height/5;
+			widthRect=width;
+			
+			xRect=x;
+			yRect=y;
+		}
+		else
+		{
+			heightRect=0;
+			widthRect=0;
+		}
+		heightImg=height-heightRect;
+		widthImg=width;
+		
+		xImg=x;
+		yImg=y+heightRect;
+		
 		if(side=="top")
 		{
-			if(fillColor!="")
-			{
-				heightRect=height/5;
-				widthRect=width;
-				
-				xRect=x;
-				yRect=y+height-heightRect;
-			}
-			else
-			{
-				heightRect=0;
-				widthRect=0;
-			}
-			
-			heightImg=height-heightRect;
-			widthImg=width;
-			
-			xImg=x+width;
-			yImg=y+heightImg;
-			
+			x+=width;
+			y+=height;
 			rotationImg=180;
 		}
 		else if(side=="left")
 		{
-			if(fillColor!="")
-			{
-				heightRect=width;
-				widthRect=height/5;
-				
-				xRect=x+height-widthRect;
-				yRect=y;
-			}
-			else
-			{
-				heightRect=0;
-				widthRect=0;
-			}
-			heightImg=height-widthRect;
-			widthImg=width;
-			
-			xImg=x+height-widthRect;
-			yImg=y;
-			
+			x+=height;
 			rotationImg=90;
 		}
 		else if(side=="bottom")
 		{
-			if(fillColor!="")
-			{
-				heightRect=height/5;
-				widthRect=width;
-				
-				xRect=x;
-				yRect=y;
-			}
-			else
-			{
-				heightRect=0;
-				widthRect=0;
-			}
-			heightImg=height-heightRect;
-			widthImg=width;
-			
-			xImg=x;
-			yImg=y+heightRect;
+
 			rotationImg=0;
 		}
 		else if(side=="right")
 		{
-			if(fillColor!="")
-			{
-				heightRect=width;
-				widthRect=height/5;
-				
-				xRect=x;
-				yRect=y;
-			}
-			else
-			{
-				heightRect=0;
-				widthRect=0;
-			}
-			heightImg=height-widthRect;
-			widthImg=width;
-			
-			xImg=x+widthRect;
-			yImg=y+width;
-			
+			y+=width;
 			rotationImg=270;
 		}
+		
+		fieldGroup=new Konva.Group(
+		{
+			x: x,
+			y: y,
+			width: width,
+            height: height+16,
+			rotation: rotationImg
+		});
 		
 		if(fillColor!="")
 		{
 			rect=new Konva.Rect(
 			{
-				x: xRect,
-				y: yRect,
+				x: 0,
+				y: 0,
 				width: widthRect,
 				height: heightRect,
 				fill: fillColor,
@@ -259,42 +245,77 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 				listening: false
 			});
 			
-			konvaLayer.add(rect);
+			fieldGroup.add(rect);
 		}
 		
 		var imageObj = new Image();
 		imageObj.src = imageSrc;
 		
+		imageObj.onload=function()
+		{
+			fieldGroup.cache(
+			{
+			  x: 0.00001,
+			  y: 0.00001,
+			  width: width,
+			  height: height
+			});
+		};
+		
 		img = new Konva.Image(
 		{
             image: imageObj,
-            x: xImg,
-            y: yImg,
+            x: 0,
+            y: heightRect,
             width: widthImg,
             height: heightImg,
-			rotation: rotationImg,
 			stroke: 'black',
 			strokeWidth: strokeWidth,
 			listening: false
         });
 		
 		// add the shapes to the layer
-		konvaLayer.add(img);
+		fieldGroup.add(img);
+		
+		chargeObj = new Konva.Text(
+		{
+            x: Math.max(width/2-20,0),
+            y: 0,
+            width: widthImg,
+            height: heightImg,
+			text: GLOBAL_MORTGAGE_FIELD_TEXT,
+			fontSize: 34,
+			fontFamily: 'Calibri',
+			fontStyle: "bold",
+			fill: "#cc0000",
+			width:Math.sqrt(widthImg*widthImg+heightImg*heightImg),
+			padding: 4,
+			rotation: 65,
+			align: 'center',
+			strokeWidth: 1,
+			perfectDrawEnabled : false,
+			listening:false,
+			shadowColor: 'black',
+			shadowBlur: 4,
+			shadowOffset: [10, 10],
+			id: 'chargeObj'
+		});
+		chargeObj.hide();
+		fieldGroup.add(chargeObj);
 		
 		var marginSide=10;
-		addText(konvaLayer, xImg, yImg, widthImg,marginSide, rotationImg, side, corner);
+		addText(fieldGroup,0 , heightRect, widthImg,marginSide, corner);
 		if(corner==false)
 		{
-			addCosts(konvaLayer, xImg, yImg, widthImg-marginSide*2, heightImg ,marginSide, rotationImg, side);
+			addCosts(fieldGroup, 0, heightRect, widthImg-marginSide*2, heightImg ,marginSide);
 		}
 			
 		colisionRect = new Konva.Rect(
 		{
-            x: xImg,
-            y: yImg,
-            width: widthImg,
-            height: heightImg,
-			rotation:rotationImg
+            x: 0,
+            y: 0,
+            width: width,
+            height: height+16
 		});
 		
 		var changePointerEnter=function()
@@ -319,12 +340,15 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 		colisionRect.on("mouseout", changePointerOut);
 		colisionRect.on("mouseenter", changePointerEnter);
 		colisionRect.on("click", clickAction);
+		fieldGroup.add(colisionRect);
+		konvaLayer.add(fieldGroup);
 		
-		konvaLayer.add(colisionRect);
+		chargeObj.moveToTop();
+		colisionRect.moveToTop();
 		
 	}
 	
-	function addText(konvaLayer,x, y, width, marginSide, rotation, side, corner)
+	function addText(konvaLayer,x, y, width, marginSide, corner)
 	{
 		if(text=="")
 		{
@@ -336,71 +360,22 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 		
 		if(!corner)
 		{
-			if(side=="top")
-			{
-				marginSide=(width-newWidth)/2;
-			}
-			else if(side=="bottom")
-			{
-				marginSide=(width-newWidth)/2;
-			}
-			else if(side=="right")
-			{
-				marginSide=marginSideY;
-				marginSideY=(width-newWidth)/2;
-			}
-			else if(side=="left")
-			{
-				marginSide=marginSideY;
-				marginSideY=(width-newWidth)/2;
-			}
+			marginSide=(width-newWidth)/2;
 		}
 		else
 		{
 			newWidth=width-2*marginSide;
 		}
 		
-		if(side=="top")
+		var rotation=0;
+		if(corner)
 		{
-			if(corner)
-			{
-				rotation-=45;
-				marginSideY=width-width/4;
-			}
-			y-=marginSideY;
-			x-=marginSide;
+			rotation-=45;
+			marginSideY=width-width/4;
 		}
-		else if(side=="left")
-		{
-			if(corner)
-			{
-				rotation-=45;
-				marginSide=width-width/4;
-			}
-			y+=marginSideY;
-			x-=marginSide;
-		}
-		else if(side=="bottom")
-		{
-			if(corner)
-			{
-				rotation-=45;
-				marginSideY=width-width/4;
-			}
-			y+=marginSideY;
-			x+=marginSide;
-		}
-		else if(side=="right")
-		{
-			if(corner)
-			{
-				rotation-=45;
-				marginSide=width-width/4;
-			}
-			y-=marginSideY;
-			x+=marginSide;
-		}
-		
+		y+=marginSideY;
+		x+=marginSide;
+	
 		// since this text is inside of a defined area, we can center it using
 		// align: 'center'
 		fieldText = new Konva.Text(
@@ -436,7 +411,7 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 		konvaLayer.add(fieldText);
 	}
 	
-	function addCosts(konvaLayer,x, y, width, height, marginSide, rotation, side)
+	function addCosts(konvaLayer,x, y, width, height, marginSide)
 	{
 		if(costs<=0)
 		{
@@ -444,32 +419,16 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 		}
 		
 		var marginBot=44;
-		if(side=="top")
-		{
-			y-=height-marginBot;
-			x-=marginSide;
-		}
-		else if(side=="left")
-		{
-			y+=marginSide;
-			x-=height-marginBot;
-		}
-		else if(side=="bottom")
-		{
+		
 			y+=height-marginBot;
 			x+=marginSide;
-		}
-		else if(side=="right")
-		{
-			y-=marginSide;
-			x+=height-marginBot;
-		}
+		
 		
 		fieldCosts = new Konva.Text(
 		{
 			x: x,
 			y: y,
-			text: costs+" eg",
+			text: costs+" "+GLOBAL_MONEY_VAR,
 			fontSize: 22,
 			fontFamily: 'Calibri',
 			fill: costsColor,
@@ -480,7 +439,6 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 			width: width,
 			padding: 8,
 			align: 'center',
-			rotation: rotation,
 			listening:false
 		});
 		

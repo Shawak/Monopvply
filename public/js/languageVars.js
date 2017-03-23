@@ -1,0 +1,8 @@
+var GLOBAL_MONEY_VAR="eg"
+var GLOBAL_MORTGAGE_FIELD_TEXT="MORTGAGED"
+var GLOBAL_MORTGAGE_TEXT="Mortgage"
+var GLOBAL_UNMORTGAGE_TEXT="Unmortgage"
+var GLOBAL_MORTGAGE_ACTION_TEXT="This field can be motgaged to get"
+var GLOBAL_HOUSES_TEXT="houses"
+var GLOBAL_CLOSE_TEXT="Close"
+var GLOBAL_MORTGAGE_FOR_TEXT="Charge with"

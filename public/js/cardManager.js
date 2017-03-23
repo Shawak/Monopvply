@@ -1,6 +1,7 @@
 
-function CardManager(gameMap, ingameMenu, informationMenu, xStart, yStart, cardWidth, cardHeight)
+function CardManager(playerObj, gameMap, ingameMenu, informationMenu, xStart, yStart, cardWidth, cardHeight)
 {
+	var player=playerObj;
 	var ingameMenu=ingameMenu;
 	var informationMenu=informationMenu;
 	var gameMap=gameMap;
@@ -13,7 +14,9 @@ function CardManager(gameMap, ingameMenu, informationMenu, xStart, yStart, cardW
 	var cardBackground;
 	var overlapFactor=1.6;
 	var ownedFields=[];
-
+	var that=this;
+	var cards=[];
+	
 	init();
 	
 	function init()
@@ -30,20 +33,7 @@ function CardManager(gameMap, ingameMenu, informationMenu, xStart, yStart, cardW
 	this.addCardById = function(id)
 	{
 		var field=gameMap.getFieldById(id);
-		if(field==undefined)
-		{
-			return false;
-		}
-		ownedFields.push(field);
-
-		var myAlert=function(txt)
-		{
-			alert(txt);
-		}
-		var boundAlert2=myAlert.bind(null,"Card Manager: You clicked '"+text+"'!");
-		ingameMenu.addFieldCard(currX, currY, cardWidth, cardHeight, text, field.getColor(), boundAlert2,field.getImgSrc());
-		
-		nextPlace();
+		that.addCard(field);
 		return true;
 	}
 	
@@ -59,14 +49,43 @@ function CardManager(gameMap, ingameMenu, informationMenu, xStart, yStart, cardW
 			return false;
 		}
 		ownedFields.push(field);
-
-		var text1="Charge with";
-		var text2="houses";
-		var text3="This field can be charged to get";
-		var text4="Close";
-		var cardMenu=fieldInformationWindow.bind(null,informationMenu, text1, text2, text3, text4, field);
 		
-		ingameMenu.addFieldCard(currX, currY, cardWidth, cardHeight, field.getText(), field.getColor(), cardMenu,field.getImgSrc());
+		var newCard=ingameMenu.addFieldCard(currX, currY, cardWidth, cardHeight, field.getText(), field.getColor(), undefined,field.getImgSrc());
+		cards.push(newCard);
+		
+		var chargeCallback=function()
+		{
+			var money=player.getMoney();
+			if(field.isCharged())
+			{
+				if(money>=field.getCosts())
+				{
+					player.updateMoney(money-field.getCosts(),true);
+					var chargeObj = newCard[1];
+					if(chargeObj!=undefined)
+					{
+						chargeObj.hide();
+					}
+					newCard[0].cache();
+					field.setCharged(false);
+				}
+			}
+			else
+			{
+				player.updateMoney(money+field.getHypothekWorth(),true);
+				var chargeObj = newCard[1];
+				if(chargeObj!=undefined)
+				{
+					chargeObj.show();
+				}
+				newCard[0].cache();
+				field.setCharged(true);
+			}
+			return true;
+		};
+		
+		var cardMenu=fieldInformationWindow.bind(null,informationMenu, GLOBAL_MORTGAGE_FOR_TEXT, GLOBAL_HOUSES_TEXT, GLOBAL_MORTGAGE_ACTION_TEXT, GLOBAL_CLOSE_TEXT, field, "",chargeCallback);
+		newCard[0].on("click",cardMenu);
 		
 		nextPlace();
 		return true;
