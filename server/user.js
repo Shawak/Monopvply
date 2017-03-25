@@ -1,20 +1,8 @@
 class User {
 
-    constructor(client, name) {
-        this.client = client;
+    constructor(id, name) {
+        this.id = id;
         this.name = name;
-    }
-
-    send(packet) {
-        this.client.send(packet);
-    }
-
-    getClient() {
-        return this.client;
-    }
-
-    getName() {
-        return this.name;
     }
 
 }

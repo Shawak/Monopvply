@@ -1,32 +1,28 @@
 const Packets = require('../shared/packets.js');
 
-const User = require('./user.js');
-const Player = require('./player.js');
-
 class Lobby {
 
-    constructor(owner) {
-        this.users = [user];
+    constructor(server, owner) {
+        this.server = server;
+        this.clients = [owner];
     }
 
-    join(user) {
-        this.users.push(user);
+    getClients() {
+        return this.clients;
+    }
 
-        let network = user.getClient().network;
+    join(client) {
+        this.clients.push(client);
+        let network = client.network;
         network.link(Packets.ChatMessagePacket, this.onChatMessagePacket);
+        network.link(Packets.LeaveLobbyPacket, this.onLeaveLobbyPacket);
     }
 
-    leave(user) {
-        this.users.splice(this.users.indexOf(user), 1);
-    }
-
-    senderToUser(sender) {
-        for(let user of this.users) {
-            if(user.getClient() == sender) {
-                return user;
-            }
-        }
-        return null;
+    leave(client) {
+        this.users.splice(this.users.indexOf(client), 1);
+        let network = client.network;
+        network.unlink(Packets.ChatMessagePacket, this.onChatMessagePacket);
+        network.unlink(Packets.LeaveLobbyPacket, this.onLeaveLobbyPacket);
     }
 
     getOwner() {
@@ -41,9 +37,16 @@ class Lobby {
         this.broadcast(packet);
     }
 
+    onLeaveLobbyPacket(sender, packet) {
+        this.clients.splice(this.clients.indexOf(sender), 1);
+        if(this.clients.length == 0) {
+            this.server.removeLobby(this);
+        }
+    }
+
     broadcast(packet) {
-        for(let user of this.users) {
-            user.send(packet);
+        for(let client of this.clients) {
+            client.send(packet);
         }
     }
 

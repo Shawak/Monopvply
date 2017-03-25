@@ -7,20 +7,19 @@ const Monopvply = require('./rules/monopvply.js');
 
 class Game {
 
-    constructor(users) {
-        this.users = users;
+    constructor(clients) {
+        this.clients = clients;
         this.playerInfo = [];
         this.currentPlayerIndex = 0;
         this.playerCanEndTurn = false;
         let players = [];
-        for (let user of this.users) {
-            let player = new Player(user.getName());
+        for (let client of this.clients) {
+            let player = new Player(client.user.name);
             players.push(player);
-            this.playerInfo.push({player: player, user: user});
-            let network = user.getClient().network;
-            network.link(Packets.PlayerEndTurnPacket, this.onPlayerEndTurnPacket);
-            network.link(Packets.PlayerBuyPacket, this.onPlayerBuyPacket);
-            network.link(Packets.ChatMessagePacket, this.onChatMessagePacket);
+            this.playerInfo.push({client: client, player: player});
+            client.network.link(Packets.PlayerEndTurnPacket, this.onPlayerEndTurnPacket, this);
+            client.network.link(Packets.PlayerBuyPacket, this.onPlayerBuyPacket, this);
+            client.network.link(Packets.ChatMessagePacket, this.onChatMessagePacket, this);
         }
         this.map = new Monopvply(this, players);
     }
@@ -33,7 +32,7 @@ class Game {
 
     senderToPlayer(sender) {
         for (let info of this.playerInfo) {
-            if (sender == info.user.getClient()) {
+            if (sender == info.user.client) {
                 return info.player;
             }
         }
@@ -72,8 +71,8 @@ class Game {
     }
 
     broadcast(packet) {
-        for (let user of this.users) {
-            user.send(packet);
+        for (let client of this.clients) {
+            client.send(packet);
         }
     }
 

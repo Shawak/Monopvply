@@ -45,6 +45,17 @@ function ChatMessagePacket(from, message) {
 function CreateLobbyPacket() {
 }
 
+function UpdateLobbyPacket(users) {
+    this.users = users;
+}
+
+function JoinLobbyPacket(lobbyID) {
+    this.lobbyID = lobbyID;
+}
+
+function LeaveLobbyPacket() {
+}
+
 exports.LoginPacket = LoginPacket;
 exports.PingPacket = PingPacket;
 exports.GameStartPacket = GameStartPacket;
@@ -55,4 +66,8 @@ exports.PlayerBuyPacket = PlayerBuyPacket;
 exports.UpdatePlayerPacket = UpdatePlayerPacket;
 exports.UpdateFieldPacket = UpdateFieldPacket;
 exports.ChatMessagePacket = ChatMessagePacket;
+
 exports.CreateLobbyPacket = CreateLobbyPacket;
+exports.UpdateLobbyPacket = UpdateLobbyPacket;
+exports.JoinLobbyPacket = JoinLobbyPacket;
+exports.LeaveLobbyPacket = LeaveLobbyPacket;
