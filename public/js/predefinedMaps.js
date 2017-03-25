@@ -1,11 +1,6 @@
 
 function setUpStandardMap(queueManager, gameMap, informationMenu)
 {
-	var text1="Charge with";
-	var text2="houses";
-	var text3="This field can be charged to get";
-	var text4="Close";
-
 	gameMap.addSideField(new Field(queueManager,0,0,"./img/streets/7_major_3/2_metin_2.jpg", "brown", "Metin2", 120,10));
 	
 	gameMap.addSideField(new Field(queueManager,1,-1,"./img/events/2_community.jpg","", "Community Field", "", 0));
@@ -76,7 +71,7 @@ function setUpStandardMap(queueManager, gameMap, informationMenu)
 	{
 		if(fields[i].getGroup()>-1)
 		{
-			var cardInfo=fieldInformationWindow.bind(null,informationMenu, text1, text2, text3, text4, fields[i]);
+			var cardInfo=fieldInformationWindow.bind(null,informationMenu, GLOBAL_MORTGAGE_FOR_TEXT, GLOBAL_HOUSES_TEXT, GLOBAL_MORTGAGE_ACTION_TEXT, GLOBAL_CLOSE_TEXT, fields[i]);
 			fields[i].onClick(cardInfo);
 		}
 

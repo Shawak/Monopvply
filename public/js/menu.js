@@ -275,6 +275,31 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 		
 		group.add(textObj);
 		
+		
+		var chargeObj = new Konva.Text(
+		{
+			x: 20,
+			y: 0,
+			text: GLOBAL_MORTGAGE_FIELD_TEXT,
+			fontSize: 26,
+			fontFamily: 'Calibri',
+			fontStyle: "bold",
+			fill: "#cc0000",
+			width:Math.sqrt(width*width+height*height),
+			padding: 4,
+			rotation: 65,
+			align: 'center',
+			strokeWidth: 1,
+			perfectDrawEnabled : false,
+			listening:false,
+			shadowColor: 'black',
+			shadowBlur: 4,
+			shadowOffset: [10, 10],
+			id: 'chargeObj'
+		});
+		chargeObj.hide();
+		group.add(chargeObj);
+		
 		var colisionRect = new Konva.Image(
 		{
 			x: 0,
@@ -318,7 +343,7 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 		group.on("click", upAction);
 		groupDrag.add(group);
 		group.cache();
-		return group;
+		return [group,chargeObj];
 	}
 	
 	this.addButton = function(x, y, width, height, text, callback, tooltipText, imgSrc)

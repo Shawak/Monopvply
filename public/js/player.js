@@ -63,6 +63,7 @@ function Player(gameMap, ingameMenuLayer, informationMenu, money, profileImgSrc)
 	      strokeWidth: 4
 	    });
 	    gameMap.addKonvaObj(boardFigure);
+		boardFigure.moveToTop();
 	}
 
 	this.moveTo = function(id)
@@ -95,7 +96,7 @@ function Player(gameMap, ingameMenuLayer, informationMenu, money, profileImgSrc)
 	
 	this.createCardManager = function(xStart, yStart, cardWidth, cardHeight)
 	{
-		fieldCardManager=new CardManager(gameMap, ingameMenu, informationMenu, xStart, yStart, cardWidth, cardHeight);
+		fieldCardManager=new CardManager(this,gameMap, ingameMenu, informationMenu, xStart, yStart, cardWidth, cardHeight);
 	}
 	
 	this.setMoneyTextbox = function(moneyText)
@@ -127,7 +128,7 @@ function Player(gameMap, ingameMenuLayer, informationMenu, money, profileImgSrc)
 				textBox.fill(textColor);
 				layer.draw();
 				busy=false;
-			}, 250); 
+			}, 500); 
 		}		
 		else
 		{

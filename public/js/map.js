@@ -271,6 +271,8 @@ function Map(konvaStage)
 		stage.add(layer);
 		layer.moveToBottom();
 		
+		detailsGroup.moveToTop();
+		
 		return true;
 	}
 	
@@ -326,10 +328,10 @@ function Map(konvaStage)
 	
 	function setCornerFieldPositions()
 	{
-		cornerFields[0].construct(mapGroup, 0, 0, heightOneSideField, heightOneSideField, "top",true);
-		cornerFields[1].construct(mapGroup, widthOneSideField*fieldsPerSide+heightOneSideField, 0, heightOneSideField, heightOneSideField, "right",true);
-		cornerFields[2].construct(mapGroup, widthOneSideField*fieldsPerSide+heightOneSideField, widthOneSideField*fieldsPerSide+heightOneSideField, heightOneSideField, heightOneSideField, "bottom",true);
-		cornerFields[3].construct(mapGroup, 0, widthOneSideField*fieldsPerSide+heightOneSideField, heightOneSideField, heightOneSideField, "left",true);
+		cornerFields[0].construct(layer,gameGroup,mapGroup, 0, 0, heightOneSideField, heightOneSideField, "top",true);
+		cornerFields[1].construct(layer,gameGroup,mapGroup, widthOneSideField*fieldsPerSide+heightOneSideField, 0, heightOneSideField, heightOneSideField, "right",true);
+		cornerFields[2].construct(layer,gameGroup,mapGroup, widthOneSideField*fieldsPerSide+heightOneSideField, widthOneSideField*fieldsPerSide+heightOneSideField, heightOneSideField, heightOneSideField, "bottom",true);
+		cornerFields[3].construct(layer,gameGroup,mapGroup, 0, widthOneSideField*fieldsPerSide+heightOneSideField, heightOneSideField, heightOneSideField, "left",true);
 	}
 	
 	function setSideFieldPositions()
@@ -337,25 +339,25 @@ function Map(konvaStage)
 		var currIdx=0;
 		for (var x = 0; x < fieldsPerSide; x++)
 		{
-			sideFields[currIdx].construct(mapGroup, x*widthOneSideField+heightOneSideField, 0, widthOneSideField, heightOneSideField, "top");
+			sideFields[currIdx].construct(layer,gameGroup,mapGroup, x*widthOneSideField+heightOneSideField, 0, widthOneSideField, heightOneSideField, "top");
 			currIdx++;
 		}
 		
 		for (var y = 0; y < fieldsPerSide; y++)
 		{
-			sideFields[currIdx].construct(mapGroup, fieldsPerSide*widthOneSideField+heightOneSideField, y*widthOneSideField+heightOneSideField, widthOneSideField,heightOneSideField, "right");
+			sideFields[currIdx].construct(layer,gameGroup,mapGroup, fieldsPerSide*widthOneSideField+heightOneSideField, y*widthOneSideField+heightOneSideField, widthOneSideField,heightOneSideField, "right");
 			currIdx++;
 		}
 			
 		for (var x = fieldsPerSide-1; x >=0 ; x--)
 		{
-			sideFields[currIdx].construct(mapGroup, x*widthOneSideField+heightOneSideField, widthOneSideField*fieldsPerSide+heightOneSideField, widthOneSideField, heightOneSideField, "bottom");
+			sideFields[currIdx].construct(layer,gameGroup,mapGroup, x*widthOneSideField+heightOneSideField, widthOneSideField*fieldsPerSide+heightOneSideField, widthOneSideField, heightOneSideField, "bottom");
 			currIdx++;
 		}
 		
 		for (var y = fieldsPerSide-1; y >=0 ; y--)
 		{
-			sideFields[currIdx].construct(mapGroup, 0, y*widthOneSideField+heightOneSideField, widthOneSideField,heightOneSideField, "left");
+			sideFields[currIdx].construct(layer,gameGroup,mapGroup, 0, y*widthOneSideField+heightOneSideField, widthOneSideField,heightOneSideField, "left");
 			currIdx++;
 		}
 		

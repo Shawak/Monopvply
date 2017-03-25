@@ -1,4 +1,4 @@
-function fieldInformationWindow(informationMenu, houseText1, houseText2, hypothekText, closeText, field)
+function fieldInformationWindow(informationMenu, houseText1, houseText2, hypothekText, closeText, field, mortgageText, mortgageCallback)
 {
 	if(informationMenu.isBusy())
 	{ 
@@ -8,10 +8,25 @@ function fieldInformationWindow(informationMenu, houseText1, houseText2, hypothe
 	informationMenu.setDraggable(true);
 	informationMenu.hideAll(false);
 	
+	mortgageText = typeof mortgageText !== 'undefined' ? mortgageText : "";
+	mortgageCallback = typeof mortgageCallback !== 'undefined' ? mortgageCallback : undefined;
+	
+	if(mortgageText=="")
+	{
+		if(field.isCharged())
+		{
+			mortgageText=GLOBAL_UNMORTGAGE_TEXT;
+		}
+		else
+		{
+			mortgageText=GLOBAL_MORTGAGE_TEXT;
+		}
+	}
+
 	var width = window.innerWidth;
     var height = window.innerHeight;
 	
-	var menuWidth=width/5;
+	var menuWidth=width/4.5;
 	
 	var menuOffsetX=width/2-menuWidth/2;
 	var menuOffsetY=height/6;
@@ -23,17 +38,17 @@ function fieldInformationWindow(informationMenu, houseText1, houseText2, hypothe
 	var rent=field.getRent();
 	var currY=menuOffsetY+margin/2+fieldRect[0].getHeight();
 	
-	var text=informationMenu.addText(menuOffsetX, currY, menuWidth, field.getCosts()+" eg", false);
+	var text=informationMenu.addText(menuOffsetX, currY, menuWidth, field.getCosts()+" "+GLOBAL_MONEY_VAR, false);
 	currY+=text.getHeight()+margin*1.5;
 	for(var i=0;i<rent.length;i++)
 	{
 		text= informationMenu.addText(menuOffsetX, currY, menuWidth/1.5, houseText1+" "+i+" "+houseText2, false);
-		text=informationMenu.addText(menuOffsetX+menuWidth/1.5+margin, currY, menuWidth/3, rent[i]+" eg", false);
+		text=informationMenu.addText(menuOffsetX+menuWidth/1.5+margin, currY, menuWidth/3, rent[i]+" "+GLOBAL_MONEY_VAR, false);
 		currY+=text.getHeight()+margin;
 	}
 	 
 	currY+=margin;
-	text=informationMenu.addText(menuOffsetX, currY, menuWidth, hypothekText+" "+field.getHypothekWorth()+" eg", false);
+	text=informationMenu.addText(menuOffsetX, currY, menuWidth, hypothekText+" "+field.getHypothekWorth()+" "+GLOBAL_MONEY_VAR, false);
 	currY+=text.getHeight()+margin;
 	  
 	var menuHeight=currY-menuOffsetY;
@@ -45,8 +60,25 @@ function fieldInformationWindow(informationMenu, houseText1, houseText2, hypothe
 		return true;
 	}
 
-	informationMenu.addButton(menuOffsetX+menuWidth/2-45, currY, 90, 30, closeText, callbackClose);
-	
+	if(mortgageText=="" || mortgageCallback==undefined)
+	{
+		informationMenu.addButton(menuOffsetX+menuWidth/2-60, currY, 120, 30, closeText, callbackClose);
+	}
+	else
+	{
+		informationMenu.addButton(menuOffsetX+menuWidth-120-margin, currY, 120, 30, closeText, callbackClose);
+		
+		var callbackMortgage=function()
+		{
+			informationMenu.hideAll(true);
+			if(mortgageCallback!=undefined && mortgageCallback!="")
+			{
+				mortgageCallback();
+			}
+			return true;
+		}
+		informationMenu.addButton(menuOffsetX+margin, currY, 120, 30, mortgageText, callbackMortgage);
+	}
 	informationMenu.draw();
 }
 
@@ -83,8 +115,11 @@ function houseBuildingWindow(generalMenu, gameMap, maxHouses, playerObj, textAcc
 
 	for(var i=0;i<ownedFields.length;i++)
 	{
-		var group=ownedFields[i].getGroup();
-		streetsPerGroup[group]--;
+		if(ownedFields[i].isCharged()==false)
+		{
+			var group=ownedFields[i].getGroup();
+			streetsPerGroup[group]--;
+		}
 	}
 
 	var fullStreets=[];
@@ -100,6 +135,14 @@ function houseBuildingWindow(generalMenu, gameMap, maxHouses, playerObj, textAcc
 		}
 	}
 
+	if(fullStreets.length==0)
+	{ 
+		generalMenu.setBusy(false);
+		playerObj.setBusy(false);
+		alert("There is nothing to build on!");
+		return;
+	}
+	
 	var width = window.innerWidth;
     var height = window.innerHeight;
     var houseWidth=width/(maxHouses*1.5);
@@ -108,7 +151,7 @@ function houseBuildingWindow(generalMenu, gameMap, maxHouses, playerObj, textAcc
     var menuHeight=height/1.5;
 
 	var currMoney=playerObj.getMoney();
-	var textObj=generalMenu.addText(0,0,houseWidth,currMoney+" eg");
+	var textObj=generalMenu.addText(0,0,houseWidth,currMoney+" "+GLOBAL_MONEY_VAR);
 	
     var currHeight=0;
 	for(var i=0;i<fullStreets.length;i++)
@@ -259,7 +302,7 @@ function setUpStandardMenu(ingameMenu, gameMap, user, enemyArray, buildingMenuCa
 	ingameMenu.addMenuBackground(profileImageMargin, profileImageMargin, profileImageSize, profileImageSize+30);
 	ingameMenu.addImage(profileImageMargin, profileImageMargin, profileImageSize, profileImageSize, user.imgSrc);
 
-	var textMoney=ingameMenu.addText(profileImageMargin, profileImageMargin+profileImageSize, profileImageSize, "1500 eg");
+	var textMoney=ingameMenu.addText(profileImageMargin, profileImageMargin+profileImageSize, profileImageSize, "1500 "+GLOBAL_MONEY_VAR);
 	user.setMoneyTextbox(textMoney);
 
 	ingameMenu.addButton(containerWidth/2+30, 0, 60, 30, "»", gameMap.rotateRight, "Rotate whole map by +90°");
@@ -274,7 +317,7 @@ function setUpStandardMenu(ingameMenu, gameMap, user, enemyArray, buildingMenuCa
 		ingameMenu.addMenuBackground(x, y, profileImageSizeEnemy, profileImageSizeEnemy+30);
 		ingameMenu.addImage(x, y, profileImageSizeEnemy, profileImageSizeEnemy, enemyArray[i].imgSrc);
 
-		var textMoneyEnemy=ingameMenu.addText(x, y+profileImageSizeEnemy, profileImageSizeEnemy, "1500 eg");
+		var textMoneyEnemy=ingameMenu.addText(x, y+profileImageSizeEnemy, profileImageSizeEnemy, "1500 "+GLOBAL_MONEY_VAR);
 		enemyArray[i].setMoneyTextbox(textMoneyEnemy);
 	}
 
