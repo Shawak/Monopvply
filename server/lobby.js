@@ -2,8 +2,10 @@ const Packets = require('../shared/packets.js');
 
 class Lobby {
 
-    constructor(server, owner) {
+    constructor(server, id, name, owner) {
         this.server = server;
+        this.id = id;
+        this.name = name;
         this.clients = [owner];
     }
 
@@ -13,24 +15,22 @@ class Lobby {
 
     join(client) {
         this.clients.push(client);
-        let network = client.network;
-        network.link(Packets.ChatMessagePacket, this.onChatMessagePacket);
-        network.link(Packets.LeaveLobbyPacket, this.onLeaveLobbyPacket);
+        client.network.link(Packets.ChatMessagePacket, this.onChatMessagePacket, this);
+        client.network.link(Packets.LeaveLobbyPacket, this.onLeaveLobbyPacket, this);
     }
 
     leave(client) {
-        this.users.splice(this.users.indexOf(client), 1);
-        let network = client.network;
-        network.unlink(Packets.ChatMessagePacket, this.onChatMessagePacket);
-        network.unlink(Packets.LeaveLobbyPacket, this.onLeaveLobbyPacket);
+        this.clients.splice(this.clients.indexOf(client), 1);
+        client.network.unlink(Packets.ChatMessagePacket, this.onChatMessagePacket, this);
+        client.network.unlink(Packets.LeaveLobbyPacket, this.onLeaveLobbyPacket, this);
     }
 
     getOwner() {
-        return this.users[0];
+        return this.clients[0];
     }
 
-    isOwner(user) {
-        return this.users[0] == user;
+    isOwner(client) {
+        return this.clients[0] == client;
     }
 
     onChatMessagePacket(sender, packet) {

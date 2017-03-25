@@ -36,12 +36,25 @@ class GameServer {
         this.server.listen(1234);
     }
 
+    sendLobbiesPacket(client) {
+        let lobbies = [];
+        for(let lobby of this.lobbies) {
+            lobbies.push({
+                id: lobby.id,
+                name: lobby.name
+            });
+        }
+    }
+
     getLobby(id) {
         return this.lobbies.find(x => x.id == id);
     }
 
     createLobby(owner) {
-        this.lobbies.push(new Lobby(this, owner));
+        let id = 0;
+        while(this.lobbies.find(x => x.id == id))
+            id++;
+        this.lobbies.push(new Lobby(this, id, 'new lobby', owner));
     }
 
     removeLobby(lobby) {

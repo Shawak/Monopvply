@@ -14,13 +14,14 @@ function EventHandler() {
         this.handler[T].push([func, caller]);
     };
 
-    this.unlink = function(func) {
+    this.unlink = function(func, caller) {
+        caller = (typeof caller !== 'undefined') ? caller : null;
         if(typeof(func) !== 'function') {
             throw 'unlink: func is not a function';
         }
         for(var T in this.handler) {
             for(var i = 0; i < this.handler[T].length; i++) {
-                if(this.handler[T][i][0] == func) {
+                if(this.handler[T][i][0] == func && (!this.handler[T][i][1] || this.handler[T][i][1] == caller)) {
                     this.handler[T].splice(i, 1);
                     return true;
                 }
