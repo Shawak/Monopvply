@@ -2,7 +2,6 @@ const io = require('socket.io');
 
 const Client = require('./client.js');
 const Lobby = require('./lobby.js');
-const Packets = require('./../shared/packets.js');
 
 class GameServer {
 
