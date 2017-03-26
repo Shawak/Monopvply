@@ -19,6 +19,10 @@ body {
     height: 100%;
 }
 
+#content {
+    padding-top: 50px;
+}
+
 #stage-parent {
     width: 100%;
     height: 100%;

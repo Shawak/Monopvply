@@ -68,22 +68,32 @@
         }
     }
 
-    window.login = function () {
+    function login() {
         client.send(new LoginPacket('User', ''));
-    };
+    }
 
     function onPingPacket(sender, packet) {
         console.log(new Date().getTime() - packet.sent)
     }
 
     function onGameStartPacket(sender, packet) {
+        page('game', function() {
+            startGame();
+        });
+    }
+
+    function page(pageName, callback) {
         $.ajax({
-            url: '/game.html'
+            url: '/' + pageName + '.html'
         }).done(function (data) {
-                $('body').html(data);
+            $('#content').html(data);
+            if(pageName == 'game') {
                 startGame();
             }
-        );
+            if(callback) {
+                callback();
+            }
+        });
     }
 
     function onNextTurnPacket(sender, packet) {
@@ -128,4 +138,8 @@
     client.network.link(DiceResultPacket, onDiceResultPacket);
     client.start();
 
+    page('lobbies');
+
+    window.page = page;
+    window.login = login;
 })();
