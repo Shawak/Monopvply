@@ -9,6 +9,10 @@ class Lobby {
         this.clients = [owner];
     }
 
+    getClientsCount() {
+        return this.clients.length;
+    }
+
     getClients() {
         return this.clients;
     }

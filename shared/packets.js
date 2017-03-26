@@ -42,6 +42,19 @@ function ChatMessagePacket(from, message) {
     this.message = message;
 }
 
+exports.LoginPacket = LoginPacket;
+exports.PingPacket = PingPacket;
+exports.GameStartPacket = GameStartPacket;
+exports.NextTurnPacket = NextTurnPacket;
+exports.PlayerEndTurnPacket = PlayerEndTurnPacket;
+exports.DiceResultPacket = DiceResultPacket;
+exports.PlayerBuyPacket = PlayerBuyPacket;
+exports.UpdatePlayerPacket = UpdatePlayerPacket;
+exports.UpdateFieldPacket = UpdateFieldPacket;
+exports.ChatMessagePacket = ChatMessagePacket;
+
+/* Lobby */
+
 function CreateLobbyPacket() {
 }
 
@@ -56,18 +69,16 @@ function JoinLobbyPacket(lobbyID) {
 function LeaveLobbyPacket() {
 }
 
-exports.LoginPacket = LoginPacket;
-exports.PingPacket = PingPacket;
-exports.GameStartPacket = GameStartPacket;
-exports.NextTurnPacket = NextTurnPacket;
-exports.PlayerEndTurnPacket = PlayerEndTurnPacket;
-exports.DiceResultPacket = DiceResultPacket;
-exports.PlayerBuyPacket = PlayerBuyPacket;
-exports.UpdatePlayerPacket = UpdatePlayerPacket;
-exports.UpdateFieldPacket = UpdateFieldPacket;
-exports.ChatMessagePacket = ChatMessagePacket;
+function ListLobbiesPacket(lobbies) {
+    this.lobbies = lobbies;
+}
+
+function RequestLobbiesPacket() {
+}
 
 exports.CreateLobbyPacket = CreateLobbyPacket;
 exports.UpdateLobbyPacket = UpdateLobbyPacket;
 exports.JoinLobbyPacket = JoinLobbyPacket;
 exports.LeaveLobbyPacket = LeaveLobbyPacket;
+exports.RequestLobbiesPacket = RequestLobbiesPacket;
+exports.ListLobbiesPacket = ListLobbiesPacket;

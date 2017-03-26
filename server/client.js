@@ -38,8 +38,21 @@ class Client {
         if(!this.user) {
             console.log(packet.username + ' logged in!');
             this.user = new User(0, packet.username);
-            new Game([this]).start();
+            //new Game([this]).start();
+            this.sendLobbies();
         }
+    }
+
+    sendLobbies() {
+        let lobbies = [];
+        for(let lobby of this.server.getLobbies()) {
+            lobbies.push({
+                id: lobby.id,
+                name: lobby.name,
+                clients: lobby.getClientsCount()
+            });
+        }
+        this.send(new Packets.ListLobbiesPacket(lobbies));
     }
 
     onCreateLobbyPacket(sender, packet) {
