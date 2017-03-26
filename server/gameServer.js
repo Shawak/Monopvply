@@ -13,7 +13,7 @@ class GameServer {
         this.server.on('connection', (socket) => {
 
             let id = 0;
-            while(this.client.find(lobby => lobby.id != id))
+            while(this.clients.find(client => client.id == id))
                 id++;
 
             this.clients.push(new Client(this, id, socket));
