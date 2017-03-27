@@ -14,6 +14,7 @@ function Map(konvaStage)
 	var containerWidth;
 	var containerHeight;
 	var innerBackground;
+	var fieldPositions=[];
 	
 	var widthOneSideField=160;
 	var heightOneSideField=210;
@@ -30,11 +31,22 @@ function Map(konvaStage)
 		return sideFields[sideFields.length-1];
 	}
 	
+	
+	this.getSideFieldsPerSide =function()
+	{
+		return fieldsPerSide;
+	}
+	
 	this.getSideFields =function()
 	{
 		return sideFields;
 	}
 
+	this.getLayer =function()
+	{
+		return layer;
+	}
+	
 	this.draw =function()
 	{
 		layer.draw();
@@ -50,6 +62,47 @@ function Map(konvaStage)
 		return heightOneSideField;
 	}
 
+	this.getPositionOfField = function(field)
+	{
+		for(var i=0;i<fieldPositions.length;i++)
+		{
+			if(fieldPositions[i].getId() == field.getId())
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	this.getFieldsBetween = function(startFieldPosition, diceSum)
+	{
+		var fieldsBetween=[];
+		if(startFieldPosition>-1)
+		{
+			if(diceSum<0)
+			{
+				diceSum+=fieldPositions.length;
+			}
+			console.log(startFieldPosition+" "+endPos);
+			var endPos=(startFieldPosition+diceSum)%fieldPositions.length;
+			
+			if(startFieldPosition>endPos)
+			{
+				for(var i=startFieldPosition;i<fieldPositions.length;i++)
+				{
+					fieldsBetween.push(fieldPositions[i]);
+				}
+				startFieldPosition=0;
+			}
+			
+			for(var i=startFieldPosition;i<fieldPositions.length && i<=endPos;i++)
+			{
+				fieldsBetween.push(fieldPositions[i]);
+			}
+		}
+		return fieldsBetween;
+	}
+	
 	this.getFieldById = function(id)
 	{
 		for(var i=0;i<sideFields.length;i++)
@@ -72,6 +125,11 @@ function Map(konvaStage)
 			}
 		}	
 		return undefined;
+	}
+	
+	this.getDetailsGroup = function()
+	{
+		return detailsGroup;
 	}
 	
 	this.addKonvaObj = function(konvaObj)
@@ -332,32 +390,48 @@ function Map(konvaStage)
 		cornerFields[1].construct(layer,gameGroup,mapGroup, widthOneSideField*fieldsPerSide+heightOneSideField, 0, heightOneSideField, heightOneSideField, "right",true);
 		cornerFields[2].construct(layer,gameGroup,mapGroup, widthOneSideField*fieldsPerSide+heightOneSideField, widthOneSideField*fieldsPerSide+heightOneSideField, heightOneSideField, heightOneSideField, "bottom",true);
 		cornerFields[3].construct(layer,gameGroup,mapGroup, 0, widthOneSideField*fieldsPerSide+heightOneSideField, heightOneSideField, heightOneSideField, "left",true);
+	
+		fieldPositions[0]=cornerFields[0];
+		fieldPositions[fieldsPerSide+1]=cornerFields[1];
+		fieldPositions[fieldsPerSide*2+2]=cornerFields[2];
+		fieldPositions[fieldsPerSide*3+3]=cornerFields[3];
 	}
 	
 	function setSideFieldPositions()
 	{
+		fieldPositions=[-1];
 		var currIdx=0;
 		for (var x = 0; x < fieldsPerSide; x++)
 		{
 			sideFields[currIdx].construct(layer,gameGroup,mapGroup, x*widthOneSideField+heightOneSideField, 0, widthOneSideField, heightOneSideField, "top");
+			fieldPositions.push(sideFields[currIdx]);
 			currIdx++;
 		}
+		
+		fieldPositions.push(-1);
 		
 		for (var y = 0; y < fieldsPerSide; y++)
 		{
 			sideFields[currIdx].construct(layer,gameGroup,mapGroup, fieldsPerSide*widthOneSideField+heightOneSideField, y*widthOneSideField+heightOneSideField, widthOneSideField,heightOneSideField, "right");
+			fieldPositions.push(sideFields[currIdx]);
 			currIdx++;
 		}
-			
+		
+		fieldPositions.push(-1);
+		
 		for (var x = fieldsPerSide-1; x >=0 ; x--)
 		{
 			sideFields[currIdx].construct(layer,gameGroup,mapGroup, x*widthOneSideField+heightOneSideField, widthOneSideField*fieldsPerSide+heightOneSideField, widthOneSideField, heightOneSideField, "bottom");
+			fieldPositions.push(sideFields[currIdx]);
 			currIdx++;
 		}
+		
+		fieldPositions.push(-1);
 		
 		for (var y = fieldsPerSide-1; y >=0 ; y--)
 		{
 			sideFields[currIdx].construct(layer,gameGroup,mapGroup, 0, y*widthOneSideField+heightOneSideField, widthOneSideField,heightOneSideField, "left");
+			fieldPositions.push(sideFields[currIdx]);
 			currIdx++;
 		}
 		

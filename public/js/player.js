@@ -1,6 +1,7 @@
 
 function Player(gameMap, ingameMenuLayer, informationMenu, money, profileImgSrc)
 {
+	var currFieldPosition=0;
 	var informationMenu=informationMenu;
 	var layer=ingameMenuLayer;
 	var money=money;
@@ -13,6 +14,7 @@ function Player(gameMap, ingameMenuLayer, informationMenu, money, profileImgSrc)
 	var boardFigure;
 	var busy=false;
 	var textColor;
+	var busyMoving=false;
 	
 	this.setBusy = function(state)
 	{
@@ -54,7 +56,7 @@ function Player(gameMap, ingameMenuLayer, informationMenu, money, profileImgSrc)
 	    boardFigure = new Konva.Circle(
 	    {
 	      x: gameMap.getWidthField()/2,
-	      y: gameMap.getWidthField()/2,
+	      y: gameMap.getHeightField()/2,
 	      radius: gameMap.getWidthField()/4,
 	      stroke: color,
 		  rotation:180,
@@ -68,21 +70,83 @@ function Player(gameMap, ingameMenuLayer, informationMenu, money, profileImgSrc)
 
 	this.moveTo = function(id)
 	{
-		busy=true;
+		if(busyMoving==true)
+		{
+			return false;
+		}
+		
+		busyMoving=true;
 		var field=gameMap.getFieldById(id);
 		if(field!= undefined)
 		{
-			boardFigure.setPosition({x: field.getX()+gameMap.getWidthField()/2, y: field.getY()+gameMap.getWidthField()/2});
+			var endPos=gameMap.getPositionOfField(field);
+			
+			var fieldsBetween=gameMap.getFieldsBetween(currFieldPosition,endPos-currFieldPosition);
+			currFieldPosition=endPos;
+			
+			if(fieldsBetween==undefined || fieldsBetween.length==0)
+			{
+				busyMoving=false;
+				return false;
+			}
+			var fieldBefore;
+			var currField;
+			var amountSteps=50;
+			var stepsPerStreet=(amountSteps/fieldsBetween.length)|0;
+			
+			fieldBefore=fieldsBetween[0];
+			currField=fieldsBetween[0];
+			
+			var counter=0;
+			var countSteps=0;
+			var anim;
+			var currX=boardFigure.x();
+			var currY=boardFigure.y();
+			fieldBefore=fieldsBetween[0];
+			currField=fieldsBetween[1];
+			
+			anim = new Konva.Animation(function(frame) 
+			{
+				currX-=(fieldBefore.getX()-currField.getX())/stepsPerStreet;
+				currY-=(fieldBefore.getY()-currField.getY())/stepsPerStreet;
+				
+				boardFigure.setPosition(
+				{
+					x: currX, 
+					y: currY
+				});
+				
+				countSteps++;
+				if(countSteps>=stepsPerStreet)
+				{
+					counter++;
+					countSteps=0;
+					fieldBefore=currField;
+					currField=fieldsBetween[counter];	
+				}
+				if(counter>=fieldsBetween.length)
+				{
+					anim.stop();
+					busyMoving=false;
+				}
+				
+			}, gameMap.getLayer());
+			anim.start();
+			
 			gameMap.draw();	
-			busy=false;
 			return true;
 		}
-		busy=false;
+		busyMoving=false;
 		return false;
 	}
 
 	this.buyCard = function(id, animation)
 	{
+		if(busy==true)
+		{
+			return false;
+		}
+		busy=true;
 		animation = typeof animation !== 'undefined' ? animation : true;
 		var field=gameMap.getFieldById(id);
 		if(field!= undefined && money>=field.getCosts())
@@ -91,6 +155,7 @@ function Player(gameMap, ingameMenuLayer, informationMenu, money, profileImgSrc)
 			that.updateMoney(money-field.getCosts(),animation);
 			return true;
 		}
+		busy=false;
 		return false;
 	}
 	
@@ -136,6 +201,7 @@ function Player(gameMap, ingameMenuLayer, informationMenu, money, profileImgSrc)
 			layer.draw();
 			money=newMoney;
 			busy=false;
-		}	
+		}
+		return true;		
 	}
 }
