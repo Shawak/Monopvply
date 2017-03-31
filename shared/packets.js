@@ -1,7 +1,50 @@
+/* Login */
+
 function LoginPacket(username, password) {
     this.username = username;
     this.password = password;
 }
+
+function LoginResultPacket(success) {
+    this.success = success;
+}
+
+exports.LoginPacket = LoginPacket;
+exports.LoginResultPacket = LoginResultPacket;
+
+
+/* Lobby */
+
+function CreateLobbyPacket() {
+}
+
+function UpdateLobbyPacket(users) {
+    this.users = users;
+}
+
+function JoinLobbyPacket(lobbyID) {
+    this.lobbyID = lobbyID;
+}
+
+function LeaveLobbyPacket() {
+}
+
+function ListLobbiesPacket(lobbies) {
+    this.lobbies = lobbies;
+}
+
+function RequestLobbiesPacket() {
+}
+
+exports.CreateLobbyPacket = CreateLobbyPacket;
+exports.UpdateLobbyPacket = UpdateLobbyPacket;
+exports.JoinLobbyPacket = JoinLobbyPacket;
+exports.LeaveLobbyPacket = LeaveLobbyPacket;
+exports.RequestLobbiesPacket = RequestLobbiesPacket;
+exports.ListLobbiesPacket = ListLobbiesPacket;
+
+
+/* Other */
 
 function PingPacket() {
     this.sent = new Date().getTime();
@@ -42,7 +85,6 @@ function ChatMessagePacket(from, message) {
     this.message = message;
 }
 
-exports.LoginPacket = LoginPacket;
 exports.PingPacket = PingPacket;
 exports.GameStartPacket = GameStartPacket;
 exports.NextTurnPacket = NextTurnPacket;
@@ -52,33 +94,3 @@ exports.PlayerBuyPacket = PlayerBuyPacket;
 exports.UpdatePlayerPacket = UpdatePlayerPacket;
 exports.UpdateFieldPacket = UpdateFieldPacket;
 exports.ChatMessagePacket = ChatMessagePacket;
-
-/* Lobby */
-
-function CreateLobbyPacket() {
-}
-
-function UpdateLobbyPacket(users) {
-    this.users = users;
-}
-
-function JoinLobbyPacket(lobbyID) {
-    this.lobbyID = lobbyID;
-}
-
-function LeaveLobbyPacket() {
-}
-
-function ListLobbiesPacket(lobbies) {
-    this.lobbies = lobbies;
-}
-
-function RequestLobbiesPacket() {
-}
-
-exports.CreateLobbyPacket = CreateLobbyPacket;
-exports.UpdateLobbyPacket = UpdateLobbyPacket;
-exports.JoinLobbyPacket = JoinLobbyPacket;
-exports.LeaveLobbyPacket = LeaveLobbyPacket;
-exports.RequestLobbiesPacket = RequestLobbiesPacket;
-exports.ListLobbiesPacket = ListLobbiesPacket;

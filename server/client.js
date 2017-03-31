@@ -24,26 +24,23 @@ class Client {
 
         this.network = new EventHandler();
         this.network.link(Packets.LoginPacket, this.onLoginPacket, this);
+        this.network.link(Packets.RequestLobbiesPacket, this.onRequestLobbiesPacket, this);
         this.network.link(Packets.CreateLobbyPacket, this.onCreateLobbyPacket, this);
         this.network.link(Packets.JoinLobbyPacket, this.onJoinLobbyPacket, this);
 
         /*setInterval(() => this.send(new Packets.PingPacket()), 1000);*/
     }
 
-    getNetwork() {
-        return this.network;
-    }
-
     onLoginPacket(sender, packet) {
         if(!this.user) {
+            // TODO: Login using the Database
             console.log(packet.username + ' logged in!');
             this.user = new User(0, packet.username);
-            //new Game([this]).start();
-            this.sendLobbies();
+            this.send(new Packets.LoginResultPacket(true));
         }
     }
 
-    sendLobbies() {
+    onRequestLobbiesPacket(sender, packet) {
         let lobbies = [];
         for(let lobby of this.server.getLobbies()) {
             lobbies.push({

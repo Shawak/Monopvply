@@ -77,7 +77,7 @@ class Game {
     }
 
     update(obj) {
-        switch(Object.getPrototypeOf(obj)) {
+        switch (Object.getPrototypeOf(obj)) {
             case Player:
                 this.broadcast(new Packets.UpdatePlayerPacket(obj));
                 break;
@@ -89,7 +89,7 @@ class Game {
 
     onPlayerEndTurnPacket(sender, packet) {
         let player = this.senderToPlayer(sender);
-        if(player != this.getCurrentPlayer() || !this.playerCanEndTurn)
+        if (player != this.getCurrentPlayer() || !this.playerCanEndTurn)
             return;
 
         this.nextTurn();
@@ -97,7 +97,7 @@ class Game {
 
     onPlayerBuyPacket(sender, packet) {
         let player = this.senderToPlayer(sender);
-        if(player != this.getCurrentPlayer())
+        if (player != this.getCurrentPlayer())
             return;
 
         this.map.onBuy(this, player, packet.fieldID);
@@ -105,7 +105,7 @@ class Game {
 
     onChatMessagePacket(sender, packet) {
         let player = this.senderToPlayer(sender);
-        if(!player)
+        if (!player)
             return;
 
         this.broadcast(new Packets.ChatMessagePacket(player, packet.message));

@@ -72,20 +72,13 @@
         client.send(new LoginPacket('User', ''));
     }
 
-    function onPingPacket(sender, packet) {
-        console.log(new Date().getTime() - packet.sent)
-    }
-
-    function onGameStartPacket(sender, packet) {
-        page('game', function() {
-            startGame();
-        });
-    }
-
-    function page(pageName, callback) {
+    function changePage(pageName, callback) {
+        $('#navbar li').removeClass('active');
+        $('#navbar a[href="#' + pageName + '"]').parent().addClass('active');
         $.ajax({
             url: '/' + pageName + '.html'
         }).done(function (data) {
+            $('#navbar [href="#' + pageName + '"]').addClass('active');
             $('#content').html(data);
             if(pageName == 'game') {
                 startGame();
@@ -93,6 +86,28 @@
             if(callback) {
                 callback();
             }
+        });
+    }
+
+    function sendMessage(message) {
+        client.send(new ChatMessagePacket(null, message));
+    }
+
+    function onLoginResultPacket(sender, packet) {
+        if(packet.success) {
+            $('#navbar a[href="#login"]').remove();
+            $('#navbar .nav').append('<li><a href="#lobbies">Lobbies</a></li>');
+            client.send(new RequestLobbiesPacket());
+        }
+    }
+
+    function onPingPacket(sender, packet) {
+        console.log(new Date().getTime() - packet.sent)
+    }
+
+    function onGameStartPacket(sender, packet) {
+        changePage('game', function() {
+            startGame();
         });
     }
 
@@ -124,11 +139,13 @@
         // TODO
     }
 
-    function sendMessage(message) {
-        client.send(new ChatMessagePacket(null, message));
+    function onListLobbiesPacket(sender, packet) {
+        changePage('lobbies');
+        console.log(packet);
     }
 
     var client = new Client();
+    client.network.link(LoginResultPacket, onLoginResultPacket);
     client.network.link(PingPacket, onPingPacket);
     client.network.link(GameStartPacket, onGameStartPacket);
     client.network.link(NextTurnPacket, onNextTurnPacket);
@@ -136,10 +153,17 @@
     client.network.link(UpdateFieldPacket, onUpdateFieldPacket);
     client.network.link(ChatMessagePacket, onChatMessagePacket);
     client.network.link(DiceResultPacket, onDiceResultPacket);
+    client.network.link(ListLobbiesPacket, onListLobbiesPacket);
     client.start();
 
-    page('lobbies');
-
-    window.page = page;
+    window.changePage = changePage;
     window.login = login;
+
+    changePage('login');
+
+    $('#navbar a').click(function() {
+        var page = $(this).attr('href').substring(1);
+        changePage(page);
+    });
+
 })();
