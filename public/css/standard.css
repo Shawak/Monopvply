@@ -23,6 +23,14 @@ body {
     padding-top: 50px;
 }
 
+#lobbies tbody tr {
+    cursor: pointer;
+}
+
+#lobbies tbody tr:hover {
+    background-color: rgb(230, 230, 230);
+}
+
 #stage-parent {
     width: 100%;
     height: 100%;

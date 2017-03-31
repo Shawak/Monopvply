@@ -49,18 +49,18 @@
             gameMap = new Map(stage);
             window.ingameMenu = new Menu(stage, queue);
             generalMenu = new Menu(stage, queue);
-			var informationMenu=new Menu(stage,queue);
-			
-            window.user = new Player(gameMap, ingameMenu.getLayer(),informationMenu, 1500, "./img/test.jpg", "./img/test.jpg");
+            var informationMenu = new Menu(stage, queue);
+
+            window.user = new Player(gameMap, ingameMenu.getLayer(), informationMenu, 1500, "./img/test.jpg", "./img/test.jpg");
             var enemies = [];
-            enemies.push(new Player(gameMap, ingameMenu.getLayer(),informationMenu, 1500, "./img/Testing.jpg", "./img/Testing.jpg"));
-            enemies.push(new Player(gameMap, ingameMenu.getLayer(),informationMenu, 1500, "./img/Testing.jpg", "./img/Testing.jpg"));
-            enemies.push(new Player(gameMap, ingameMenu.getLayer(),informationMenu, 1500, "./img/Testing.jpg", "./img/Testing.jpg"));
+            enemies.push(new Player(gameMap, ingameMenu.getLayer(), informationMenu, 1500, "./img/Testing.jpg", "./img/Testing.jpg"));
+            enemies.push(new Player(gameMap, ingameMenu.getLayer(), informationMenu, 1500, "./img/Testing.jpg", "./img/Testing.jpg"));
+            enemies.push(new Player(gameMap, ingameMenu.getLayer(), informationMenu, 1500, "./img/Testing.jpg", "./img/Testing.jpg"));
 
             var houseBuildingMenu = houseBuildingWindow.bind(null, generalMenu, gameMap, 5, user, "Accept", "Cancel");
 
-			setUpStandardMenu(ingameMenu,gameMap,user,enemies,houseBuildingMenu);
-			setUpStandardMap(queue,gameMap,informationMenu);
+            setUpStandardMenu(ingameMenu, gameMap, user, enemies, houseBuildingMenu);
+            setUpStandardMap(queue, gameMap, informationMenu);
 
             user.addBoardFigure("", "green");
             queue.start();
@@ -80,10 +80,10 @@
         }).done(function (data) {
             $('#navbar [href="#' + pageName + '"]').addClass('active');
             $('#content').html(data);
-            if(pageName == 'game') {
+            if (pageName == 'game') {
                 startGame();
             }
-            if(callback) {
+            if (callback) {
                 callback();
             }
         });
@@ -94,7 +94,7 @@
     }
 
     function onLoginResultPacket(sender, packet) {
-        if(packet.success) {
+        if (packet.success) {
             $('#navbar a[href="#login"]').remove();
             $('#navbar .nav').append('<li><a href="#lobbies">Lobbies</a></li>');
             client.send(new RequestLobbiesPacket());
@@ -106,7 +106,7 @@
     }
 
     function onGameStartPacket(sender, packet) {
-        changePage('game', function() {
+        changePage('game', function () {
             startGame();
         });
     }
@@ -140,8 +140,18 @@
     }
 
     function onListLobbiesPacket(sender, packet) {
-        changePage('lobbies');
         console.log(packet);
+        changePage('lobbies', function () {
+            var elem = $('#lobbies tbody');
+            elem.empty();
+            for (var i = 0; i < packet.lobbies.length; i++) {
+                elem.append('<tr>' +
+                    '<td>#' + packet.lobbies[i].id + '</td>' +
+                    '<td>' + packet.lobbies[i].name + '</td>' +
+                    '<td>' + packet.lobbies[i].clients + '</td>' +
+                    '</tr>')
+            }
+        });
     }
 
     var client = new Client();
@@ -161,7 +171,7 @@
 
     changePage('login');
 
-    $('#navbar a').click(function() {
+    $('#navbar a').click(function () {
         var page = $(this).attr('href').substring(1);
         changePage(page);
     });
