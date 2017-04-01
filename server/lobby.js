@@ -2,14 +2,14 @@ const Packets = require('../shared/packets.js');
 
 class Lobby {
 
-    constructor(server, id, name, owner) {
+    constructor(server, id, name) {
         this.server = server;
         this.id = id;
         this.name = name;
-        this.clients = [owner];
+        this.clients = [];
     }
 
-    getClientsCount() {
+    getClientCount() {
         return this.clients.length;
     }
 
@@ -17,16 +17,27 @@ class Lobby {
         return this.clients;
     }
 
+    hasClient(client) {
+        return this.clients.find(x => x == client);
+    }
+
     join(client) {
         this.clients.push(client);
+        client.onDisconnect.add(this.onClientDisconnect);
         client.network.link(Packets.ChatMessagePacket, this.onChatMessagePacket, this);
         client.network.link(Packets.LeaveLobbyPacket, this.onLeaveLobbyPacket, this);
+        client.send(new Packets.UpdateLobbyPacket(this.getClients()));
     }
 
     leave(client) {
         this.clients.splice(this.clients.indexOf(client), 1);
+        client.onDisconnect.remove(this.onClientDisconnect);
         client.network.unlink(Packets.ChatMessagePacket, this.onChatMessagePacket, this);
         client.network.unlink(Packets.LeaveLobbyPacket, this.onLeaveLobbyPacket, this);
+    }
+
+    onClientDisconnect(sender) {
+        this.leave(sender);
     }
 
     getOwner() {
@@ -55,3 +66,5 @@ class Lobby {
     }
 
 }
+
+module.exports = Lobby;

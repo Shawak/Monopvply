@@ -80,6 +80,11 @@
         }).done(function (data) {
             $('#navbar [href="#' + pageName + '"]').addClass('active');
             $('#content').html(data);
+
+            $('#createLobby').click(function() {
+                client.send(new CreateLobbyPacket());
+            });
+
             if (pageName == 'game') {
                 startGame();
             }
@@ -154,6 +159,18 @@
         });
     }
 
+    function onUpdateLobbyPacket(sender, packet) {
+        console.log(packet);
+        if(!lobby) {
+            changePage('lobby', function() {
+
+            });
+        }
+    }
+
+
+    var lobby = null;
+
     var client = new Client();
     client.network.link(LoginResultPacket, onLoginResultPacket);
     client.network.link(PingPacket, onPingPacket);
@@ -164,6 +181,7 @@
     client.network.link(ChatMessagePacket, onChatMessagePacket);
     client.network.link(DiceResultPacket, onDiceResultPacket);
     client.network.link(ListLobbiesPacket, onListLobbiesPacket);
+    client.network.link(UpdateLobbyPacket, onUpdateLobbyPacket);
     client.start();
 
     window.changePage = changePage;

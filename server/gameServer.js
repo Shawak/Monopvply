@@ -40,16 +40,21 @@ class GameServer {
         return this.lobbies.find(x => x.id == id);
     }
 
-    createLobby(owner) {
+    createLobby() {
         let id = 0;
         while (this.lobbies.find(x => x.id == id))
             id++;
-
-        this.lobbies.push(new Lobby(this, id, 'new lobby', owner));
+        let lobby = new Lobby(this, id, 'new lobby');
+        this.lobbies.push(lobby);
+        return lobby;
     }
 
     removeLobby(lobby) {
         this.lobbies.slice(this.lobbies.indexOf(lobby), 1);
+    }
+
+    isInLobby(client) {
+        return this.lobbies.find(x => x.hasClient(client));
     }
 
 }

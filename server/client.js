@@ -4,6 +4,7 @@ const Packets = require('./../shared/packets.js');
 
 const User = require('./user.js');
 const Game = require('./game.js');
+const Event = require('./event.js');
 
 class Client {
 
@@ -12,12 +13,13 @@ class Client {
         this.id = id;
         this.socket = socket;
         this.user = null;
+        this.onDisconnect = new Event(this);
 
         this.socket.on('packet', (data) => {
             try {
                 let packet = PacketManager.parse(data);
                 this.network.dispatch(this, packet);
-            } catch(ex) {
+            } catch (ex) {
                 console.log(ex);
             }
         });
@@ -32,7 +34,7 @@ class Client {
     }
 
     onLoginPacket(sender, packet) {
-        if(!this.user) {
+        if (!this.user) {
             // TODO: Login using the Database
             console.log(packet.username + ' logged in!');
             this.user = new User(0, packet.username);
@@ -42,7 +44,7 @@ class Client {
 
     onRequestLobbiesPacket(sender, packet) {
         let lobbies = [];
-        for(let lobby of this.server.getLobbies()) {
+        for (let lobby of this.server.getLobbies()) {
             lobbies.push({
                 id: lobby.id,
                 name: lobby.name,
@@ -53,14 +55,15 @@ class Client {
     }
 
     onCreateLobbyPacket(sender, packet) {
-        if(this.user) {
-            this.server.createLobby(this);
+        if (this.user) {
+            let lobby = this.server.createLobby();
+            lobby.join(this);
         }
     }
 
     onJoinLobbyPacket(sender, packet) {
         let lobby = this.server.getLobby(packet.lobbyID);
-        if(lobby && this.user) {
+        if (lobby && this.user) {
             lobby.join(this);
         }
     }
