@@ -1,5 +1,5 @@
 
-function Player(gameMap, ingameMenuLayer, informationMenu, money, profileImgSrc)
+function Player(gameMap, ingameMenuLayer, informationMenu, money, color, profileImgSrc)
 {
 	var currFieldPosition=0;
 	var informationMenu=informationMenu;
@@ -15,6 +15,19 @@ function Player(gameMap, ingameMenuLayer, informationMenu, money, profileImgSrc)
 	var busy=false;
 	var textColor;
 	var busyMoving=false;
+	var playerColor=color;
+	var playerName="Username";
+	
+	
+	this.getName = function()
+	{
+		return playerName;
+	}
+	
+	this.getColor = function()
+	{
+		return playerColor;
+	}
 	
 	this.setBusy = function(state)
 	{
@@ -41,10 +54,9 @@ function Player(gameMap, ingameMenuLayer, informationMenu, money, profileImgSrc)
 		return fieldCardManager.getAllOwnedFields();
 	}
 
-	this.addBoardFigure = function(boardImgSrc,color)
+	this.addBoardFigure = function(boardImgSrc)
 	{
 		boardImgSrc = typeof boardImgSrc !== 'undefined' ? boardImgSrc : "";
-		color = typeof color !== 'undefined' ? color : "black";
 		if(boardImgSrc=="")
 		{
 			this.boardImgSrc=this.imgSrc;
@@ -58,7 +70,7 @@ function Player(gameMap, ingameMenuLayer, informationMenu, money, profileImgSrc)
 	      x: gameMap.getWidthField()/2,
 	      y: gameMap.getHeightField()/2,
 	      radius: gameMap.getWidthField()/4,
-	      stroke: color,
+	      stroke: playerColor,
 		  rotation:180,
 		  fillPatternImage: imageObj,
 		  fillPatternOffset: { x : gameMap.getWidthField()/4, y : gameMap.getWidthField()/4},
@@ -140,6 +152,17 @@ function Player(gameMap, ingameMenuLayer, informationMenu, money, profileImgSrc)
 		return false;
 	}
 
+	this.addCard = function(id)
+	{
+		var field=gameMap.getFieldById(id);
+		if(field!= undefined)
+		{
+			fieldCardManager.addCard(field);
+			return true;
+		}
+		return false;
+	}
+	
 	this.buyCard = function(id, animation)
 	{
 		if(busy==true)

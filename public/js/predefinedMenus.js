@@ -1,8 +1,258 @@
+function tradingWindow(generalMenu, playerObj, enemyObj, textOffer, textCancel, offerCallback, cancelCallback)
+{
+	if(generalMenu.isBusy() || playerObj.isBusy() || enemyObj.isBusy())
+	{ 
+		return true;
+	}
+	playerObj.setBusy(true);
+	generalMenu.setBusy(true);
+	enemyObj.setBusy(true);
+
+	offerCallback = typeof offerCallback !== 'undefined' ? offerCallback : undefined;
+	cancelCallback = typeof cancelCallback !== 'undefined' ? cancelCallback : undefined;
+	
+	generalMenu.clear();
+	generalMenu.setDraggable(true);
+	generalMenu.hideAll(false);
+	
+	var width = window.innerWidth;
+    var height = window.innerHeight;
+	
+	var menuWidth=Math.max(width/1.75,830);
+	
+	var menuOffsetX=width/2-menuWidth/2;
+	var menuOffsetY=height/6;
+	
+	var margin=8;
+	var currY=menuOffsetY+margin;
+	
+	var ownedFields=playerObj.getAllOwnedFields();
+	var ownedEnemyFields=enemyObj.getAllOwnedFields();
+	
+	var myTextBox = generalMenu.addTextInRect(menuOffsetX+margin, menuOffsetY+margin, menuWidth/2-margin*2, playerObj.getName(), playerObj.getColor());
+	var enemyTextBox = generalMenu.addTextInRect(menuOffsetX+margin*3+menuWidth/2, menuOffsetY+margin, menuWidth/2-margin*2, enemyObj.getName(), enemyObj.getColor());
+
+	currY+=Math.max(enemyTextBox[0].getHeight(),myTextBox[0].getHeight())+margin;
+	var startLine=currY;
+	
+	var ownedCardsText=generalMenu.addText(menuOffsetX+margin, currY, menuWidth/4-margin*2,"Owned Cards");
+	generalMenu.addText(menuOffsetX+margin*2+menuWidth/4, currY, menuWidth/4-margin*2,"Send");
+	generalMenu.addText(menuOffsetX+margin*2+menuWidth/4*2, currY, menuWidth/4-margin*2,"Recieve");
+	generalMenu.addText(menuOffsetX+margin*2+menuWidth/4*3, currY, menuWidth/4-margin*2,"Enemy Cards");
+
+	currY+=ownedCardsText.getHeight()+margin;
+	
+	var currY2=currY;
+	
+	var cardCurrX=menuOffsetX+margin;
+	var myMaxX=menuOffsetX+menuWidth/4;
+	var cardWidth=70;
+	var cardHeight=90;
+	var player1SendingLineX=menuOffsetX+menuWidth/4+margin;
+	
+	var cards=[];
+	var cardsTrading=[];
+	
+	function sendCard(i)
+	{
+		cards[i][0].hide();
+		cardsTrading[i][0].show();
+		generalMenu.draw();
+	}
+	
+	function dontSendCard(i)
+	{
+		cards[i][0].show();
+		cardsTrading[i][0].hide();
+		generalMenu.draw();
+	}
+	
+	for(var i=0;i<ownedFields.length;i++)
+	{
+		if(cardCurrX+cardWidth*1.1>=myMaxX)
+		{
+			cardCurrX=menuOffsetX+margin;
+			currY+=cardHeight/1.33;
+		}
+
+		var newCard=generalMenu.addFieldCard(cardCurrX, currY, cardWidth, cardHeight, ownedFields[i].getText(), ownedFields[i].getColor(), sendCard.bind(null,i), ownedFields[i].getImgSrc(),false);
+		var newCardTrading=generalMenu.addFieldCard(cardCurrX+menuWidth/4+margin*2, currY, cardWidth, cardHeight, ownedFields[i].getText(), ownedFields[i].getColor(), dontSendCard.bind(null,i), ownedFields[i].getImgSrc(),false);
+		newCardTrading[0].hide();
+		
+		cards[i]=newCard;
+		cardsTrading[i]=newCardTrading;
+		
+		cardCurrX+=cardWidth/1.33;
+	}
+	player1SendingLineX+=margin;
+	currY+=cardHeight*1.33;
+	
+	cardCurrX=menuOffsetX+menuWidth/4*3;
+	var enemyMaxX=menuOffsetX+menuWidth;
+	var player2SendingLineX=cardCurrX-margin;
+	cardCurrX+=margin;
+	
+	var enemyCards=[];
+	var enemyCardsTrading=[];
+	
+	function getCard(i)
+	{
+		enemyCards[i][0].hide();
+		enemyCardsTrading[i][0].show();
+		generalMenu.draw();
+	}
+	
+	function dontGetCard(i)
+	{
+		enemyCards[i][0].show();
+		enemyCardsTrading[i][0].hide();
+		generalMenu.draw();
+	}
+	
+	for(var i=0;i<ownedEnemyFields.length;i++)
+	{
+		if(cardCurrX+cardWidth*1.1>=enemyMaxX)
+		{
+			cardCurrX=menuOffsetX+margin+menuWidth/4*3;
+			currY2+=cardHeight/1.33;
+		}
+		var newCard=generalMenu.addFieldCard(cardCurrX, currY2, cardWidth, cardHeight, ownedEnemyFields[i].getText(), ownedEnemyFields[i].getColor(), getCard.bind(null,i),ownedEnemyFields[i].getImgSrc(),false);
+		var newCardTrading=generalMenu.addFieldCard(cardCurrX-menuWidth/4+margin, currY2, cardWidth, cardHeight, ownedEnemyFields[i].getText(), ownedEnemyFields[i].getColor(), dontGetCard.bind(null,i),ownedEnemyFields[i].getImgSrc(),false);
+		newCardTrading[0].hide();
+		
+		enemyCards[i]=newCard;
+		enemyCardsTrading[i]=newCardTrading;
+		
+		cardCurrX+=cardWidth/1.33;
+	}
+	player2SendingLineX+=margin;
+	
+	currY2+=cardHeight*1.33;	
+
+	currY=Math.max(currY,currY2);
+	
+	var textBox;
+	var negativeNumber=false;
+	var textBoxWidth=menuWidth/4-2*margin;
+	
+	generalMenu.addLine(menuOffsetX+margin, currY,menuOffsetX+menuWidth+margin,currY);
+	currY+=margin/2;
+	
+	var myBox=generalMenu.addText(menuOffsetX+margin+menuWidth/4, currY, textBoxWidth, "");
+	var	enemyBox=generalMenu.addText(menuOffsetX+margin+menuWidth/4*2, currY, textBoxWidth, "");
+	
+	var currMoney=0;
+	
+	var callbackAdd=function(addMoney)
+	{
+		currMoney+=addMoney;
+		
+		if(currMoney>0)
+		{
+			enemyBox.text(Math.abs(currMoney));
+			myBox.text("");
+		}
+		else
+		{
+			myBox.text(Math.abs(currMoney));
+			enemyBox.text("");
+		}
+		
+		generalMenu.draw();
+		return true;
+	}
+	
+	currY+=margin/2;
+	
+	var buttonWidth=100;
+	var buttonX=menuOffsetX+menuWidth/4/2-buttonWidth-margin/2+margin;
+	var buttonXBefore=buttonX;
+	
+	generalMenu.addButton(buttonX, currY, buttonWidth, 30, "Send 1", callbackAdd.bind(null,-1));
+	buttonX+=buttonWidth+margin;
+	generalMenu.addButton(buttonX, currY, buttonWidth, 30, "Send 10", callbackAdd.bind(null,-10));
+	
+	buttonX=buttonXBefore;
+	var currYBefore=currY;
+	currY+=margin+30;
+	
+	generalMenu.addButton(buttonX, currY, buttonWidth, 30, "Send 100", callbackAdd.bind(null,-100));
+	buttonX+=buttonWidth+margin;
+	generalMenu.addButton(buttonX, currY, buttonWidth, 30, "Send 1000", callbackAdd.bind(null,-1000));
+	
+	currY=currYBefore;
+	buttonX=menuOffsetX+menuWidth/4*3+menuWidth/4/2-buttonWidth-margin/2+margin;
+	buttonXBefore=buttonX;
+	
+	generalMenu.addButton(buttonX, currY, buttonWidth, 30, "Get 1", callbackAdd.bind(null,1));
+	buttonX+=buttonWidth+margin;
+	generalMenu.addButton(buttonX, currY, buttonWidth, 30, "Get 10", callbackAdd.bind(null,10));
+	
+	buttonX=buttonXBefore;
+	currY+=margin+30;
+	
+	generalMenu.addButton(buttonX, currY, buttonWidth, 30, "Get 100", callbackAdd.bind(null,100));
+	buttonX+=buttonWidth+margin;
+	generalMenu.addButton(buttonX, currY, buttonWidth, 30, "Get 1000", callbackAdd.bind(null,1000));
+	buttonX+=buttonWidth+margin;
+	
+	currY+=30+margin;
+
+	generalMenu.addLine(player1SendingLineX, startLine,player1SendingLineX,currY);
+	generalMenu.addLine(player2SendingLineX, startLine,player2SendingLineX,currY);
+	generalMenu.addLine(menuOffsetX+menuWidth/2+margin, menuOffsetY+margin,menuOffsetX+menuWidth/2+margin,currY);
+	
+	generalMenu.addLine(menuOffsetX+margin/2, currY,menuOffsetX+menuWidth+margin,currY);
+	
+	currY+=margin*2;
+	
+	var callbackClose=function()
+	{
+		generalMenu.hideAll(true);
+		playerObj.setBusy(false);
+		generalMenu.setBusy(false);
+		enemyObj.setBusy(false);
+		
+		if(cancelCallback!=undefined)
+		{
+			cancelCallback();
+		}
+		return true;
+	}
+	
+	var callbackOffer=function()
+	{
+		generalMenu.hideAll(true);
+		playerObj.setBusy(false);
+		generalMenu.setBusy(false);
+		enemyObj.setBusy(false);
+		
+		if(offerCallback!=undefined)
+		{
+			offerCallback();
+		}
+		return true;
+	}
+	
+	buttonX=menuOffsetX+menuWidth/4+margin*2;
+	generalMenu.addButton(buttonX, currY, menuWidth/4-2*margin, 30, textOffer, callbackClose);
+	
+	buttonX=menuOffsetX+menuWidth/4*2+margin*2;
+	generalMenu.addButton(buttonX, currY, menuWidth/4-2*margin, 30, textCancel, callbackOffer);
+	
+	currY+=30+margin;
+	
+	generalMenu.addMenuBackground(menuOffsetX-8,menuOffsetY-8,menuWidth+16+margin*2,currY-menuOffsetY+16,"","black",true);
+	
+	generalMenu.draw();
+	return true;
+}
+
 function fieldInformationWindow(informationMenu, houseText1, houseText2, hypothekText, closeText, field, mortgageText, mortgageCallback)
 {
 	if(informationMenu.isBusy())
 	{ 
-		return;
+		return true;
 	}
 	informationMenu.clear();
 	informationMenu.setDraggable(true);
@@ -86,7 +336,7 @@ function houseBuildingWindow(generalMenu, gameMap, maxHouses, playerObj, textAcc
 {
 	if(generalMenu.isBusy() || playerObj.isBusy())
 	{ 
-		return;
+		return true;
 	}
 	playerObj.setBusy(true);
 	generalMenu.setBusy(true);
@@ -234,7 +484,7 @@ function acceptWindow(generalMenu, text, yesCallback, noCallback)
 {   
 	if(generalMenu.isBusy())
 	{
-		return;
+		return false;
 	}
 	
 	generalMenu.setBusy(true);
@@ -285,7 +535,7 @@ function acceptWindow(generalMenu, text, yesCallback, noCallback)
 	generalMenu.draw();
 }
 
-function setUpStandardMenu(ingameMenu, gameMap, user, enemyArray, buildingMenuCallback)
+function setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemyArray, buildingMenuCallback)
 {
 	var container = document.querySelector('#stage-parent');
 	var containerWidth = container.offsetWidth;
@@ -313,14 +563,16 @@ function setUpStandardMenu(ingameMenu, gameMap, user, enemyArray, buildingMenuCa
 	for(var i=0;i<enemyArray.length;i++)
 	{
 		var x=containerWidth-profileImageMargin-profileImageSizeEnemy;
-		var y=(margin+profileImageSizeEnemy+30)*(i+1);
+		var y=(margin+profileImageSizeEnemy+68)*i+marginHeight;
 		ingameMenu.addMenuBackground(x, y, profileImageSizeEnemy, profileImageSizeEnemy+30);
 		ingameMenu.addImage(x, y, profileImageSizeEnemy, profileImageSizeEnemy, enemyArray[i].imgSrc);
 
 		var textMoneyEnemy=ingameMenu.addText(x, y+profileImageSizeEnemy, profileImageSizeEnemy, "1500 "+GLOBAL_MONEY_VAR);
 		enemyArray[i].setMoneyTextbox(textMoneyEnemy);
+		
+		ingameMenu.addButton(x+16, y+profileImageSizeEnemy+8+textMoneyEnemy.getHeight(), profileImageSizeEnemy-32, 30, "Trade", tradingWindow.bind(null, generalMenu,user,enemyArray[i],"Offer", "Cancel"), "Start a trade with this player");
 	}
-
+	
 	ingameMenu.addButton(profileImageMargin, profileImageMargin+profileImageSize+16+textMoneyEnemy.getHeight(), profileImageSize, 30, "Building Menu", buildingMenuCallback, "Opens menu to buy and sell houses");
 
 	/*

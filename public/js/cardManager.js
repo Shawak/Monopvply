@@ -33,8 +33,7 @@ function CardManager(playerObj, gameMap, ingameMenu, informationMenu, xStart, yS
 	this.addCardById = function(id)
 	{
 		var field=gameMap.getFieldById(id);
-		that.addCard(field);
-		return true;
+		return that.addCard(field);
 	}
 	
 	this.getAllOwnedFields = function()
@@ -49,6 +48,11 @@ function CardManager(playerObj, gameMap, ingameMenu, informationMenu, xStart, yS
 			return false;
 		}
 		ownedFields.push(field);
+		
+		if(typeof xStart === 'undefined')
+		{
+			return true;
+		}
 		
 		var newCard=ingameMenu.addFieldCard(currX, currY, cardWidth, cardHeight, field.getText(), field.getColor(), undefined,field.getImgSrc());
 		cards.push(newCard);

@@ -161,11 +161,12 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 		return menuBackground;
 	}
 	
-	this.addFieldCard = function(x, y, width, height, text, color, callback, imgSrc)
+	this.addFieldCard = function(x, y, width, height, text, color, callback, imgSrc, hoverAnimation)
 	{
 		callback = typeof callback !== 'undefined' ? callback : undefined;
 		color = typeof color !== 'undefined' ? color : "";
 		imgSrc = typeof imgSrc !== 'undefined' ? imgSrc : "";
+		hoverAnimation = typeof hoverAnimation !== 'undefined' ? hoverAnimation : true;
 		
 		var group= new Konva.Group(
 		{
@@ -197,12 +198,18 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 			transformsEnabled : 'position'
 		});
 		
+		var fontSize=16;
+		if(width*height<100*120)
+		{
+			fontSize=14;
+		}
+		
 		var textObj = new Konva.Text(
 		{
 			x: 2,
 			y: rectHeight+2,
 			text: text,
-			fontSize: 16,
+			fontSize: fontSize,
 			fontFamily: 'Calibri',
 			fill: textColor,
 			width: width-4,
@@ -281,7 +288,7 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 			x: 20,
 			y: 0,
 			text: GLOBAL_MORTGAGE_FIELD_TEXT,
-			fontSize: 26,
+			fontSize: 24,
 			fontFamily: 'Calibri',
 			fontStyle: "bold",
 			fill: "#cc0000",
@@ -300,7 +307,7 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 		chargeObj.hide();
 		group.add(chargeObj);
 		
-		var colisionRect = new Konva.Image(
+		var colisionRect = new Konva.Rect(
 		{
 			x: 0,
 			y: 0,
@@ -313,20 +320,36 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 		
 		var originalX=x;
 		var originalY=y;
-
+		var moveTop=true;
+		
 		var changePointerEnter=function()
 		{
-			document.body.style.cursor = 'help';
-			group.moveToTop();
-			group.y(originalY-16);
-			layer.draw();
+			if(moveTop==true)
+			{
+				if(hoverAnimation==true)
+				{
+					document.body.style.cursor = 'help';
+					group.y(originalY-20);
+				}
+				else
+				{
+					document.body.style.cursor = 'pointer';
+				}
+				group.moveToTop();
+				layer.draw();
+				moveTop=false;
+			}
 		};
 		
 		var changePointerOut=function()
 		{
+			if(hoverAnimation==true)
+			{
+				group.y(originalY);
+			}
 			document.body.style.cursor = 'default';
-			group.y(originalY);
 			layer.draw();
+			moveTop=true;
 		};
 		
 		group.on("mouseout", changePointerOut);
@@ -342,15 +365,22 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 		
 		group.on("click", upAction);
 		groupDrag.add(group);
-		group.cache();
+		group.moveToTop();
+		group.cache({
+			x: 0.000001,
+			y: 0.000001,
+			width: width,
+			height: height
+		});
 		return [group,chargeObj];
 	}
 	
-	this.addButton = function(x, y, width, height, text, callback, tooltipText, imgSrc)
+	this.addButton = function(x, y, width, height, text, callback, tooltipText, imgSrc, newButtonColor)
 	{
 		callback = typeof callback !== 'undefined' ? callback : undefined;
 		tooltipText = typeof tooltipText !== 'undefined' ? tooltipText : "";
 		imgSrc = typeof imgSrc !== 'undefined' ? imgSrc : "";
+		newButtonColor = typeof newButtonColor !== 'undefined' ? newButtonColor : buttonColor;
 		
 		var innerObj;
 		var rect = new Konva.Rect(
@@ -359,7 +389,7 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 			y: y,
 			stroke: strokeColor,
 			strokeWidth: 2,
-			fill: buttonColor,
+			fill: newButtonColor,
 			width: width,
 			height: height,
 			cornerRadius: 4,
@@ -660,7 +690,31 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 			transformsEnabled : 'position'
 		});
 		groupDrag.add(rect);
-
+		
 		return rect;
 	}
+	
+	this.addLine = function(x, y, x2, y2, colorLine, listening)
+	{
+		colorLine = typeof colorLine !== 'undefined' ? colorLine : buttonColor;
+		listening = typeof listening !== 'undefined' ? listening : false;
+		
+		var line = new Konva.Line(
+		{
+			points: [x, y, x2, y2],
+			stroke: colorLine,
+			strokeWidth: 4,
+			lineCap: 'round',
+			lineJoin: 'round',
+			perfectDrawEnabled : false,
+			listening: listening,
+			transformsEnabled : 'position'
+		});
+		
+		groupDrag.add(line);
+		
+		return line;
+	}
+	
+
 }
