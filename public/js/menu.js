@@ -308,10 +308,10 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 		
 		var chargeObj = new Konva.Text(
 		{
-			x: 20,
+			x: 22,
 			y: 0,
 			text: GLOBAL_MORTGAGE_FIELD_TEXT,
-			fontSize: 24,
+			fontSize: 21,
 			fontFamily: 'Calibri',
 			fontStyle: "bold",
 			fill: "#cc0000",
