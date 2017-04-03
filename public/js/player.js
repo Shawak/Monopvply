@@ -1,5 +1,5 @@
 
-function Player(gameMap, ingameMenuLayer, informationMenu, money, color, profileImgSrc)
+function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, color, profileImgSrc)
 {
 	var currFieldPosition=0;
 	var informationMenu=informationMenu;
@@ -17,7 +17,22 @@ function Player(gameMap, ingameMenuLayer, informationMenu, money, color, profile
 	var busyMoving=false;
 	var playerColor=color;
 	var playerName="Username";
+	var id=playerId;
 	
+	this.getPosition=function()
+	{
+		return currFieldPosition;
+	}
+	
+	this.setId = function(newId)
+	{
+		id=newId;
+	}
+	
+	this.getId = function()
+	{
+		return id;
+	}
 	
 	this.getName = function()
 	{
@@ -54,6 +69,19 @@ function Player(gameMap, ingameMenuLayer, informationMenu, money, color, profile
 		return fieldCardManager.getAllOwnedFields();
 	}
 
+	this.updateState = function(state)
+	{
+		if(state.money!=money)
+		{
+			that.updateMoney(state.money);
+		}
+		
+		if(state.position!=gameMap.getFieldByPosition(currFieldPosition))
+		{
+			that.moveTo(state.position);
+		}
+	}
+	
 	this.addBoardFigure = function(boardImgSrc)
 	{
 		boardImgSrc = typeof boardImgSrc !== 'undefined' ? boardImgSrc : "";
@@ -79,6 +107,7 @@ function Player(gameMap, ingameMenuLayer, informationMenu, money, color, profile
 	    gameMap.addKonvaObj(boardFigure);
 		boardFigure.moveToTop();
 	}
+
 
 	this.moveTo = function(id)
 	{

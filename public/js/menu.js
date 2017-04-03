@@ -14,6 +14,7 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 	var strokeColorMenu=typeof strokeColorMenu !== 'undefined' ? strokeColorMenu : strokeColor;
 	var groupDrag;
 	var busy=false;
+	var allButtons=[];
 	
 	init();
 	
@@ -27,6 +28,27 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 		layer.moveToTop();
 		tooltipLayer.moveToTop();
 		layer.add(groupDrag);
+		allButtons=[];
+	}
+	
+	this.disableAllButtons = function()
+	{
+		layer.disableHitGraph();
+		for(var i=0;i<allButtons.length;i++)
+		{
+			allButtons[i].hide();
+		}
+		layer.draw();
+	}
+	
+	this.enableAllButtons = function()
+	{
+		layer.enableHitGraph();
+		for(var i=0;i<allButtons.length;i++)
+		{
+			allButtons[i].show();
+		}
+		layer.draw();
 	}
 	
 	this.setBusy = function(state)
@@ -63,6 +85,7 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 	{
 		groupDrag.destroyChildren();
 		groupDrag.clearCache();
+		allButtons=[];
 	}
 	
 	this.hideAll = function (hide)
@@ -580,6 +603,9 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 			
 			rect.on("click", upAction);
 		}
+		
+		allButtons.push(rect);
+		allButtons.push(innerObj);
 		
 		groupDrag.add(innerObj);
 		return [rect,innerObj];

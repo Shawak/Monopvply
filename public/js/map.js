@@ -83,7 +83,7 @@ function Map(konvaStage)
 			{
 				diceSum+=fieldPositions.length;
 			}
-			console.log(startFieldPosition+" "+endPos);
+
 			var endPos=(startFieldPosition+diceSum)%fieldPositions.length;
 			
 			if(startFieldPosition>endPos)
@@ -113,6 +113,14 @@ function Map(konvaStage)
 			}
 		}	
 		return undefined;
+	}
+	
+	this.getFieldByPosition = function(position)
+	{
+		if(position<0 || position>=fieldPositions.length)
+			return undefined;
+		
+		return fieldPositions[position];
 	}
 	
 	this.getFieldByText = function(name)

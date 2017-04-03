@@ -20,9 +20,13 @@
 
         var iterations = 0;
 
-        var gameMap;
-        var generalMenu;
-        var queue = new QueueManager();
+		var gameMap;
+		var ingameMenu;
+		var generalMenu;
+		var queue=new QueueManager();
+		var user;
+		var enemies=[];
+		var iterations=0;
 
         var testFunc = function () {
             if (iterations == 0)
@@ -39,6 +43,8 @@
                 queue.add(user.buyCard.bind(user, 8));
             if (iterations == 6)
                 queue.add(user.moveTo.bind(user, 6));
+			if (iterations == 7)
+				queue.add(user.moveTo.bind(user,2)); 
 
             iterations++;
             if (iterations < 9)
@@ -49,22 +55,29 @@
             gameMap = new Map(stage);
             window.ingameMenu = new Menu(stage, queue);
             generalMenu = new Menu(stage, queue);
-            var informationMenu = new Menu(stage, queue);
+            informationMenu = new Menu(stage, queue);
 
-            window.user = new Player(gameMap, ingameMenu.getLayer(), informationMenu, 1500, "./img/test.jpg", "./img/test.jpg");
-            var enemies = [];
-            enemies.push(new Player(gameMap, ingameMenu.getLayer(), informationMenu, 1500, "./img/Testing.jpg", "./img/Testing.jpg"));
-            enemies.push(new Player(gameMap, ingameMenu.getLayer(), informationMenu, 1500, "./img/Testing.jpg", "./img/Testing.jpg"));
-            enemies.push(new Player(gameMap, ingameMenu.getLayer(), informationMenu, 1500, "./img/Testing.jpg", "./img/Testing.jpg"));
+            window.user = new Player(0,gameMap, ingameMenu.getLayer(), informationMenu, 1500, "red","./img/test.jpg", "./img/test.jpg");
+            enemies = [];
+            enemies.push(new Player(1,gameMap, ingameMenu.getLayer(), informationMenu, 1500, "green","./img/Testing.jpg", "./img/Testing.jpg"));
+            enemies.push(new Player(2,gameMap, ingameMenu.getLayer(), informationMenu, 1500, "yellow","./img/Testing.jpg", "./img/Testing.jpg"));
+            enemies.push(new Player(3,gameMap, ingameMenu.getLayer(), informationMenu, 1500, "blue","./img/Testing.jpg", "./img/Testing.jpg"));
 
             var houseBuildingMenu = houseBuildingWindow.bind(null, generalMenu, gameMap, 5, user, "Accept", "Cancel");
 
-            setUpStandardMenu(ingameMenu, gameMap, user, enemies, houseBuildingMenu);
-            setUpStandardMap(queue, gameMap, informationMenu);
+            setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemies, houseBuildingMenu);
+			setUpStandardMap(queue, gameMap, informationMenu);
 
-            user.addBoardFigure("", "green");
-            queue.start();
-            setTimeout(testFunc, 3000);
+			user.addBoardFigure("");
+			queue.start();
+				
+			for(var i=0;i<enemies.length;i++)
+			{
+				enemies[i].createCardManager();
+				enemies[i].addCard(11);
+			}
+			
+            setTimeout(testFunc, 4000);
         }
     }
 
@@ -119,6 +132,17 @@
     function onNextTurnPacket(sender, packet) {
         // TODO
         // update gui buttons (disable them)
+		
+		if(packet.player.id==user.getId())
+		{
+			// Next user is YOU, so enable everything
+			ingameMenu.enableAllButtons();
+		}
+		else
+		{
+			// Enemys turn, disable everything
+			ingameMenu.disableAllButtons();
+		}
     }
 
     function onUpdatePlayerPacket(sender, packet) {
@@ -127,6 +151,19 @@
 
         // if (packet.player.position != player.position)
         // call movement animations
+		
+		for(var i=0;i<enemies.length;i++)
+		{
+			if(packet.player.id==enemies[i].getId())
+			{
+				enemies[i].updateState(packet.player);
+			}
+		}
+		
+		if(packet.player.id==user.getId())
+		{
+			user.updateState(packet.player);
+		}
     }
 
     function onUpdateFieldPacket(sender, packet) {
