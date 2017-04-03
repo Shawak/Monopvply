@@ -15,7 +15,6 @@ function CardManager(playerObj, gameMap, ingameMenu, informationMenu, xStart, yS
 	var overlapFactor=1.6;
 	var ownedFields=[];
 	var that=this;
-	var cards=[];
 	
 	init();
 	
@@ -24,9 +23,14 @@ function CardManager(playerObj, gameMap, ingameMenu, informationMenu, xStart, yS
 		//cardBackground=ingameMenu.addMenuBackground(xStart-cardWidth/8, yStart-cardHeight/8, cardWidth/4+(cardWidth-cardWidth/overlapFactor), cardHeight+cardHeight/4);
 	}
 	
-	function nextPlace()
+	function reorder()
 	{
-		currX+=(cardWidth/overlapFactor)|0;
+		currX=xStart;
+		for(var i=0;i<ownedFields.length;i++)
+		{
+			ownedFields[i][1][0].x(currX);
+			currX+=(cardWidth/overlapFactor)|0;
+		}
 		//cardBackground.width(cardBackground.width()+cardWidth/overlapFactor);
 	}
 	
@@ -38,7 +42,12 @@ function CardManager(playerObj, gameMap, ingameMenu, informationMenu, xStart, yS
 	
 	this.getAllOwnedFields = function()
 	{
-		return ownedFields;
+		var realFields=[];
+		for(var i=0;i<ownedFields.length;i++)
+		{
+			realFields.push(ownedFields[i][0]);
+		}
+		return realFields;
 	}
 
 	this.addCard = function(field)
@@ -47,7 +56,6 @@ function CardManager(playerObj, gameMap, ingameMenu, informationMenu, xStart, yS
 		{
 			return false;
 		}
-		ownedFields.push(field);
 		
 		if(typeof xStart === 'undefined')
 		{
@@ -55,7 +63,9 @@ function CardManager(playerObj, gameMap, ingameMenu, informationMenu, xStart, yS
 		}
 		
 		var newCard=ingameMenu.addFieldCard(currX, currY, cardWidth, cardHeight, field.getText(), field.getColor(), undefined,field.getImgSrc());
-		cards.push(newCard);
+
+		ownedFields.push([field,newCard]);
+		ownedFields.sort(function(a,b) {return a[0].getId() - b[0].getId();} );
 		
 		var chargeCallback=function()
 		{
@@ -91,7 +101,7 @@ function CardManager(playerObj, gameMap, ingameMenu, informationMenu, xStart, yS
 		var cardMenu=fieldInformationWindow.bind(null,informationMenu, GLOBAL_MORTGAGE_FOR_TEXT, GLOBAL_HOUSES_TEXT, GLOBAL_MORTGAGE_ACTION_TEXT, GLOBAL_CLOSE_TEXT, field, "",chargeCallback);
 		newCard[0].on("click",cardMenu);
 		
-		nextPlace();
+		reorder();
 		return true;
 	}
 }

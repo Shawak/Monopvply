@@ -276,7 +276,7 @@ function fieldInformationWindow(informationMenu, houseText1, houseText2, hypothe
 	var width = window.innerWidth;
     var height = window.innerHeight;
 	
-	var menuWidth=width/4.5;
+	var menuWidth=Math.max(width/4.5,300);
 	
 	var menuOffsetX=width/2-menuWidth/2;
 	var menuOffsetY=height/6;
