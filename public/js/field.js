@@ -279,7 +279,7 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 		
 		chargeObj = new Konva.Text(
 		{
-            x: Math.max(width/2-20,0),
+            x: Math.max(width/2-24,0),
             y: 0,
             width: widthImg,
             height: heightImg,
