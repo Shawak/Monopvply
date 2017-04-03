@@ -575,6 +575,9 @@ function setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemyArray, b
 	
 	ingameMenu.addButton(profileImageMargin, profileImageMargin+profileImageSize+16+textMoneyEnemy.getHeight(), profileImageSize, 30, "Building Menu", buildingMenuCallback, "Opens menu to buy and sell houses");
 
+	ingameMenu.addButton(profileImageMargin, profileImageMargin+profileImageSize+38+16+textMoneyEnemy.getHeight(), profileImageSize, 30, "End Turn", undefined, "Ends the current turn");
+
+	
 	/*
 	var boundAlert2=myAlert.bind(null,"Yay, you clicked Field Card 'Last Chaos'!");
 	ingameMenu.addFieldCard(50, 80, 70, 80, "Last Chaos", "lightblue", boundAlert2,"./img/streets/2_mmorpg/2_last_chaos.jpg");
