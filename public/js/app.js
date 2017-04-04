@@ -52,10 +52,10 @@
         };
 
         function startRendering() {
-            gameMap = new Map(stage);
-            window.ingameMenu = new Menu(stage, queue);
-            generalMenu = new Menu(stage, queue);
-            informationMenu = new Menu(stage, queue);
+            gameMap=new Map(stage);
+			ingameMenu=new Menu(stage,queue);
+			generalMenu=new Menu(stage,queue);
+			informationMenu=new Menu(stage,queue);
 
             window.user = new Player(0,gameMap, ingameMenu.getLayer(), informationMenu, 1500, "red","./img/test.jpg", "./img/test.jpg");
             enemies = [];
