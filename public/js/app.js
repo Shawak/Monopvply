@@ -57,7 +57,7 @@
 			generalMenu=new Menu(stage,queue);
 			informationMenu=new Menu(stage,queue);
 
-            window.user = new Player(0,gameMap, ingameMenu.getLayer(), informationMenu, 1500, "red","./img/test.jpg", "./img/test.jpg");
+            user = new Player(0,gameMap, ingameMenu.getLayer(), informationMenu, 1500, "red","./img/test.jpg", "./img/test.jpg");
             enemies = [];
             enemies.push(new Player(1,gameMap, ingameMenu.getLayer(), informationMenu, 1500, "green","./img/Testing.jpg", "./img/Testing.jpg"));
             enemies.push(new Player(2,gameMap, ingameMenu.getLayer(), informationMenu, 1500, "yellow","./img/Testing.jpg", "./img/Testing.jpg"));
