@@ -98,6 +98,11 @@
                 client.send(new CreateLobbyPacket());
             });
 
+            $('#lobbies tbody').on('click', 'tr', function(e) {
+                var index = e.currentTarget.firstElementChild.innerText.substring(1);
+                client.send(new JoinLobbyPacket(index));
+            });
+
             if (pageName == 'game') {
                 startGame();
             }

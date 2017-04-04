@@ -5,17 +5,18 @@ class Event {
         this.handlers = [];
     }
 
-    add(func) {
-        this.handlers.push(func);
+    add(func, caller) {
+        this.handlers.push([func, caller]);
     }
 
-    remove(func) {
-        this.handlers.remove(func);
+    remove(func, caller) {
+        let index = this.handlers.find(x => x[0] == func && x[1] == caller);
+        this.handlers.splice(index, 1);
     }
 
-    call() {
-        for(let func of this.handlers) {
-            func(this.sender);
+    dispatch() {
+        for(let handler of this.handlers) {
+            handler[0].call(handler[1], this.sender);
         }
     }
 

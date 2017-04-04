@@ -3,7 +3,6 @@ const PacketManager = require('./../shared/packetManager.js');
 const Packets = require('./../shared/packets.js');
 
 const User = require('./user.js');
-const Game = require('./game.js');
 const Event = require('./event.js');
 
 class Client {
@@ -69,7 +68,7 @@ class Client {
     }
 
     send(packet) {
-        // console.log('[' + (this.user ? this.user.getName() : this.id) + '] ' + Packets.PacketManager.pack(packet));
+        // console.log('[' + (this.user ? this.user.name : this.id) + '] ' + PacketManager.pack(packet));
         this.socket.emit('packet', PacketManager.pack(packet));
     }
 

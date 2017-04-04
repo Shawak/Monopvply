@@ -9,7 +9,7 @@ class Lobby {
         this.clients = [];
     }
 
-    getClientCount() {
+    getClientsCount() {
         return this.clients.length;
     }
 
@@ -21,25 +21,6 @@ class Lobby {
         return this.clients.find(x => x == client);
     }
 
-    join(client) {
-        this.clients.push(client);
-        client.onDisconnect.add(this.onClientDisconnect);
-        client.network.link(Packets.ChatMessagePacket, this.onChatMessagePacket, this);
-        client.network.link(Packets.LeaveLobbyPacket, this.onLeaveLobbyPacket, this);
-        client.send(new Packets.UpdateLobbyPacket(this.getClients()));
-    }
-
-    leave(client) {
-        this.clients.splice(this.clients.indexOf(client), 1);
-        client.onDisconnect.remove(this.onClientDisconnect);
-        client.network.unlink(Packets.ChatMessagePacket, this.onChatMessagePacket, this);
-        client.network.unlink(Packets.LeaveLobbyPacket, this.onLeaveLobbyPacket, this);
-    }
-
-    onClientDisconnect(sender) {
-        this.leave(sender);
-    }
-
     getOwner() {
         return this.clients[0];
     }
@@ -48,15 +29,34 @@ class Lobby {
         return this.clients[0] == client;
     }
 
+    join(client) {
+        this.clients.push(client);
+        client.onDisconnect.add(this.onClientDisconnect, this);
+        client.network.link(Packets.ChatMessagePacket, this.onChatMessagePacket, this);
+        client.network.link(Packets.LeaveLobbyPacket, this.onLeaveLobbyPacket, this);
+        client.send(new Packets.UpdateLobbyPacket([]));
+    }
+
+    leave(client) {
+        this.clients.splice(this.clients.indexOf(client), 1);
+        client.onDisconnect.remove(this.onClientDisconnect, this);
+        client.network.unlink(Packets.ChatMessagePacket, this.onChatMessagePacket, this);
+        client.network.unlink(Packets.LeaveLobbyPacket, this.onLeaveLobbyPacket, this);
+        if(this.clients.length == 0) {
+            this.server.removeLobby(this);
+        }
+    }
+
+    onClientDisconnect(sender) {
+        this.leave(sender);
+    }
+
     onChatMessagePacket(sender, packet) {
         this.broadcast(packet);
     }
 
     onLeaveLobbyPacket(sender, packet) {
-        this.clients.splice(this.clients.indexOf(sender), 1);
-        if(this.clients.length == 0) {
-            this.server.removeLobby(this);
-        }
+        this.leave(sender);
     }
 
     broadcast(packet) {
