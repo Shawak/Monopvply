@@ -558,7 +558,7 @@ function setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemyArray, b
 	ingameMenu.addButton(containerWidth/2+30, 0, 60, 30, "»", gameMap.rotateRight, "Rotate whole map by +90°");
 	ingameMenu.addButton(containerWidth/2-30, 0, 60, 30, "«", gameMap.rotateLeft, "Rotate whole map by -90°");
 
-	user.createCardManager(containerWidth/4, containerHeight-124, 100, 140);
+	user.createCardManager(ingameMenu, containerWidth/4, containerHeight-124, 100, 140);
 
 	for(var i=0;i<enemyArray.length;i++)
 	{

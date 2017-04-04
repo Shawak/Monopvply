@@ -211,7 +211,7 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 		return false;
 	}
 	
-	this.createCardManager = function(xStart, yStart, cardWidth, cardHeight)
+	this.createCardManager = function(ingameMenu, xStart, yStart, cardWidth, cardHeight)
 	{
 		fieldCardManager=new CardManager(this,gameMap, ingameMenu, informationMenu, xStart, yStart, cardWidth, cardHeight);
 	}
