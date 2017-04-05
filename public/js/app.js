@@ -180,10 +180,9 @@
     }
 
     function onUpdateLobbyPacket(sender, packet) {
-        console.log(packet);
         if (!lobby) {
             changePage('lobby', function () {
-
+                // TODO
             });
         }
     }
