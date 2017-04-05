@@ -20,7 +20,7 @@ function Client() {
 
         this.socket.on('packet', function (data) {
             try {
-                let packet = PacketManager.parse(data);
+                var packet = PacketManager.parse(data);
                 console.log('RECV: %s', packet);
                 self.network.dispatch(self, packet);
             }
