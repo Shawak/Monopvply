@@ -1,4 +1,5 @@
 const Packets = require('../shared/packets.js');
+const Game = require('./game.js');
 
 class Lobby {
 
@@ -32,6 +33,7 @@ class Lobby {
     join(client) {
         this.clients.push(client);
         client.onDisconnect.add(this.onClientDisconnect, this);
+        client.network.link(Packets.StartLobbyPacket, this.onStartLobbyPacket, this);
         client.network.link(Packets.ChatMessagePacket, this.onChatMessagePacket, this);
         client.network.link(Packets.LeaveLobbyPacket, this.onLeaveLobbyPacket, this);
         client.send(new Packets.UpdateLobbyPacket([]));
@@ -40,6 +42,7 @@ class Lobby {
     leave(client) {
         this.clients.splice(this.clients.indexOf(client), 1);
         client.onDisconnect.remove(this.onClientDisconnect, this);
+        client.network.unlink(Packets.StartLobbyPacket, this.onStartLobbyPacket, this);
         client.network.unlink(Packets.ChatMessagePacket, this.onChatMessagePacket, this);
         client.network.unlink(Packets.LeaveLobbyPacket, this.onLeaveLobbyPacket, this);
         if(this.clients.length == 0) {
@@ -49,6 +52,13 @@ class Lobby {
 
     onClientDisconnect(sender) {
         this.leave(sender);
+    }
+
+    onStartLobbyPacket(sender, packet) {
+        if(sender == this.getOwner()) {
+            let game = new Game(this.clients);
+            game.start();
+        }
     }
 
     onChatMessagePacket(sender, packet) {

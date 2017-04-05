@@ -18,6 +18,9 @@ exports.LoginResultPacket = LoginResultPacket;
 function CreateLobbyPacket() {
 }
 
+function StartLobbyPacket() {
+}
+
 function UpdateLobbyPacket(users) {
     this.users = users;
 }
@@ -37,6 +40,7 @@ function RequestLobbiesPacket() {
 }
 
 exports.CreateLobbyPacket = CreateLobbyPacket;
+exports.StartLobbyPacket = StartLobbyPacket;
 exports.UpdateLobbyPacket = UpdateLobbyPacket;
 exports.JoinLobbyPacket = JoinLobbyPacket;
 exports.LeaveLobbyPacket = LeaveLobbyPacket;
@@ -70,7 +74,6 @@ function DiceResultPacket(player, rollResult) {
 
 function PlayerBuyPacket(fieldID) {
     this.fieldID = fieldID;
-	// not needed!? --> UpdatePlayerPacket/UpdateFieldPacket is enough?!
 }
 
 function UpdateFieldPacket(field) {

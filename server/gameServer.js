@@ -23,9 +23,6 @@ class GameServer {
                 let client = this.clients.find(client => client.socket == socket);
                 client.onDisconnect.dispatch();
                 this.clients.splice(this.clients.indexOf(client), 1);
-                if(client.user) {
-                    console.log(client.user.name + ' logged out!')
-                }
                 console.log('client #' + client.id + ' has disconnected!');
             });
 

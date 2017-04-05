@@ -18,14 +18,13 @@
         );
         stage.hide(true);
 
-        var iterations = 0;
+        var gameMap;
+        var ingameMenu;
+        var generalMenu;
+        var queue=new QueueManager();
+        var user = 1;
+        var enemies=[];
 
-		var gameMap;
-		var ingameMenu;
-		var generalMenu;
-		var queue=new QueueManager();
-		var user;
-		var enemies=[];
 		var iterations=0;
 
         var testFunc = function () {
@@ -44,7 +43,7 @@
             if (iterations == 6)
                 queue.add(user.moveTo.bind(user, 6));
 			if (iterations == 7)
-				queue.add(user.moveTo.bind(user,2)); 
+				queue.add(user.moveTo.bind(user,2));
 
             iterations++;
             if (iterations < 9)
@@ -98,6 +97,10 @@
                 client.send(new CreateLobbyPacket());
             });
 
+            $('#startLobby').click(function() {
+               client.send(new StartLobbyPacket());
+            });
+
             $('#lobbies tbody').on('click', 'tr', function(e) {
                 var index = e.currentTarget.firstElementChild.innerText.substring(1);
                 client.send(new JoinLobbyPacket(index));
@@ -137,7 +140,6 @@
     function onNextTurnPacket(sender, packet) {
         // TODO
         // update gui buttons (disable them)
-		
 		if(packet.player.id==user.getId())
 		{
 			// Next user is YOU, so enable everything
@@ -187,7 +189,6 @@
     }
 
     function onListLobbiesPacket(sender, packet) {
-        console.log(packet);
         changePage('lobbies', function () {
             var elem = $('#lobbies tbody');
             elem.empty();
@@ -202,14 +203,12 @@
     }
 
     function onUpdateLobbyPacket(sender, packet) {
-        console.log(packet);
         if(!lobby) {
             changePage('lobby', function() {
-
+                // TODO
             });
         }
     }
-
 
     var lobby = null;
 

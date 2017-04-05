@@ -13,6 +13,11 @@ class Client {
         this.socket = socket;
         this.user = null;
         this.onDisconnect = new Event(this);
+        this.onDisconnect.add(() => {
+            if(this.user) {
+                console.log(this.user.name + ' logged out!')
+            }
+        }, this);
 
         this.socket.on('packet', (data) => {
             try {
