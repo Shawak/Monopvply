@@ -107,3 +107,47 @@ function sellOneHouseInBuildingMenu(layer, field, houseRects, textObj, originalM
 	playerObj.setMoney(newMoney);
 	layer.draw();
 }
+
+function nextTurnState(packet,user)
+{
+	if(user==undefined || packet==undefined)
+	{
+		return false;
+	}
+	
+	if(packet.player.id==user.getId())
+	{
+		// Next user is YOU, so enable everything
+		ingameMenu.enableAllButtons();
+	}
+	else
+	{
+		// Enemys turn, disable everything
+		ingameMenu.disableAllButtons();
+	}
+	
+	return true;
+}
+
+function updatePlayerState(packet,user, enemies)
+{	
+	if(user==undefined || packet==undefined || enemies==undefined || enemies.length==0)
+	{
+		return false;
+	}
+	
+	for(var i=0;i<enemies.length;i++)
+	{
+		if(packet.player.id==enemies[i].getId())
+		{
+			return enemies[i].updateState(packet.player);
+		}
+	}
+	
+	if(packet.player.id==user.getId())
+	{
+		return user.updateState(packet.player);
+	}
+	
+	return true;
+}

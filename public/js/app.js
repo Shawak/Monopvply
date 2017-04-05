@@ -4,6 +4,13 @@
         window[prop] = window.exports[prop];
     }
 
+    var gameMap;
+    var ingameMenu;
+    var generalMenu;
+    var queue = new QueueManager();
+    var user;
+    var enemies = [];
+
     function startGame() {
         document.getElementById("loading-img").addEventListener('load', startRendering)
 
@@ -18,14 +25,7 @@
         );
         stage.hide(true);
 
-        var gameMap;
-        var ingameMenu;
-        var generalMenu;
-        var queue=new QueueManager();
-        var user = 1;
-        var enemies=[];
-
-		var iterations=0;
+        var iterations = 0;
 
         var testFunc = function () {
             if (iterations == 0)
@@ -42,8 +42,8 @@
                 queue.add(user.buyCard.bind(user, 8));
             if (iterations == 6)
                 queue.add(user.moveTo.bind(user, 6));
-			if (iterations == 7)
-				queue.add(user.moveTo.bind(user,2));
+            if (iterations == 7)
+                queue.add(user.moveTo.bind(user, 2));
 
             iterations++;
             if (iterations < 9)
@@ -51,31 +51,30 @@
         };
 
         function startRendering() {
-            gameMap=new Map(stage);
-			ingameMenu=new Menu(stage,queue);
-			generalMenu=new Menu(stage,queue);
-			informationMenu=new Menu(stage,queue);
+            gameMap = new Map(stage);
+            ingameMenu = new Menu(stage, queue);
+            generalMenu = new Menu(stage, queue);
+            informationMenu = new Menu(stage, queue);
 
-            user = new Player(0,gameMap, ingameMenu.getLayer(), informationMenu, 1500, "red","./img/test.jpg", "./img/test.jpg");
+            user = new Player(0, gameMap, ingameMenu.getLayer(), informationMenu, 1500, "red", "./img/test.jpg", "./img/test.jpg");
             enemies = [];
-            enemies.push(new Player(1,gameMap, ingameMenu.getLayer(), informationMenu, 1500, "green","./img/Testing.jpg", "./img/Testing.jpg"));
-            enemies.push(new Player(2,gameMap, ingameMenu.getLayer(), informationMenu, 1500, "yellow","./img/Testing.jpg", "./img/Testing.jpg"));
-            enemies.push(new Player(3,gameMap, ingameMenu.getLayer(), informationMenu, 1500, "blue","./img/Testing.jpg", "./img/Testing.jpg"));
+            enemies.push(new Player(1, gameMap, ingameMenu.getLayer(), informationMenu, 1500, "green", "./img/Testing.jpg", "./img/Testing.jpg"));
+            enemies.push(new Player(2, gameMap, ingameMenu.getLayer(), informationMenu, 1500, "yellow", "./img/Testing.jpg", "./img/Testing.jpg"));
+            enemies.push(new Player(3, gameMap, ingameMenu.getLayer(), informationMenu, 1500, "blue", "./img/Testing.jpg", "./img/Testing.jpg"));
 
             var houseBuildingMenu = houseBuildingWindow.bind(null, generalMenu, gameMap, 5, user, "Accept", "Cancel");
 
             setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemies, houseBuildingMenu);
-			setUpStandardMap(queue, gameMap, informationMenu);
+            setUpStandardMap(queue, gameMap, informationMenu);
 
-			user.addBoardFigure("");
-			queue.start();
-				
-			for(var i=0;i<enemies.length;i++)
-			{
-				enemies[i].createCardManager();
-				enemies[i].addCard(11);
-			}
-			
+            user.addBoardFigure("");
+            queue.start();
+
+            for (var i = 0; i < enemies.length; i++) {
+                enemies[i].createCardManager();
+                enemies[i].addCard(11);
+            }
+
             setTimeout(testFunc, 4000);
         }
     }
@@ -93,15 +92,15 @@
             $('#navbar [href="#' + pageName + '"]').addClass('active');
             $('#content').html(data);
 
-            $('#createLobby').click(function() {
+            $('#createLobby').click(function () {
                 client.send(new CreateLobbyPacket());
             });
 
-            $('#startLobby').click(function() {
-               client.send(new StartLobbyPacket());
+            $('#startLobby').click(function () {
+                client.send(new StartLobbyPacket());
             });
 
-            $('#lobbies tbody').on('click', 'tr', function(e) {
+            $('#lobbies tbody').on('click', 'tr', function (e) {
                 var index = e.currentTarget.firstElementChild.innerText.substring(1);
                 client.send(new JoinLobbyPacket(index));
             });
@@ -137,16 +136,8 @@
     function onNextTurnPacket(sender, packet) {
         // TODO
         // update gui buttons (disable them)
-		if(packet.player.id==user.getId())
-		{
-			// Next user is YOU, so enable everything
-			ingameMenu.enableAllButtons();
-		}
-		else
-		{
-			// Enemys turn, disable everything
-			ingameMenu.disableAllButtons();
-		}
+
+        queue.add(nextTurnState.bind(null, packet, user));
     }
 
     function onUpdatePlayerPacket(sender, packet) {
@@ -155,19 +146,8 @@
 
         // if (packet.player.position != player.position)
         // call movement animations
-		
-		for(var i=0;i<enemies.length;i++)
-		{
-			if(packet.player.id==enemies[i].getId())
-			{
-				enemies[i].updateState(packet.player);
-			}
-		}
-		
-		if(packet.player.id==user.getId())
-		{
-			user.updateState(packet.player);
-		}
+
+        queue.add(updatePlayerState.bind(null, packet, user, enemies));
     }
 
     function onUpdateFieldPacket(sender, packet) {
@@ -200,9 +180,10 @@
     }
 
     function onUpdateLobbyPacket(sender, packet) {
-        if(!lobby) {
-            changePage('lobby', function() {
-                // TODO
+        console.log(packet);
+        if (!lobby) {
+            changePage('lobby', function () {
+
             });
         }
     }
@@ -210,16 +191,16 @@
     var lobby = null;
 
     var client = new Client();
-    client.network.link(LoginResultPacket, onLoginResultPacket);
-    client.network.link(PingPacket, onPingPacket);
-    client.network.link(GameStartPacket, onGameStartPacket);
-    client.network.link(NextTurnPacket, onNextTurnPacket);
-    client.network.link(UpdatePlayerPacket, onUpdatePlayerPacket);
-    client.network.link(UpdateFieldPacket, onUpdateFieldPacket);
-    client.network.link(ChatMessagePacket, onChatMessagePacket);
-    client.network.link(DiceResultPacket, onDiceResultPacket);
-    client.network.link(ListLobbiesPacket, onListLobbiesPacket);
-    client.network.link(UpdateLobbyPacket, onUpdateLobbyPacket);
+    client.network.link(LoginResultPacket, onLoginResultPacket, this);
+    client.network.link(PingPacket, onPingPacket, this);
+    client.network.link(GameStartPacket, onGameStartPacket, this);
+    client.network.link(NextTurnPacket, onNextTurnPacket, this);
+    client.network.link(UpdatePlayerPacket, onUpdatePlayerPacket, this);
+    client.network.link(UpdateFieldPacket, onUpdateFieldPacket, this);
+    client.network.link(ChatMessagePacket, onChatMessagePacket, this);
+    client.network.link(DiceResultPacket, onDiceResultPacket, this);
+    client.network.link(ListLobbiesPacket, onListLobbiesPacket, this);
+    client.network.link(UpdateLobbyPacket, onUpdateLobbyPacket, this);
     client.start();
 
     window.changePage = changePage;

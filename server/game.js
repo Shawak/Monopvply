@@ -13,8 +13,9 @@ class Game {
         this.currentPlayerIndex = 0;
         this.playerCanEndTurn = false;
         let players = [];
+        let i = 0;
         for (let client of this.clients) {
-            let player = new Player(client.user.name);
+            let player = new Player(i++, client.user.name);
             players.push(player);
             this.playerInfo.push({client: client, player: player});
             client.network.link(Packets.PlayerEndTurnPacket, this.onPlayerEndTurnPacket, this);

@@ -73,13 +73,14 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 	{
 		if(state.money!=money)
 		{
-			that.updateMoney(state.money);
+			return that.updateMoney(state.money);
 		}
 		
 		if(state.position!=gameMap.getFieldByPosition(currFieldPosition))
 		{
-			that.moveTo(state.position);
+			return that.moveTo(state.position);
 		}
+		return true;
 	}
 	
 	this.addBoardFigure = function(boardImgSrc)

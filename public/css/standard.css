@@ -19,10 +19,6 @@ body {
     height: 100%;
 }
 
-#content {
-    padding-top: 50px;
-}
-
 #lobbies tbody tr {
     cursor: pointer;
 }
