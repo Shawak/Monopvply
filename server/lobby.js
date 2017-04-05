@@ -18,6 +18,14 @@ class Lobby {
         return this.clients;
     }
 
+    getUsers() {
+        let ret = [];
+        for(let client of this.clients) {
+            ret.push(client.user);
+        }
+        return ret;
+    }
+
     hasClient(client) {
         return this.clients.find(x => x == client);
     }
@@ -36,7 +44,7 @@ class Lobby {
         client.network.link(Packets.StartLobbyPacket, this.onStartLobbyPacket, this);
         client.network.link(Packets.ChatMessagePacket, this.onChatMessagePacket, this);
         client.network.link(Packets.LeaveLobbyPacket, this.onLeaveLobbyPacket, this);
-        client.send(new Packets.UpdateLobbyPacket([]));
+        this.broadcast(new Packets.UpdateLobbyPacket(this.getUsers()));
     }
 
     leave(client) {

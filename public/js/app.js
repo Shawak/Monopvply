@@ -53,7 +53,9 @@
     }
 
     function login() {
-        client.send(new LoginPacket('User', ''));
+        var username = $('#inputUsername').val();
+        var password = $('#inputPassword').val();
+        client.send(new LoginPacket(username, password));
     }
 
     function changePage(pageName, callback) {
@@ -67,6 +69,10 @@
 
             $('#createLobby').click(function () {
                 client.send(new CreateLobbyPacket());
+            });
+
+            $('#updateLobbies').click(function() {
+                client.send(new RequestLobbiesPacket());
             });
 
             $('#startLobby').click(function () {
@@ -156,7 +162,11 @@
     function onUpdateLobbyPacket(sender, packet) {
         if (!lobby) {
             changePage('lobby', function () {
-                // TODO
+                var users = [];
+                for(var i = 0; i < packet.users.length; i++) {
+                    users.push(packet.users[i].name);
+                }
+                $('#lobby span').text(users.join(', '));
             });
         }
     }
