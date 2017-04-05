@@ -11,7 +11,7 @@
     var user;
     var enemies = [];
 
-    function startGame() {
+    function startGame(packet) {
         document.getElementById("loading-img").addEventListener('load', startRendering)
 
         var width = window.innerWidth;
@@ -25,32 +25,8 @@
         );
         stage.hide(true);
 
-        var iterations = 0;
-
-        var testFunc = function () {
-            if (iterations == 0)
-                queue.add(user.buyCard.bind(user, 0));
-            if (iterations == 1)
-                queue.add(user.buyCard.bind(user, 2));
-            if (iterations == 2)
-                queue.add(user.buyCard.bind(user, 4));
-            if (iterations == 3)
-                queue.add(user.buyCard.bind(user, 5));
-            if (iterations == 4)
-                queue.add(user.buyCard.bind(user, 7));
-            if (iterations == 5)
-                queue.add(user.buyCard.bind(user, 8));
-            if (iterations == 6)
-                queue.add(user.moveTo.bind(user, 6));
-            if (iterations == 7)
-                queue.add(user.moveTo.bind(user, 2));
-
-            iterations++;
-            if (iterations < 9)
-                setTimeout(testFunc, 100);
-        };
-
-        function startRendering() {
+        function startRendering() 
+		{
             gameMap = new Map(stage);
             ingameMenu = new Menu(stage, queue);
             generalMenu = new Menu(stage, queue);
@@ -65,17 +41,14 @@
             var houseBuildingMenu = houseBuildingWindow.bind(null, generalMenu, gameMap, 5, user, "Accept", "Cancel");
 
             setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemies, houseBuildingMenu);
-            setUpStandardMap(queue, gameMap, informationMenu);
+            setUpStandardMap(packet, queue, gameMap, informationMenu);
 
             user.addBoardFigure("");
             queue.start();
 
             for (var i = 0; i < enemies.length; i++) {
                 enemies[i].createCardManager();
-                enemies[i].addCard(11);
             }
-
-            setTimeout(testFunc, 4000);
         }
     }
 
@@ -128,8 +101,9 @@
     }
 
     function onGameStartPacket(sender, packet) {
-        changePage('game', function () {
-            startGame();
+        changePage('game', function () 
+		{
+            startGame(packet);
         });
     }
 

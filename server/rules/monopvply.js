@@ -3,8 +3,8 @@ const Field = require('./../field.js');
 const Street = require('./../street.js');
 
 class TaxField extends Field {
-    constructor(id, img, name, textColor, price) {
-        super(id, img, name);
+    constructor(id, name, img, textColor, price) {
+        super(id, name, img);
         this.textColor = textColor;
         this.price = price;
     }
@@ -17,7 +17,7 @@ class TaxField extends Field {
 
 class ActionField extends Field {
     constructor(id, img) {
-        super(id, img, 'Action Field');
+        super(id, 'Action Field', img);
     }
 
     onEnter(game, player) {
@@ -27,7 +27,7 @@ class ActionField extends Field {
 
 class CommunityField extends Field {
     constructor(id, img) {
-        super(id, img, 'Community Field');
+        super(id, 'Community Field', img);
     }
 
     onEnter(game, player) {
