@@ -55,7 +55,7 @@
     function login() {
         var username = $('#inputUsername').val();
         var password = $('#inputPassword').val();
-        client.send(new LoginPacket(username, password));
+        client.send(new LoginPacket(username ? username : 'User', password));
     }
 
     function changePage(pageName, callback) {
