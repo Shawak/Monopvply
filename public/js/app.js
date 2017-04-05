@@ -106,9 +106,6 @@
                 client.send(new JoinLobbyPacket(index));
             });
 
-            if (pageName == 'game') {
-                startGame();
-            }
             if (callback) {
                 callback();
             }
