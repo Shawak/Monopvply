@@ -1,6 +1,5 @@
 const Packets = require('../shared/packets.js');
 
-const User = require('./user.js');
 const Player = require('./player.js');
 const Field = require('./field.js');
 

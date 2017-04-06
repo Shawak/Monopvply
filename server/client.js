@@ -2,7 +2,6 @@ const EventHandler = require('./../shared/eventHandler.js');
 const PacketManager = require('./../shared/packetManager.js');
 const Packets = require('./../shared/packets.js');
 
-const User = require('./user.js');
 const Event = require('./event.js');
 
 class Client {
@@ -39,10 +38,14 @@ class Client {
 
     onLoginPacket(sender, packet) {
         if (!this.user) {
-            // TODO: Login using the Database
-            console.log(packet.username + ' logged in!');
-            this.user = new User(0, packet.username);
-            this.send(new Packets.LoginResultPacket(true));
+            this.server.db.login(packet.username, packet.password).then(user => {
+                if(user) {
+                    this.user = user;
+                    this.send(new Packets.LoginResultPacket(true));
+                } else {
+                    this.send(new Packets.LoginResultPacket(false));
+                }
+            });
         }
     }
 

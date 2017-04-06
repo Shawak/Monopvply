@@ -10,23 +10,19 @@ class GameServer {
     constructor() {
         this.db = new Database();
 
-        /*this.db.User.destroy({
+        // create dev user
+        this.db.User.findOne({
             where: {
-                username: 'Shawak'
+                username: 'dev'
             }
-        });
-
-        this.db.login("Shawak", "test").then(user => {
-            if(user) {
-                console.log(user.username);
-            }
-        });
-
-        this.db.getUsers().then(users => {
-           for(let user of users) {
-               console.log(user.username);
+        }).then(user => {
+           if(!user) {
+               this.db.User.create({
+                   username: 'dev',
+                   password: 'dev'
+               });
            }
-        });*/
+        });
 
         this.clients = [];
         this.lobbies = [];
@@ -60,12 +56,12 @@ class GameServer {
     }
 
     getLobby(id) {
-        return this.lobbies.find(x => x.id == id);
+        return this.lobbies.find(lobby => lobby.id == id);
     }
 
     createLobby() {
         let id = 0;
-        while (this.lobbies.find(x => x.id == id))
+        while (this.lobbies.find(lobby => lobby.id == id))
             id++;
         let lobby = new Lobby(this, id, 'new lobby');
         this.lobbies.push(lobby);
