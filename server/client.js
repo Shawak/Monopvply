@@ -40,7 +40,10 @@ class Client {
         if (!this.user) {
             this.server.db.login(packet.username, packet.password).then(user => {
                 if(user) {
-                    this.user = user;
+                    this.user = {
+                        id: user.id,
+                        name: user.username
+                    };
                     this.send(new Packets.LoginResultPacket(true));
                 } else {
                     this.send(new Packets.LoginResultPacket(false));

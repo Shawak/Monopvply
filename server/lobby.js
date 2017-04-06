@@ -8,6 +8,7 @@ class Lobby {
         this.id = id;
         this.name = name;
         this.clients = [];
+        this.game = null;
     }
 
     getClientsCount() {
@@ -27,7 +28,7 @@ class Lobby {
     }
 
     hasClient(client) {
-        return this.clients.find(x => x == client);
+        return this.clients.find(client => client == client);
     }
 
     getOwner() {
@@ -64,8 +65,8 @@ class Lobby {
 
     onStartLobbyPacket(sender, packet) {
         if(sender == this.getOwner()) {
-            let game = new Game(this.clients);
-            game.start();
+            this.game = new Game(this.clients);
+            this.game.start();
         }
     }
 
