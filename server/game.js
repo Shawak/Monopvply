@@ -13,23 +13,32 @@ class Game {
         this.playerInfo = [];
         this.currentPlayerIndex = 0;
         this.playerCanEndTurn = false;
-        let players = [];
+
+        let colors = ['red', 'orange', 'blue', 'yellow'];
         let i = 0;
         for (let client of this.clients) {
-            let player = new Player(i++, client.user.name);
-            players.push(player);
-            this.playerInfo.push({client: client, player: player});
+            let color = colors.length > 0 ? colors[this.random(0, colors.length - 1)] : 'white';
+            colors.splice(colors.indexOf(color));
+            this.playerInfo.push({client: client, player: new Player(i++, client.user.name, color)});
             client.network.link(Packets.PlayerEndTurnPacket, this.onPlayerEndTurnPacket, this);
             client.network.link(Packets.PlayerBuyPacket, this.onPlayerBuyPacket, this);
             client.network.link(Packets.ChatMessagePacket, this.onChatMessagePacket, this);
         }
-        this.map = new Monopvply(this, players);
+        this.map = new Monopvply(this, this.getPlayers());
     }
 
     start() {
         this.map.onStart(this);
         this.broadcast(new Packets.GameStartPacket(this.map.players, this.map.fields));
         this.nextTurn();
+    }
+
+    getPlayers() {
+        let players = [];
+        for(let info of this.playerInfo) {
+            players.push(info.player);
+        }
+        return players;
     }
 
     senderToPlayer(sender) {
