@@ -3,7 +3,9 @@
   "main": "server/app.js",
   "dependencies": {
     "express": "4.15.2",
-    "socket.io": "1.7.3"
+    "socket.io": "1.7.3",
+    "sequelize": "3.30.4",
+    "mysql ": "2.13.0"
   },
   "scripts": {
     "start": "nodemon -L server/app.js",

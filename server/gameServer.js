@@ -3,9 +3,31 @@ const io = require('socket.io');
 const Client = require('./client.js');
 const Lobby = require('./lobby.js');
 
+const Database = require('./database.js');
+
 class GameServer {
 
     constructor() {
+        this.db = new Database();
+
+        /*this.db.User.destroy({
+            where: {
+                username: 'Shawak'
+            }
+        });
+
+        this.db.login("Shawak", "test").then(user => {
+            if(user) {
+                console.log(user.username);
+            }
+        });
+
+        this.db.getUsers().then(users => {
+           for(let user of users) {
+               console.log(user.username);
+           }
+        });*/
+
         this.clients = [];
         this.lobbies = [];
 
