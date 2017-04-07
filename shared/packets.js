@@ -54,9 +54,10 @@ function PingPacket() {
     this.sent = new Date().getTime();
 }
 
-function GameStartPacket(players, field) {
+function GameStartPacket(players, field, yourPlayerID) {
     this.players = players;
     this.field = field;
+    this.yourPlayerID = yourPlayerID;
 }
 
 function NextTurnPacket(player, turnTime) {

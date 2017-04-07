@@ -28,7 +28,11 @@ class Game {
 
     start() {
         this.map.onStart(this);
-        this.broadcast(new Packets.GameStartPacket(this.map.players, this.map.fields));
+        let packet = new Packets.GameStartPacket(this.map.players, this.map.fields, -1);
+        for (let info of this.playerInfo) {
+            packet.yourPlayerID = info.player.id;
+            info.client.send(packet);
+        }
         this.nextTurn();
     }
 
