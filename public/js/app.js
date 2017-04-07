@@ -32,17 +32,27 @@
             generalMenu = new Menu(stage, queue);
             informationMenu = new Menu(stage, queue);
 
-            user = new Player(0, gameMap, ingameMenu.getLayer(), informationMenu, 1500, "red", "./img/test.jpg", "./img/test.jpg");
             enemies = [];
-            enemies.push(new Player(1, gameMap, ingameMenu.getLayer(), informationMenu, 1500, "green", "./img/Testing.jpg", "./img/Testing.jpg"));
-            enemies.push(new Player(2, gameMap, ingameMenu.getLayer(), informationMenu, 1500, "yellow", "./img/Testing.jpg", "./img/Testing.jpg"));
-            enemies.push(new Player(3, gameMap, ingameMenu.getLayer(), informationMenu, 1500, "blue", "./img/Testing.jpg", "./img/Testing.jpg"));
-
+			
+			for(var i=0;i<packet.players.length;i++)
+			{
+				if(packet.players[i].id==packet.yourPlayerID)
+				{
+					user = new Player(packet.players[i].id, gameMap, ingameMenu.getLayer(), informationMenu, packet.players[i].money, packet.players[i].color, "./img/test.jpg", "./img/test.jpg");
+				}
+				else
+				{
+					enemies.push(new Player(packet.players[i].id, gameMap, ingameMenu.getLayer(), informationMenu, packet.players[i].money, packet.players[i].color, "./img/Testing.jpg", "./img/Testing.jpg"));
+				}
+			}
+            
             var houseBuildingMenu = houseBuildingWindow.bind(null, generalMenu, gameMap, 5, user, "Accept", "Cancel");
 
-            setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemies, houseBuildingMenu);
+            var buyButton=setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemies, houseBuildingMenu);
             setUpStandardMap(packet, queue, gameMap, informationMenu);
 
+			player.setBuyButton(buyButton);
+			
             user.addBoardFigure("");
             queue.start();
 

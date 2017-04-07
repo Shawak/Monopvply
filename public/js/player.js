@@ -18,6 +18,35 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 	var playerColor=color;
 	var playerName="Username";
 	var id=playerId;
+	var buyButton;
+	var currentField;
+	
+	this.setBuyButton=function(button)
+	{
+		buyButton=button;
+	}
+	
+	this.getCurrentField=function()
+	{
+		return currentField;
+	}
+	
+	this.updateBuyButton=function(visible, field)
+	{
+		if(visible==false)
+		{
+			buyButton[0].hide();
+			buyButton[1].hide();
+			layer.draw();
+			return false;
+		}
+		
+		buyButton[0].show();
+		buyButton[1].show();
+		layer.draw();
+		currentField=field;
+		return true;
+	}
 	
 	this.getPosition=function()
 	{
@@ -78,7 +107,8 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 		
 		if(state.position!=gameMap.getFieldByPosition(currFieldPosition))
 		{
-			return that.moveTo(state.position);
+			var success=that.moveTo(state.position);
+			return success;
 		}
 		return true;
 	}
@@ -170,6 +200,10 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 				{
 					anim.stop();
 					busyMoving=false;
+					if(field.isBuyable())
+					{
+						updateBuyButton(true,field);
+					}
 				}
 				
 			}, gameMap.getLayer());

@@ -34,6 +34,17 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 	var fieldGroup;
 	var layer;
 	var parentLayer;
+	var buyable;
+	
+	this.isBuyable =function()
+	{
+		return buyable;
+	}
+	
+	this.setBuyable=function(buy)
+	{
+		buyable=buy;
+	}
 	
 	this.onClick =function(callback)
 	{

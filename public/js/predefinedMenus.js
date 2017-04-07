@@ -577,7 +577,29 @@ function setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemyArray, b
 
 	ingameMenu.addButton(profileImageMargin, profileImageMargin+profileImageSize+38+16+textMoneyEnemy.getHeight(), profileImageSize, 30, "End Turn", undefined, "Ends the current turn");
 
+	function buyField(player)
+	{
+		if(player.isBusy())
+		{
+			return false;
+		}
+		
+		var success=player.buyCard(player.getCurrentField().getId(), true);
+		if(success==true)
+		{
+			alert("You bought it!");
+		}
+		else
+		{
+			alert("Not enough money!");
+		}
+		return true;
+	}
 	
+	var buyCallback=buyField.bind(null,user);
+	var buyButton=ingameMenu.addButton(profileImageMargin, profileImageMargin+profileImageSize+76+16+textMoneyEnemy.getHeight(), profileImageSize, 30, "Buy Field", undefined, "Buy the field you are at");
+
+	return buyButton;
 	/*
 	var boundAlert2=myAlert.bind(null,"Yay, you clicked Field Card 'Last Chaos'!");
 	ingameMenu.addFieldCard(50, 80, 70, 80, "Last Chaos", "lightblue", boundAlert2,"./img/streets/2_mmorpg/2_last_chaos.jpg");
