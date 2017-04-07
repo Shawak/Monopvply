@@ -3,22 +3,20 @@ const io = require('socket.io');
 const Client = require('./client.js');
 const Lobby = require('./lobby.js');
 
-const Database = require('./database.js');
-
 class GameServer {
 
-    constructor() {
-        this.db = new Database();
+    constructor(db) {
+        this.db = db;
 
         // create dev user
         this.db.User.findOne({
             where: {
-                username: 'dev'
+                name: 'dev'
             }
         }).then(user => {
            if(!user) {
                this.db.User.create({
-                   username: 'dev',
+                   name: 'dev',
                    password: 'dev'
                });
            }

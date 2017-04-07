@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 class Database {
 
     constructor() {
-        this.db = new Sequelize('monopvply', 'dev', '123456', {
+        this.sequelize = new Sequelize('monopvply', 'dev', '123456', {
             host: 'db',
             dialect: 'mysql',
             pool: {
@@ -13,12 +13,14 @@ class Database {
             }
         });
 
-        this.User = this.db.define('user', {
-            username: Sequelize.STRING,
+        this.User = this.sequelize.define('user', {
+            name: Sequelize.STRING,
             password: Sequelize.STRING
         });
+    }
 
-        this.db.sync();
+    sync() {
+        return this.sequelize.sync({force: true});
     }
 
     getUsers() {
@@ -28,7 +30,7 @@ class Database {
     login(username, password) {
         return this.User.findOne({
            where: {
-               username: username,
+               name: username,
                password: password
            }
         });

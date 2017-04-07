@@ -2,8 +2,12 @@ const PacketManager = require('./../shared/packetManager.js');
 const Packets = require('./../shared/packets.js');
 PacketManager.initialize(Packets);
 
+const Database = require('./database.js');
 const GameServer = require('./gameServer.js');
-new GameServer().start();
-
 const WebServer = require('./webServer.js');
-new WebServer().start();
+
+let db = new Database();
+db.sync().then(() => {
+    new GameServer(db).start();
+    new WebServer().start();
+});
