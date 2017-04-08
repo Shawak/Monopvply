@@ -42,7 +42,7 @@ class Client {
                 if(user) {
                     this.user = {
                         id: user.id,
-                        name: user.username
+                        name: user.name
                     };
                     this.send(new Packets.LoginResultPacket(true));
                 } else {
