@@ -22,6 +22,7 @@ function Client() {
             try {
                 var packet = PacketManager.parse(data);
                 console.log('RECV: %s', packet);
+                console.log(packet);
                 self.network.dispatch(self, packet);
             }
             catch (ex) {
