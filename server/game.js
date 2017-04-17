@@ -92,10 +92,10 @@ class Game {
 
     update(obj) {
         switch (Object.getPrototypeOf(obj)) {
-            case Player:
+            case Player.prototype:
                 this.broadcast(new Packets.UpdatePlayerPacket(obj));
                 break;
-            case Field:
+            case Field.prototype:
                 this.broadcast(new Packets.UpdateFieldPacket(obj));
                 break;
         }

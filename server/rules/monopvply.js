@@ -103,6 +103,7 @@ class Monopvply {
 
         let steps = rolls[0] + rolls[1];
         player.position = (player.position + steps) % this.fields.length;
+        game.update(player);
 
         let field = this.fields[player.position];
         if(field.onEnter) {
