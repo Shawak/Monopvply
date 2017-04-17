@@ -57,8 +57,8 @@
             
             var houseBuildingMenu = houseBuildingWindow.bind(null, generalMenu, gameMap, 5, user, "Accept", "Cancel");
 
-            var menuEntities=setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemies, houseBuildingMenu);
-            setUpStandardMap(packet, queue, gameMap, informationMenu,undefined,endTurn);
+            var menuEntities=setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemies, houseBuildingMenu,endTurn,undefined);
+            setUpStandardMap(packet, queue, gameMap, informationMenu);
 
 			dices=menuEntities.dices;
 			
