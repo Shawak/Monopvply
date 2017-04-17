@@ -33,7 +33,7 @@ class Game {
             packet.yourPlayerID = info.player.id;
             info.client.send(packet);
         }
-        this.nextTurn();
+        setTimeout(() => this.nextTurn(), 1000); // TODO fix client to be able to receive faster
     }
 
     getPlayers() {
