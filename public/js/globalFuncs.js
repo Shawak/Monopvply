@@ -131,7 +131,7 @@ function nextTurnState(packet,ingameMenu,user)
 
 function updatePlayerState(packet,user, enemies)
 {	
-	if(user==undefined || packet==undefined || enemies==undefined || enemies.length==0)
+	if(user==undefined || packet==undefined || enemies==undefined)
 	{
 		return false;
 	}
@@ -166,7 +166,7 @@ function showDice(dices, num1, num2)
 
 function updateDiceState(packet, diceMenu, dices, user, enemies)
 {
-	if(user==undefined || packet==undefined || enemies==undefined /*|| enemies.length==0*/)
+	if(user==undefined || packet==undefined || enemies==undefined)
 	{
 		return false;
 	}
@@ -175,18 +175,12 @@ function updateDiceState(packet, diceMenu, dices, user, enemies)
 	showDice(dices, packet.rollResult[0], packet.rollResult[1]);
 	diceMenu.draw();
 	
-	for(var i=0;i<enemies.length;i++)
-	{
-		if(packet.player.id==enemies[i].getId())
-		{
-			return enemies[i].updateState(packet.player);
-		}
-	}
-	
-	if(packet.player.id==user.getId())
-	{
-		return user.updateState(packet.player);
-	}
+	return true;
+}
+
+function updateFieldState(packet,user, enemies)
+{	
+
 	
 	return true;
 }

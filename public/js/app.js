@@ -162,6 +162,8 @@
     function onUpdateFieldPacket(sender, packet) {
         // TODO
         // update field
+		
+		queue.add(updateFieldState.bind(null, packet, user, enemies));
     }
 
     function onChatMessagePacket(sender, packet) {
