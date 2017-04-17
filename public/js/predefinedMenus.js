@@ -599,7 +599,18 @@ function setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemyArray, b
 	var buyCallback=buyField.bind(null,user);
 	var buyButton=ingameMenu.addButton(profileImageMargin, profileImageMargin+profileImageSize+76+16+textMoneyEnemy.getHeight(), profileImageSize, 30, "Buy Field", undefined, "Buy the field you are at");
 
-	return buyButton;
+	var dices=[[],[]];
+	
+	for(var i=0;i<6;i++)
+	{
+		dices[0].push(ingameMenu.addImage(profileImageMargin+profileImageSize/2-54, profileImageMargin+profileImageSize+112+16+textMoneyEnemy.getHeight(), 50, 50,"img/dice/d"+(i*1+1)+".png"));
+	}
+	
+	for(var i=0;i<6;i++)
+	{
+		d
+	
+	return {buyButton: buyButton, dices: dices};
 	/*
 	var boundAlert2=myAlert.bind(null,"Yay, you clicked Field Card 'Last Chaos'!");
 	ingameMenu.addFieldCard(50, 80, 70, 80, "Last Chaos", "lightblue", boundAlert2,"./img/streets/2_mmorpg/2_last_chaos.jpg");

@@ -151,3 +151,42 @@ function updatePlayerState(packet,user, enemies)
 	
 	return true;
 }
+
+function showDice(dices, num1, num2)
+{
+	for(var i=0;i<dices[0].length;i++)
+	{
+		dices[0][i].hide();
+		dices[1][i].hide();
+	}
+
+	dices[0][num1-1].show();
+	dices[1][num2-1].show();
+}
+
+function updateDiceState(packet, diceMenu, dices, user, enemies)
+{
+	if(user==undefined || packet==undefined || enemies==undefined || enemies.length==0)
+	{
+		return false;
+	}
+	
+	// Show dice result
+	showDice(dices, packet.rollResult[0], packet.rollResult[1]);
+	diceMenu.draw();
+	
+	for(var i=0;i<enemies.length;i++)
+	{
+		if(packet.player.id==enemies[i].getId())
+		{
+			return enemies[i].updateState(packet.player);
+		}
+	}
+	
+	if(packet.player.id==user.getId())
+	{
+		return user.updateState(packet.player);
+	}
+	
+	return true;
+}

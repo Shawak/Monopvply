@@ -7,10 +7,12 @@
     var gameMap;
     var ingameMenu;
     var generalMenu;
+	var diceMenu;
     var queue = new QueueManager();
     var user;
     var enemies = [];
-
+	var dices;
+	
     function startGame(packet) {
         document.getElementById("loading-img").addEventListener('load', startRendering)
 
@@ -31,7 +33,7 @@
             ingameMenu = new Menu(stage, queue);
             generalMenu = new Menu(stage, queue);
             informationMenu = new Menu(stage, queue);
-
+			diceMenu=new Menu(stage,queue);
             enemies = [];
 			
 			for(var i=0;i<packet.players.length;i++)
@@ -48,16 +50,20 @@
             
             var houseBuildingMenu = houseBuildingWindow.bind(null, generalMenu, gameMap, 5, user, "Accept", "Cancel");
 
-            var buyButton=setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemies, houseBuildingMenu);
+            var menuEntities=setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemies, houseBuildingMenu);
             setUpStandardMap(packet, queue, gameMap, informationMenu);
 
-			player.setBuyButton(buyButton);
+			dices=menuEntities.dices;
 			
-            user.addBoardFigure("");
+			player.setBuyButton(menuEntities.buyButton);
+			
             queue.start();
 
+			 user.addBoardFigure("");
+			
             for (var i = 0; i < enemies.length; i++) {
                 enemies[i].createCardManager();
+				enemies[i].addBoardFigure("");
             }
         }
     }
@@ -153,6 +159,7 @@
 
     function onDiceResultPacket(sender, packet) {
         // TODO
+		queue.add(updateDiceState.bind(null, packet,diceMenu, dices, user, enemies));
     }
 
     function onListLobbiesPacket(sender, packet) {
