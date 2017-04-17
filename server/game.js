@@ -46,7 +46,7 @@ class Game {
 
     senderToPlayer(sender) {
         for (let info of this.playerInfo) {
-            if (sender == info.user.client) {
+            if (sender == info.client) {
                 return info.player;
             }
         }
