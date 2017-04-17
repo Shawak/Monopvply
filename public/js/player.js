@@ -202,7 +202,7 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 					busyMoving=false;
 					if(field.isBuyable())
 					{
-						updateBuyButton(true,field);
+						that.updateBuyButton(true,field);
 					}
 				}
 				

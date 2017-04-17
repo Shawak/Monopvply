@@ -588,7 +588,7 @@ function setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemyArray, b
 		var success=player.buyCard(player.getCurrentField().getId(), true);
 		if(success==true)
 		{
-			if(buyFieldCallback!=undefine)
+			if(buyFieldCallback!=undefined)
 			{
 				buyFieldCallback(player.getCurrentField().getId());
 			}

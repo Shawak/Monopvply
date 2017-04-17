@@ -34,7 +34,7 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 	var fieldGroup;
 	var layer;
 	var parentLayer;
-	var buyable;
+	var buyable=true;
 	
 	this.isBuyable =function()
 	{
