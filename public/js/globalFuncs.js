@@ -108,7 +108,7 @@ function sellOneHouseInBuildingMenu(layer, field, houseRects, textObj, originalM
 	layer.draw();
 }
 
-function nextTurnState(packet,user)
+function nextTurnState(packet,ingameMenu,user)
 {
 	if(user==undefined || packet==undefined)
 	{

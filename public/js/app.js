@@ -141,7 +141,7 @@
         // TODO
         // update gui buttons (disable them)
 
-        queue.add(nextTurnState.bind(null, packet, user));
+        queue.add(nextTurnState.bind(null, packet, ingameMenu, user));
     }
 
     function onUpdatePlayerPacket(sender, packet) {
