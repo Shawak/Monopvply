@@ -9,8 +9,8 @@
     var generalMenu;
 	var diceMenu;
     var queue = new QueueManager();
-    var user;
-    var enemies = [];
+    var user = {};
+    var enemies = {};
 	var dices;
 	var client = new Client();
 	
@@ -71,7 +71,7 @@
 			
             queue.start();
 
-			 user.addBoardFigure("");
+			user.addBoardFigure("");
 			
             for (var i = 0; i < enemies.length; i++) 
 			{

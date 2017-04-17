@@ -2,7 +2,7 @@ function QueueManager()
 {
 	var callbackQueue=[];
 	var that=this;
-	var stop=false;
+	var stop=true;
 	
 	this.clear = function()
 	{
@@ -42,6 +42,9 @@ function QueueManager()
 	this.add = function(callback)
 	{
 		callbackQueue.push(callback);
-		that.callNext(false);
+		if(stop==false)
+		{
+			that.callNext(false);
+		}
 	}
 }
