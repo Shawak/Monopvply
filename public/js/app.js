@@ -9,8 +9,8 @@
     var generalMenu;
 	var diceMenu;
     var queue = new QueueManager();
-    var user = {};
-    var enemies = {};
+    var user = undefined;
+    var enemies = undefined;
 	var dices;
 	var client = new Client();
 	
