@@ -166,7 +166,7 @@ function showDice(dices, num1, num2)
 
 function updateDiceState(packet, diceMenu, dices, user, enemies)
 {
-	if(user==undefined || packet==undefined || enemies==undefined || enemies.length==0)
+	if(user==undefined || packet==undefined || enemies==undefined /*|| enemies.length==0*/)
 	{
 		return false;
 	}

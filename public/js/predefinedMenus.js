@@ -588,7 +588,10 @@ function setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemyArray, b
 		var success=player.buyCard(player.getCurrentField().getId(), true);
 		if(success==true)
 		{
-			alert("You bought it!");
+			if(buyFieldCallback!=undefine)
+			{
+				buyFieldCallback(player.getCurrentField().getId());
+			}
 		}
 		else
 		{
@@ -598,7 +601,7 @@ function setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemyArray, b
 	}
 	
 	var buyCallback=buyField.bind(null,user);
-	var buyButton=ingameMenu.addButton(profileImageMargin, profileImageMargin+profileImageSize+76+16+textMoney.getHeight(), profileImageSize, 30, "Buy Field", buyFieldCallback, "Buy the field you are at");
+	var buyButton=ingameMenu.addButton(profileImageMargin, profileImageMargin+profileImageSize+76+16+textMoney.getHeight(), profileImageSize, 30, "Buy Field", buyCallback, "Buy the field you are at");
 
 	var dices=[[],[]];
 	
