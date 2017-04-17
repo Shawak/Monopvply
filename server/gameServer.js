@@ -71,7 +71,7 @@ class GameServer {
     }
 
     isInLobby(client) {
-        return this.lobbies.find(x => x.hasClient(client));
+        return this.lobbies.find(lobby => lobby.hasClient(client));
     }
 
 }

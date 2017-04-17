@@ -41,13 +41,16 @@ class Monopvply {
         this.game = game;
         this.players = players;
 
-        for(let player of this.players) {
+        for (let player of this.players) {
             player.money += 1500;
         }
 
         let id = 0;
         this.fields = [
-            new Field(id++, 'Start', 'img/corner/1_start.jpg', (game, player) => { player.money += 1; game.update(player); }),
+            new Field(id++, 'Start', 'img/corner/1_start.jpg', (game, player) => {
+                player.money += 1;
+                game.update(player);
+            }),
             new Street(id++, 'Metin2', 'img/streets/7_major_3/2_metin_2.jpg', 0, 'brown', 120),
             new CommunityField(id++, 'img/events/2_community.jpg'),
             new Street(id++, 'Flyff', 'img/streets/7_major_3/1_flyff.jpg', 0, 'brown', 140),
@@ -106,14 +109,17 @@ class Monopvply {
         game.update(player);
 
         let field = this.fields[player.position];
-        if(field.onEnter) {
+        if (field.onEnter) {
             field.onEnter(game, player);
         }
     }
 
     onBuy(game, player, fieldID) {
         let field = this.fields[fieldID];
-        if(player.money < field.price)
+        if (player.money < field.price)
+            return;
+
+        if (field[fieldID].owner != player.id)
             return;
 
         player.money -= field.price;

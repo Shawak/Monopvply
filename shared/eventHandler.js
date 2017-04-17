@@ -7,7 +7,7 @@ function EventHandler() {
         if(typeof(cls) !== 'function' || typeof(func) !== 'function') {
             throw 'link: cls or func is not a function';
         }
-        var T = Object.getPrototypeOf(new cls()).constructor.name;
+        var T = cls.prototype.constructor.name;
         if(!this.handler.hasOwnProperty(T)) {
             this.handler[T] = [];
         }

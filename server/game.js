@@ -33,7 +33,7 @@ class Game {
             packet.yourPlayerID = info.player.id;
             info.client.send(packet);
         }
-        setTimeout(() => this.nextTurn(), 1000); // TODO fix client to be able to receive faster
+        setTimeout(() => this.nextTurn(), 2000); // TODO fix client to be able to receive faster
     }
 
     getPlayers() {
@@ -119,9 +119,6 @@ class Game {
 
     onChatMessagePacket(sender, packet) {
         let player = this.senderToPlayer(sender);
-        if (!player)
-            return;
-
         this.broadcast(new Packets.ChatMessagePacket(player, packet.message));
     }
 
