@@ -535,7 +535,7 @@ function acceptWindow(generalMenu, text, yesCallback, noCallback)
 	generalMenu.draw();
 }
 
-function setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemyArray, buildingMenuCallback)
+function setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemyArray, buildingMenuCallback, endTurnCallback, buyFieldCallback)
 {
 	var container = document.querySelector('#stage-parent');
 	var containerWidth = container.offsetWidth;
@@ -560,6 +560,7 @@ function setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemyArray, b
 
 	user.createCardManager(ingameMenu, containerWidth/4, containerHeight-124, 100, 140);
 
+	var textMoneyEnemy;
 	for(var i=0;i<enemyArray.length;i++)
 	{
 		var x=containerWidth-profileImageMargin-profileImageSizeEnemy;
@@ -567,15 +568,15 @@ function setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemyArray, b
 		ingameMenu.addMenuBackground(x, y, profileImageSizeEnemy, profileImageSizeEnemy+30);
 		ingameMenu.addImage(x, y, profileImageSizeEnemy, profileImageSizeEnemy, enemyArray[i].imgSrc);
 
-		var textMoneyEnemy=ingameMenu.addText(x, y+profileImageSizeEnemy, profileImageSizeEnemy, "1500 "+GLOBAL_MONEY_VAR);
+		textMoneyEnemy=ingameMenu.addText(x, y+profileImageSizeEnemy, profileImageSizeEnemy, "1500 "+GLOBAL_MONEY_VAR);
 		enemyArray[i].setMoneyTextbox(textMoneyEnemy);
 		
 		ingameMenu.addButton(x+16, y+profileImageSizeEnemy+8+textMoneyEnemy.getHeight(), profileImageSizeEnemy-32, 30, "Trade", tradingWindow.bind(null, generalMenu,user,enemyArray[i],"Offer", "Cancel"), "Start a trade with this player");
 	}
 	
-	ingameMenu.addButton(profileImageMargin, profileImageMargin+profileImageSize+16+textMoneyEnemy.getHeight(), profileImageSize, 30, "Building Menu", buildingMenuCallback, "Opens menu to buy and sell houses");
+	ingameMenu.addButton(profileImageMargin, profileImageMargin+profileImageSize+16+textMoney.getHeight(), profileImageSize, 30, "Building Menu", buildingMenuCallback, "Opens menu to buy and sell houses");
 
-	ingameMenu.addButton(profileImageMargin, profileImageMargin+profileImageSize+38+16+textMoneyEnemy.getHeight(), profileImageSize, 30, "End Turn", undefined, "Ends the current turn");
+	ingameMenu.addButton(profileImageMargin, profileImageMargin+profileImageSize+38+16+textMoney.getHeight(), profileImageSize, 30, "End Turn", endTurnCallback, "Ends the current turn");
 
 	function buyField(player)
 	{
@@ -597,18 +598,19 @@ function setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemyArray, b
 	}
 	
 	var buyCallback=buyField.bind(null,user);
-	var buyButton=ingameMenu.addButton(profileImageMargin, profileImageMargin+profileImageSize+76+16+textMoneyEnemy.getHeight(), profileImageSize, 30, "Buy Field", undefined, "Buy the field you are at");
+	var buyButton=ingameMenu.addButton(profileImageMargin, profileImageMargin+profileImageSize+76+16+textMoney.getHeight(), profileImageSize, 30, "Buy Field", buyFieldCallback, "Buy the field you are at");
 
 	var dices=[[],[]];
 	
 	for(var i=0;i<6;i++)
 	{
-		dices[0].push(ingameMenu.addImage(profileImageMargin+profileImageSize/2-54, profileImageMargin+profileImageSize+112+16+textMoneyEnemy.getHeight(), 50, 50,"img/dice/d"+(i*1+1)+".png"));
+		dices[0].push(ingameMenu.addImage(profileImageMargin+profileImageSize/2-54, profileImageMargin+profileImageSize+112+16+textMoney.getHeight(), 50, 50,"img/dice/d"+(i*1+1)+".png"));
 	}
 	
 	for(var i=0;i<6;i++)
 	{
-		d
+		dices[1].push(ingameMenu.addImage(profileImageMargin+profileImageSize/2+4, profileImageMargin+profileImageSize+112+16+textMoney.getHeight(), 50, 50,"img/dice/d"+(i*1+1)+".png"));
+	}
 	
 	return {buyButton: buyButton, dices: dices};
 	/*

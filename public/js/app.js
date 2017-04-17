@@ -12,8 +12,15 @@
     var user;
     var enemies = [];
 	var dices;
+	var client = new Client();
 	
-    function startGame(packet) {
+	function endTurn()
+	{
+		client.send(new PlayerEndTurnPacket());
+	}
+	
+    function startGame(packet) 
+	{
         document.getElementById("loading-img").addEventListener('load', startRendering)
 
         var width = window.innerWidth;
@@ -51,17 +58,18 @@
             var houseBuildingMenu = houseBuildingWindow.bind(null, generalMenu, gameMap, 5, user, "Accept", "Cancel");
 
             var menuEntities=setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemies, houseBuildingMenu);
-            setUpStandardMap(packet, queue, gameMap, informationMenu);
+            setUpStandardMap(packet, queue, gameMap, informationMenu,undefined,endTurn);
 
 			dices=menuEntities.dices;
 			
-			player.setBuyButton(menuEntities.buyButton);
+			user.setBuyButton(menuEntities.buyButton);
 			
             queue.start();
 
 			 user.addBoardFigure("");
 			
-            for (var i = 0; i < enemies.length; i++) {
+            for (var i = 0; i < enemies.length; i++) 
+			{
                 enemies[i].createCardManager();
 				enemies[i].addBoardFigure("");
             }
@@ -190,7 +198,7 @@
 
     var lobby = null;
 
-    var client = new Client();
+    
     client.network.link(LoginResultPacket, onLoginResultPacket, this);
     client.network.link(PingPacket, onPingPacket, this);
     client.network.link(GameStartPacket, onGameStartPacket, this);
