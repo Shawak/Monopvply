@@ -23,7 +23,12 @@ function QueueManager()
 	
 	this.callNext = function(loop)
 	{
+		if(busy==true)
+		{
+			return;
+		}
 		busy=true;
+		
 		loop = typeof loop !== 'undefined' ? loop : true;
 		
 		if(callbackQueue.length>0)
@@ -45,9 +50,5 @@ function QueueManager()
 	this.add = function(callback)
 	{
 		callbackQueue.push(callback);
-		if(stop==false && busy==false)
-		{
-			that.callNext(false);
-		}
 	}
 }
