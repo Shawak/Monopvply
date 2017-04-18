@@ -108,8 +108,12 @@
                 client.send(new StartLobbyPacket());
             });
 
-            $('#lobbies tbody').on('click', 'tr', function (e) {
-                var index = e.currentTarget.firstElementChild.innerText.substring(1);
+            $('#lobbies tbody').on('click', 'tr', function (e) 
+			{
+				if( !e ) e = window.event;
+				var target = e.currentTarget || e.target || e.srcElement;
+				
+                var index = target.firstElementChild.innerText.substring(1);
                 client.send(new JoinLobbyPacket(index));
             });
 
