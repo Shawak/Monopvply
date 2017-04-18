@@ -119,7 +119,7 @@ class Monopvply {
         if (player.money < field.price)
             return;
 
-        if (field[fieldID].owner != player.id)
+        if (field[fieldID].owner == player.id)
             return;
 
         player.money -= field.price;
