@@ -90,6 +90,10 @@ class Game {
         }
     }
 
+    msg(message) {
+        this.broadcast(new ChatMessagePacket(null, message));
+    }
+
     update(obj) {
         switch (Object.getPrototypeOf(obj)) {
             case Player.prototype:
