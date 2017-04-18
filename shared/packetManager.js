@@ -10,7 +10,7 @@ var PacketManager = {
     },
 
     add: function (T) {
-        this.lookup[this.aid++] = T.prototype;
+        this.lookup[this.aid++] = Object.getPrototypeOf(new T());
     },
 
     pack: function (packet) {
