@@ -5,7 +5,7 @@ function Client() {
     var self = this;
 
     this.start = function () {
-        this.socket = io(location.host + ':1234',
+        this.socket = io(location.hostname + ':1234',
             {
                 // using websocket for now because polling
                 // sometimes freezes without any reason
