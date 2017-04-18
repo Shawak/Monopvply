@@ -7,25 +7,22 @@
     var gameMap;
     var ingameMenu;
     var generalMenu;
-	var diceMenu;
+    var diceMenu;
     var queue = new QueueManager();
     var user = undefined;
     var enemies = undefined;
-	var dices;
-	var client = new Client();
-	
-	function endTurn()
-	{
-		client.send(new PlayerEndTurnPacket());
-	}
-	
-	function buyFieldSend(fieldId)
-	{
-		client.send(new PlayerBuyPacket(fieldId,0));
-	}
-	
-    function startGame(packet) 
-	{
+    var dices;
+    var client = new Client();
+
+    function endTurn() {
+        client.send(new PlayerEndTurnPacket());
+    }
+
+    function buyFieldSend(fieldId) {
+        client.send(new PlayerBuyPacket(fieldId, 0));
+    }
+
+    function startGame(packet) {
         document.getElementById("loading-img").addEventListener('load', startRendering)
 
         var width = window.innerWidth;
@@ -39,44 +36,39 @@
         );
         stage.hide(true);
 
-        function startRendering() 
-		{
+        function startRendering() {
             gameMap = new Map(stage);
             ingameMenu = new Menu(stage, queue);
             generalMenu = new Menu(stage, queue);
             informationMenu = new Menu(stage, queue);
-			diceMenu=new Menu(stage,queue);
+            diceMenu = new Menu(stage, queue);
             enemies = [];
-			
-			for(var i=0;i<packet.players.length;i++)
-			{
-				if(packet.players[i].id==packet.yourPlayerID)
-				{
-					user = new Player(packet.players[i].id, gameMap, ingameMenu.getLayer(), informationMenu, packet.players[i].money, packet.players[i].color, "./img/test.jpg", "./img/test.jpg");
-				}
-				else
-				{
-					enemies.push(new Player(packet.players[i].id, gameMap, ingameMenu.getLayer(), informationMenu, packet.players[i].money, packet.players[i].color, "./img/Testing.jpg", "./img/Testing.jpg"));
-				}
-			}
-            
+
+            for (var i = 0; i < packet.players.length; i++) {
+                if (packet.players[i].id == packet.yourPlayerID) {
+                    user = new Player(packet.players[i].id, gameMap, ingameMenu.getLayer(), informationMenu, packet.players[i].money, packet.players[i].color, "./img/test.jpg", "./img/test.jpg");
+                }
+                else {
+                    enemies.push(new Player(packet.players[i].id, gameMap, ingameMenu.getLayer(), informationMenu, packet.players[i].money, packet.players[i].color, "./img/Testing.jpg", "./img/Testing.jpg"));
+                }
+            }
+
             var houseBuildingMenu = houseBuildingWindow.bind(null, generalMenu, gameMap, 5, user, "Accept", "Cancel");
 
-            var menuEntities=setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemies, houseBuildingMenu, endTurn);
+            var menuEntities = setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemies, houseBuildingMenu, endTurn);
             setUpStandardMap(packet, queue, gameMap, informationMenu);
 
-			dices=menuEntities.dices;
-			
-			user.setBuyButton(menuEntities.buyButton);
-			
+            dices = menuEntities.dices;
+
+            user.setBuyButton(menuEntities.buyButton);
+
             queue.start();
 
-			user.addBoardFigure("");
-			
-            for (var i = 0; i < enemies.length; i++) 
-			{
+            user.addBoardFigure("");
+
+            for (var i = 0; i < enemies.length; i++) {
                 enemies[i].createCardManager();
-				enemies[i].addBoardFigure("");
+                enemies[i].addBoardFigure("");
             }
         }
     }
@@ -100,7 +92,7 @@
                 client.send(new CreateLobbyPacket());
             });
 
-            $('#updateLobbies').click(function() {
+            $('#updateLobbies').click(function () {
                 client.send(new RequestLobbiesPacket());
             });
 
@@ -108,13 +100,11 @@
                 client.send(new StartLobbyPacket());
             });
 
-            $('#lobbies tbody').on('click', 'tr', function (e) 
-			{
-				if( !e ) e = window.event;
-				var target = e.currentTarget || e.target || e.srcElement;
-				
-				var text= target.firstElementChild.innerText || target.firstElementChild.textContent || target.firstElementChild.innerHTML;
-				var index = text.substring(1);
+            $('#lobbies tbody').on('click', 'tr', function (e) {
+                if (!e) e = window.event;
+                var target = e.currentTarget || e.target || e.srcElement;
+                var text = target.firstElementChild.innerText || target.firstElementChild.textContent || target.firstElementChild.innerHTML;
+                var index = text.substring(1);
                 client.send(new JoinLobbyPacket(index));
             });
 
@@ -141,8 +131,7 @@
     }
 
     function onGameStartPacket(sender, packet) {
-        changePage('game', function () 
-		{
+        changePage('game', function () {
             startGame(packet);
         });
     }
@@ -167,8 +156,8 @@
     function onUpdateFieldPacket(sender, packet) {
         // TODO
         // update field
-		
-		queue.add(updateFieldState.bind(null, packet, user, enemies));
+
+        queue.add(updateFieldState.bind(null, packet, user, enemies));
     }
 
     function onChatMessagePacket(sender, packet) {
@@ -179,7 +168,7 @@
 
     function onDiceResultPacket(sender, packet) {
         // TODO
-		queue.add(updateDiceState.bind(null, packet,diceMenu, dices, user, enemies));
+        queue.add(updateDiceState.bind(null, packet, diceMenu, dices, user, enemies));
     }
 
     function onListLobbiesPacket(sender, packet) {
@@ -200,7 +189,7 @@
         if (!lobby) {
             changePage('lobby', function () {
                 var users = [];
-                for(var i = 0; i < packet.users.length; i++) {
+                for (var i = 0; i < packet.users.length; i++) {
                     users.push(packet.users[i].name);
                 }
                 $('#lobby span').text(users.join(', '));
@@ -210,7 +199,7 @@
 
     var lobby = null;
 
-    
+
     client.network.link(LoginResultPacket, onLoginResultPacket, this);
     client.network.link(PingPacket, onPingPacket, this);
     client.network.link(GameStartPacket, onGameStartPacket, this);
