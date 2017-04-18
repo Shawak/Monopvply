@@ -38,7 +38,7 @@ class Game {
 
     getPlayers() {
         let players = [];
-        for(let info of this.playerInfo) {
+        for (let info of this.playerInfo) {
             players.push(info.player);
         }
         return players;
@@ -48,6 +48,15 @@ class Game {
         for (let info of this.playerInfo) {
             if (sender == info.client) {
                 return info.player;
+            }
+        }
+        return null;
+    }
+
+    playerToClient(player) {
+        for (let info of this.playerInfo) {
+            if (player == info.player) {
+                return info.client;
             }
         }
         return null;
@@ -90,8 +99,12 @@ class Game {
         }
     }
 
-    msg(message) {
-        this.broadcast(new ChatMessagePacket(null, message));
+    msg(message, player) {
+        let packet = new ChatMessagePacket(null, message);
+        if (player)
+            this.playerToClient(player).send(packet);
+        else
+            this.broadcast(packet);
     }
 
     update(obj) {

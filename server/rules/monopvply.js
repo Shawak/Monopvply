@@ -117,12 +117,12 @@ class Monopvply {
     onBuy(game, player, fieldID) {
         let field = this.fields[fieldID];
         if (player.money < field.price) {
-            game.msg('You don\'t have enough money to purchase this.');
+            game.msg('You don\'t have enough money to purchase this.', player);
             return;
         }
 
         if (field[fieldID].owner == player.id) {
-            game.msg('You are already the owner.');
+            game.msg('You are already the owner.', player);
             return;
         }
 
