@@ -113,7 +113,8 @@
 				if( !e ) e = window.event;
 				var target = e.currentTarget || e.target || e.srcElement;
 				
-                var index = target.firstElementChild.innerText.substring(1);
+				var text= target.firstElementChild.innerText || target.firstElementChild.textContext || target.firstElementChild.innerHTML;
+				var index = text.substring(1);
                 client.send(new JoinLobbyPacket(index));
             });
 
