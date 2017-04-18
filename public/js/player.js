@@ -40,7 +40,7 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 		
 		if(buyButton==undefined || buyButton.length==0)
 		{
-			return true;
+			return false;
 		}
 		
 		if(visible==false)
@@ -48,7 +48,7 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 			buyButton[0].hide();
 			buyButton[1].hide();
 			layer.draw();
-			return false;
+			return true;
 		}
 		
 		buyButton[0].show();
