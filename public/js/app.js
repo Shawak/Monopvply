@@ -9,8 +9,8 @@
     var generalMenu;
     var diceMenu;
     var queue = new QueueManager();
-    var user = undefined;
-    var enemies = undefined;
+    var user;
+    var enemies;
     var dices;
     var client = new Client();
 
@@ -19,7 +19,7 @@
     }
 
     function buyFieldSend(fieldId) {
-        client.send(new PlayerBuyPacket(fieldId, 0));
+        client.send(new PlayerBuyPacket(fieldId));
     }
 
     function startGame(packet) {
@@ -55,7 +55,7 @@
 
             var houseBuildingMenu = houseBuildingWindow.bind(null, generalMenu, gameMap, 5, user, "Accept", "Cancel");
 
-            var menuEntities = setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemies, houseBuildingMenu, endTurn);
+            var menuEntities = setUpStandardMenu(ingameMenu, diceMenu, generalMenu, gameMap, user, enemies, houseBuildingMenu, endTurn,buyFieldSend);
             setUpStandardMap(packet, queue, gameMap, informationMenu);
 
             dices = menuEntities.dices;
@@ -139,7 +139,6 @@
     function onNextTurnPacket(sender, packet) {
         // TODO
         // update gui buttons (disable them)
-
         queue.add(nextTurnState.bind(null, packet, ingameMenu, user));
     }
 

@@ -535,7 +535,7 @@ function acceptWindow(generalMenu, text, yesCallback, noCallback)
 	generalMenu.draw();
 }
 
-function setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemyArray, buildingMenuCallback, endTurnCallback, buyFieldCallback)
+function setUpStandardMenu(ingameMenu, diceMenu, generalMenu, gameMap, user, enemyArray, buildingMenuCallback, endTurnCallback, buyFieldCallback)
 {
 	var container = document.querySelector('#stage-parent');
 	var containerWidth = container.offsetWidth;
@@ -584,18 +584,10 @@ function setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemyArray, b
 		{
 			return false;
 		}
-		
-		var success=player.buyCard(player.getCurrentField().getId(), true);
-		if(success==true)
+
+		if(buyFieldCallback!=undefined)
 		{
-			if(buyFieldCallback!=undefined)
-			{
-				buyFieldCallback(player.getCurrentField().getId());
-			}
-		}
-		else
-		{
-			alert("Not enough money!");
+			buyFieldCallback(player.getCurrentField().getId());
 		}
 		return true;
 	}
@@ -607,12 +599,12 @@ function setUpStandardMenu(ingameMenu, generalMenu, gameMap, user, enemyArray, b
 	
 	for(var i=0;i<6;i++)
 	{
-		dices[0].push(ingameMenu.addImage(profileImageMargin+profileImageSize/2-54, profileImageMargin+profileImageSize+112+16+textMoney.getHeight(), 50, 50,"img/dice/d"+(i*1+1)+".png"));
+		dices[0].push(diceMenu.addImage(profileImageMargin+profileImageSize/2-54, profileImageMargin+profileImageSize+112+16+textMoney.getHeight(), 50, 50,"img/dice/d"+(i*1+1)+".png"));
 	}
 	
 	for(var i=0;i<6;i++)
 	{
-		dices[1].push(ingameMenu.addImage(profileImageMargin+profileImageSize/2+4, profileImageMargin+profileImageSize+112+16+textMoney.getHeight(), 50, 50,"img/dice/d"+(i*1+1)+".png"));
+		dices[1].push(diceMenu.addImage(profileImageMargin+profileImageSize/2+4, profileImageMargin+profileImageSize+112+16+textMoney.getHeight(), 50, 50,"img/dice/d"+(i*1+1)+".png"));
 	}
 	
 	return {buyButton: buyButton, dices: dices};
