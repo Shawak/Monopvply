@@ -111,13 +111,22 @@ function Map(konvaStage)
 			{
 				return sideFields[i];
 			}
-		}	
+		}
+
+		for(var i=0;i<cornerFields.length;i++)
+		{
+			if(id==cornerFields[i].getId())
+			{
+				return cornerFields[i];
+			}
+		}
+		
 		return undefined;
 	}
 	
 	this.getFieldByPosition = function(position)
 	{
-		if(position<0 || position>=fieldPositions.length)
+		if(position<0 || fieldPositions.length==0)
 			return undefined;
 		
 		return fieldPositions[position];

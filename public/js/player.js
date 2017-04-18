@@ -18,7 +18,7 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 	var playerColor=color;
 	var playerName="Username";
 	var id=playerId;
-	var buyButton;
+	var buyButton=undefined;
 	var currentField;
 	
 	this.setBuyButton=function(button)
@@ -33,18 +33,27 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 	
 	this.updateBuyButton=function(visible, field)
 	{
+		if(visible==true)
+		{
+			currentField=field;
+		}
+		
+		if(buyButton==undefined || buyButton.length==0)
+		{
+			return false;
+		}
+		
 		if(visible==false)
 		{
 			buyButton[0].hide();
 			buyButton[1].hide();
 			layer.draw();
-			return false;
+			return true;
 		}
 		
 		buyButton[0].show();
 		buyButton[1].show();
 		layer.draw();
-		currentField=field;
 		return true;
 	}
 	

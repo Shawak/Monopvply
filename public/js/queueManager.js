@@ -3,6 +3,7 @@ function QueueManager()
 	var callbackQueue=[];
 	var that=this;
 	var stop=true;
+	var busy=false;
 	
 	this.clear = function()
 	{
@@ -22,6 +23,12 @@ function QueueManager()
 	
 	this.callNext = function(loop)
 	{
+		if(busy==true)
+		{
+			return;
+		}
+		busy=true;
+		
 		loop = typeof loop !== 'undefined' ? loop : true;
 		
 		if(callbackQueue.length>0)
@@ -35,16 +42,13 @@ function QueueManager()
 		}
 		if(loop && !stop)
 		{
-			setTimeout(function(){ that.callNext() }, 200);
+			setTimeout(function(){ that.callNext() }, 100);
 		}
+		busy=false;
 	}
 	
 	this.add = function(callback)
 	{
 		callbackQueue.push(callback);
-		if(stop==false)
-		{
-			that.callNext(false);
-		}
 	}
 }
