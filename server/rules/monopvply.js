@@ -6,11 +6,11 @@ class TaxField extends Field {
     constructor(id, name, img, textColor, price) {
         super(id, name, img);
         this.textColor = textColor;
-        this.price = price;
+        this.tax = price;
     }
 
     onEnter(game, player) {
-        player.money -= this.price;
+        player.tax -= this.tax;
         game.update(player);
     }
 }
@@ -128,6 +128,11 @@ class Monopvply {
 		
         if (field.owner != null) {
             game.msg('Someone already owns this field.', player);
+            return;
+        }
+
+        if (!field.price) {
+            game.msg('You can\'t buy this field.', player);
             return;
         }
 
