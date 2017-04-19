@@ -43,7 +43,6 @@ class Lobby {
         this.clients.push(client);
         client.onDisconnect.add(this.onClientDisconnect, this);
         client.network.link(Packets.StartLobbyPacket, this.onStartLobbyPacket, this);
-        client.network.link(Packets.ChatMessagePacket, this.onChatMessagePacket, this);
         client.network.link(Packets.LeaveLobbyPacket, this.onLeaveLobbyPacket, this);
         this.broadcast(new Packets.UpdateLobbyPacket(this.getUsers()));
     }
@@ -52,7 +51,6 @@ class Lobby {
         this.clients.splice(this.clients.indexOf(client), 1);
         client.onDisconnect.remove(this.onClientDisconnect, this);
         client.network.unlink(Packets.StartLobbyPacket, this.onStartLobbyPacket, this);
-        client.network.unlink(Packets.ChatMessagePacket, this.onChatMessagePacket, this);
         client.network.unlink(Packets.LeaveLobbyPacket, this.onLeaveLobbyPacket, this);
         if(this.clients.length == 0) {
             this.server.removeLobby(this);
@@ -68,10 +66,6 @@ class Lobby {
             this.game = new Game(this.clients);
             this.game.start();
         }
-    }
-
-    onChatMessagePacket(sender, packet) {
-        this.broadcast(packet);
     }
 
     onLeaveLobbyPacket(sender, packet) {
