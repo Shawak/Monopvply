@@ -22,7 +22,16 @@
         client.send(new PlayerBuyPacket(fieldId));
     }
 
-    function startGame(packet) {
+	function getAndSendMessage()
+	{
+		sendMessage($("#btn-input").val());
+		$("#btn-input").val("");
+	}
+	
+    function startGame(packet) 
+	{
+		$("#btn-chat").click(getAndSendMessage);
+		
         document.getElementById("loading-img").addEventListener('load', startRendering)
 
         var width = window.innerWidth;
@@ -114,8 +123,12 @@
         });
     }
 
-    function sendMessage(message) {
-        client.send(new ChatMessagePacket(null, message));
+    function sendMessage(message) 
+	{
+		if (user!=undefined)
+		{
+			client.send(new ChatMessagePacket(null, message));
+		}
     }
 
     function onLoginResultPacket(sender, packet) {
@@ -163,6 +176,29 @@
         // TODO
         // display chat message
         // packet.from is null on server broadcasts
+		
+		if(packet.from == null)
+		{
+			addChatMessage('<font color="red">'+"System"+"</font>", "", packet.message);
+		}
+		else
+		{
+			var imgSrc="";
+			if(user.getId()==packet.from.id)
+			{
+				imgSrc=user.imgSrc;
+			}
+			
+			for(var i=0;i<enemies.length;i++)
+			{
+				if(enemies[i].getId()==packet.from.id)
+				{
+					imgSrc=enemies[i].imgSrc;
+				}
+			}
+
+			addChatMessage(packet.from.name, imgSrc, packet.message);
+		}
     }
 
     function onDiceResultPacket(sender, packet) {

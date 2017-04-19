@@ -178,6 +178,20 @@ function updateDiceState(packet, diceMenu, dices, user, enemies)
 	return true;
 }
 
+function addChatMessage(playerName, playerImg, text)
+{
+	var htmlMessage='<li class="left clearfix">';
+	if(playerImg!="")
+	{
+		htmlMessage+='<span class="chat-img pull-left"><img src="'+playerImg+'" alt="" class="img-circle" style="width:40px;height:40px;"/></span>';
+	}
+	htmlMessage+='<div class="chat-body clearfix"><div class="header"><strong class="primary-font">'+playerName+'</strong></div>';
+	htmlMessage+='<p>'+text+'</p></div></li>';
+	
+	var chatMsgs=document.getElementById("chatMsgs");
+	chatMsgs.innerHTML+=htmlMessage;
+}
+			
 function updateFieldState(packet,user, enemies)
 {	
 
