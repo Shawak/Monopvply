@@ -6,6 +6,8 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 	onClickCallback = typeof onClickCallback !== 'undefined' ? onClickCallback : undefined;
 	costsColor = typeof costsColor !== 'undefined' ? costsColor : '#FFF';
 	textColor = typeof textColor !== 'undefined' ? textColor : "#DDD";
+	costs = typeof costs !== 'undefined' ? costs : 0;
+	fillColor = typeof fillColor !== 'undefined' ? fillColor : "";
 
 	var queueManager=queueManager;
 	var rect;

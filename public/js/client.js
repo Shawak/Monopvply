@@ -41,6 +41,7 @@ function Client() {
 
     this.send = function (packet) {
         console.log('SEND: %s', packet);
+		console.log(packet);
         this.socket.emit('packet', PacketManager.pack(packet));
     };
 

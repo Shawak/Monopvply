@@ -100,7 +100,7 @@ class Game {
     }
 
     msg(message, player) {
-        let packet = new ChatMessagePacket(null, message);
+        let packet = new Packets.ChatMessagePacket(null, message);
         if (player)
             this.playerToClient(player).send(packet);
         else
