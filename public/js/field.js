@@ -37,6 +37,12 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 	var layer;
 	var parentLayer;
 	var buyable=true;
+	var highPerformance=true;
+	
+	this.setHighPerformanceMode=function(performance)
+	{
+		highPerformance=performance;
+	}
 	
 	this.isBuyable =function()
 	{
@@ -308,9 +314,9 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 			strokeWidth: 1,
 			perfectDrawEnabled : false,
 			listening:false,
-			shadowColor: 'black',
-			shadowBlur: 4,
-			shadowOffset: [10, 10],
+			shadowColor: (highPerformance==true) ? undefined : "black",
+			shadowBlur: (highPerformance==true) ? undefined : 4,
+			shadowOffset: (highPerformance==true) ? undefined : [10, 10],
 			id: 'chargeObj'
 		});
 		chargeObj.hide();
@@ -414,8 +420,8 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 			fill: '#262626',
 			width: newWidth,
 			height: fieldText.getHeight(),
-			opacity:0.7,
-			cornerRadius: 10,
+			opacity: (highPerformance==true) ? undefined : 0.7,
+			cornerRadius: (highPerformance==true) ? undefined : 10,
 			rotation: rotation,
 			listening:false,
 			perfectDrawEnabled : false
@@ -445,10 +451,10 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 			fontSize: 22,
 			fontFamily: 'Calibri',
 			fill: costsColor,
-			shadowColor: 'black',
-			shadowBlur: 4,
-			shadowOffset: [10, 10],
-			shadowOpacity: 0.9,
+			shadowColor: (highPerformance==true) ? undefined : "black",
+			shadowBlur: (highPerformance==true) ? undefined : 4,
+			shadowOffset: (highPerformance==true) ? undefined : [10, 10],
+			shadowOpacity: (highPerformance==true) ? undefined : 0.9,
 			width: width,
 			padding: 8,
 			align: 'center',

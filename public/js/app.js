@@ -13,7 +13,8 @@
     var enemies;
     var dices;
     var client = new Client();
-
+	var highPerformance=true;
+	
     function endTurn() {
         client.send(new PlayerEndTurnPacket());
     }
@@ -47,10 +48,15 @@
 
         function startRendering() {
             gameMap = new Map(stage);
+			gameMap.setHighPerformanceMode(highPerformance);
             ingameMenu = new Menu(stage, queue);
+			ingameMenu.setHighPerformanceMode(highPerformance);
             generalMenu = new Menu(stage, queue);
+			generalMenu.setHighPerformanceMode(highPerformance);
             informationMenu = new Menu(stage, queue);
+			informationMenu.setHighPerformanceMode(highPerformance);
             diceMenu = new Menu(stage, queue);
+			diceMenu.setHighPerformanceMode(highPerformance);
             enemies = [];
 
             for (var i = 0; i < packet.players.length; i++) {

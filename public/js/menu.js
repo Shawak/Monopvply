@@ -15,6 +15,7 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 	var groupDrag;
 	var busy=false;
 	var allButtons=[];
+	var highPerformance=true;
 	
 	init();
 	
@@ -29,6 +30,11 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 		tooltipLayer.moveToTop();
 		layer.add(groupDrag);
 		allButtons=[];
+	}
+	
+	this.setHighPerformanceMode=function(performance)
+	{
+		highPerformance=performance;
 	}
 	
 	this.disableAllButtons = function()
@@ -108,6 +114,7 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 	{
 		var imageObj = new Image();
 		imageObj.src = imgSrc;
+
 		
 		var img = new Konva.Image(
 		{
@@ -118,7 +125,7 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 			width: width,
 			height: height,
 			listening : false,
-			opacity: 0.9,
+			opacity: (highPerformance==true) ? undefined : 0.9,
 			cornerRadius: 4,
 			stroke: strokeColorMenu,
 			strokeWidth: 1,
@@ -152,8 +159,8 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 				width: width,
 				height: height,
 				listening : listening,
-				opacity: 0.9,
-				cornerRadius: 4,
+				opacity: (highPerformance==true) ? undefined : 0.9,
+				cornerRadius: (highPerformance==true) ? undefined : 4,
 				stroke: strokeColorMenu,
 				strokeWidth: 1,
 				perfectDrawEnabled : false,
@@ -171,8 +178,8 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 				fill: color,
 				width: width,
 				height: height,
-				opacity: 0.9,
-				cornerRadius: 4,
+				opacity: (highPerformance==true) ? undefined : 0.9,
+				cornerRadius: (highPerformance==true) ? undefined : 4,
 				listening:listening,
 				perfectDrawEnabled : false,
 				transformsEnabled : 'position'
@@ -275,8 +282,8 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 				fill: '#262626',
 				width: width-4,
 				height: textObj.getHeight(),
-				opacity:0.8,
-				cornerRadius: 10,
+				opacity: (highPerformance==true) ? undefined : 0.8,
+				cornerRadius: (highPerformance==true) ? undefined : 10,
 				listening:false,
 				perfectDrawEnabled : false,
 				transformsEnabled : 'position'
@@ -322,9 +329,9 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 			strokeWidth: 1,
 			perfectDrawEnabled : false,
 			listening:false,
-			shadowColor: 'black',
-			shadowBlur: 4,
-			shadowOffset: [10, 10],
+			shadowColor: (highPerformance==true) ? undefined : "black",
+			shadowBlur: (highPerformance==true) ? undefined : 4,
+			shadowOffset: (highPerformance==true) ? undefined : [10, 10],
 			id: 'chargeObj'
 		});
 		chargeObj.hide();
@@ -415,7 +422,7 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 			fill: newButtonColor,
 			width: width,
 			height: height,
-			cornerRadius: 4,
+			cornerRadius: (highPerformance==true) ? undefined : 4,
 			perfectDrawEnabled : false,
 			transformsEnabled : 'position'
 		});
@@ -624,10 +631,10 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 			fill: textColor,
 			width: width,
 			padding: 4,
-			shadowColor: 'black',
-			shadowBlur: 4,
-			shadowOffset: [10, 10],
-			shadowOpacity: 0.9,
+			shadowColor: (highPerformance==true) ? undefined : "black",
+			shadowBlur: (highPerformance==true) ? undefined : 4,
+			shadowOffset: (highPerformance==true) ? undefined : [10, 10],
+			shadowOpacity: (highPerformance==true) ? undefined : 0.9,
 			align: 'center',
 			listening : listening,
 			perfectDrawEnabled : false,
@@ -730,8 +737,8 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 			points: [x, y, x2, y2],
 			stroke: colorLine,
 			strokeWidth: 4,
-			lineCap: 'round',
-			lineJoin: 'round',
+			lineCap: (highPerformance==true) ? undefined : 'round',
+			lineJoin: (highPerformance==true) ? undefined : 'round',
 			perfectDrawEnabled : false,
 			listening: listening,
 			transformsEnabled : 'position'

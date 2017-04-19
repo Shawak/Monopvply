@@ -15,9 +15,10 @@ function Map(konvaStage)
 	var containerHeight;
 	var innerBackground;
 	var fieldPositions=[];
+	var highPerformance=true;
 	
-	var widthOneSideField=160;
-	var heightOneSideField=210;
+	var widthOneSideField=150;
+	var heightOneSideField=205;
 	
 	if(isMobileDevice())
 	{
@@ -25,6 +26,20 @@ function Map(konvaStage)
 		heightOneSideField=160;
 	}
 	
+	this.setHighPerformanceMode=function(performance)
+	{
+		highPerformance=performance;
+		if(performance==true)
+		{
+			widthOneSideField=135;
+			heightOneSideField=185;
+		}
+		else
+		{
+			widthOneSideField=150;
+			heightOneSideField=205;
+		}
+	}
 		
 	this.getLastCreatedSideField =function()
 	{
@@ -256,11 +271,13 @@ function Map(konvaStage)
 	
 	this.addSideField = function(field)
 	{
+		field.setHighPerformanceMode(highPerformance);
 		sideFields.push(field);
 	}
 
 	this.addCornerField = function(field)
 	{
+		field.setHighPerformanceMode(highPerformance);
 		cornerFields.push(field);
 	}	
 	
