@@ -121,14 +121,12 @@ class Monopvply {
             return;
         }
 
-        if (field.owner == player.id) 
-		{
+        if (field.owner == player.id) {
             game.msg('You are already the owner.', player);
             return;
         }
 		
-		if (field.owner != null) 
-		{
+        if (field.owner != null) {
             game.msg('Someone already owns this field.', player);
             return;
         }

@@ -108,13 +108,10 @@ class Game {
     }
 
     update(obj) {
-        switch (Object.getPrototypeOf(obj)) {
-            case Player.prototype:
-                this.broadcast(new Packets.UpdatePlayerPacket(obj));
-                break;
-            case Field.prototype:
-                this.broadcast(new Packets.UpdateFieldPacket(obj));
-                break;
+        if(obj instanceof Player) {
+            this.broadcast(new Packets.UpdatePlayerPacket(obj));
+        } else if (obj instanceof Field) {
+            this.broadcast(new Packets.UpdateFieldPacket(obj));
         }
     }
 
