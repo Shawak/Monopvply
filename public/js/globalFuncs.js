@@ -197,7 +197,21 @@ function addChatMessage(playerName, playerImg, text)
 			
 function updateFieldState(packet,user, enemies)
 {	
-
+	if(packet.field.houses==null && packet.field.owner!=null)
+	{
+		for(var i=0;i<enemies.length;i++)
+		{
+			if(packet.field.owner.id==enemies[i].getId())
+			{
+				return enemies[i].addCard(packet.field.id);
+			}
+		}
+		
+		if(packet.field.owner.id==user.getId())
+		{
+			return user.addCard(packet.field.id);
+		}
+	}
 	
 	return true;
 }
