@@ -15,11 +15,13 @@
     var client = new Client();
 	var highPerformance=true;
 	
-    function endTurn() {
+    function endTurn() 
+	{
         client.send(new PlayerEndTurnPacket());
     }
 
-    function buyFieldSend(fieldId) {
+    function buyFieldSend(fieldId) 
+	{
         client.send(new PlayerBuyPacket(fieldId));
     }
 

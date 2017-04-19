@@ -190,6 +190,9 @@ function addChatMessage(playerName, playerImg, text)
 	
 	var chatMsgs=document.getElementById("chatMsgs");
 	chatMsgs.innerHTML+=htmlMessage;
+	var chatBody=document.getElementById("chatBody");
+	chatBody.scrollTop = chatBody.scrollHeight;
+	document.getElementById("newMessage").innerHTML="<div style='font-weight: bold;'>(!)</div>";
 }
 			
 function updateFieldState(packet,user, enemies)
