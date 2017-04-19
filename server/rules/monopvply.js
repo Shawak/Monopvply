@@ -59,7 +59,7 @@ class Monopvply {
             new Street(id++, 'Nostale', 'img/streets/2_mmorpg/1_nostale.jpg', 1, 'lightblue', 200),
             new ActionField(id++, 'img/events/1_action.jpg'),
             new Street(id++, 'Last Chaos', 'img/streets/2_mmorpg/2_last_chaos.jpg', 1, 'lightblue', 200),
-            new Street(id++, 'Tera', 'img/streets/2_mmorpg/3_tera.jpg', 1, 'lightblue', 'Tera', 240),
+            new Street(id++, 'Tera', 'img/streets/2_mmorpg/3_tera.jpg', 1, 'lightblue', 240),
 
             new Field(id++, 'Prison', 'img/corner/2_prison.jpg'),
             new Street(id++, 'General Gaming', 'img/streets/1_gaming/1_general_gaming.jpg', 2, 'pink', 240),
