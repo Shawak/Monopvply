@@ -135,7 +135,7 @@ body {
 #accordionContainer
 {
   z-index: 200;
-  width:800px;
+  width:300px;
   position:absolute;
   bottom:0px;
  }
