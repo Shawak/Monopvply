@@ -90,6 +90,27 @@ function ChatMessagePacket(from, message) {
     this.message = message;
 }
 
+function TradeOfferPacket(from, offer /*{money, streets (array)}*/, to, receive /*{money, streets (array)}*/) {
+    this.tradeID = null; // set by server
+    this.from = from;
+    this.offer = offer;
+    this.to = to;
+    this.receive = receive;
+
+    // fix compiler warnings
+    if (!this.offer.receive) {
+        this.offer.receive = [];
+    }
+    if (!this.offer.streets) {
+        this.offer.streets = [];
+    }
+}
+
+function TradeAnswerPacket(tradeID, accept) {
+    this.tradeID = tradeID;
+    this.accept = accept;
+}
+
 exports.PingPacket = PingPacket;
 exports.GameStartPacket = GameStartPacket;
 exports.NextTurnPacket = NextTurnPacket;
@@ -99,3 +120,4 @@ exports.PlayerBuyPacket = PlayerBuyPacket;
 exports.UpdatePlayerPacket = UpdatePlayerPacket;
 exports.UpdateFieldPacket = UpdateFieldPacket;
 exports.ChatMessagePacket = ChatMessagePacket;
+exports.TradeOfferPacket = TradeOfferPacket;

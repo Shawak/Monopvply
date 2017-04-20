@@ -8,20 +8,22 @@ const Monopvply = require('./rules/monopvply.js');
 class Game {
 
     constructor(clients) {
-        this.clients = clients;
         this.playerInfo = [];
         this.currentPlayerIndex = 0;
         this.playerCanEndTurn = false;
+        this.trades = [];
 
         let colors = ['red', 'orange', 'blue', 'yellow'];
         let i = 0;
-        for (let client of this.clients) {
+        for (let client of clients) {
             let color = colors.length > 0 ? colors[this.random(0, colors.length - 1)] : 'white';
             colors.splice(colors.indexOf(color));
             this.playerInfo.push({client: client, player: new Player(i++, client.user.name, color)});
             client.network.link(Packets.PlayerEndTurnPacket, this.onPlayerEndTurnPacket, this);
             client.network.link(Packets.PlayerBuyPacket, this.onPlayerBuyPacket, this);
             client.network.link(Packets.ChatMessagePacket, this.onChatMessagePacket, this);
+            client.network.link(Packets.TradeOfferPacket, this.onTradeOfferPacket, this);
+            client.network.link(Packet.TradeAnswerPacket, this.onTradeAnswerPacket, this);
         }
         this.map = new Monopvply(this, this.getPlayers());
     }
@@ -94,8 +96,8 @@ class Game {
     }
 
     broadcast(packet) {
-        for (let client of this.clients) {
-            client.send(packet);
+        for (let info of this.playerInfo) {
+            info.client.send(packet);
         }
     }
 
@@ -134,6 +136,35 @@ class Game {
     onChatMessagePacket(sender, packet) {
         let player = this.senderToPlayer(sender);
         this.broadcast(new Packets.ChatMessagePacket(player, packet.message));
+    }
+
+    onTradeOfferPacket(sender, packet) {
+        let player = this.senderToPlayer(sender);
+        if (player != packet.from) {
+            return;
+        }
+
+        let otherPlayer = this.playerInfo.find(player => player.id == packet.to.id);
+        if (!otherPlayer) {
+            return;
+        }
+
+        let tradeID = 0;
+        while(this.trades.find(trade => trade.id == tradeID))
+            tradeID++;
+        packet.tradeID = tradeID;
+        this.trades.push(packet);
+        this.playerToClient(otherPlayer).send(packet);
+    }
+
+    onTradeAnswerPacket(sender, packet) {
+        let trade = this.trades.find(trade => trade.id == packet.tradeID);
+        if (!trade) {
+            return;
+        }
+
+        this.map.onTrade(packet.accept, packet.from, packet.offer, packet.to, packet.receive);
+        this.trades.splice(this.trades.indexOf(packet), 1);
     }
 
 }

@@ -2,7 +2,7 @@ const Field = require('./field.js');
 
 class Street extends Field {
 
-    constructor(id, name, img, group, color, price, textColor=undefined) {
+    constructor(id, name, img, group, color, price, textColor = undefined) {
         super(id, name, img);
 
         this.group = group;
