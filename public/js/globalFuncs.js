@@ -197,19 +197,49 @@ function addChatMessage(playerName, playerImg, text)
 			
 function updateFieldState(packet,user, enemies)
 {	
+	var ownerBefore=undefined;
+
+	for(var i=0;i<enemies.length;i++)
+	{
+		if (enemies[i].ownsField(packet.field.id))
+		{
+			ownerBefore=enemies[i];
+			break;
+		}
+	}
+	
+	if (user.ownsField(packet.field.id))
+	{
+		ownerBefore=user;
+	}
+	
 	if(packet.field.houses==null && packet.field.owner!=null)
 	{
 		for(var i=0;i<enemies.length;i++)
 		{
 			if(packet.field.owner.id==enemies[i].getId())
 			{
-				return enemies[i].addCard(packet.field.id);
+				if (enemies[i].ownsField(packet.field.id)==false)
+				{
+					if(ownerBefore!=undefined)
+					{
+						ownerBefore.removeCard(packet.field.id);
+					}
+					return enemies[i].addCard(packet.field.id);
+				}
 			}
 		}
 		
 		if(packet.field.owner.id==user.getId())
 		{
-			return user.addCard(packet.field.id);
+			if (user.ownsField(packet.field.id)==false)
+			{
+				if(ownerBefore!=undefined)
+				{
+					ownerBefore.removeCard(packet.field.id);
+				}
+				return user.addCard(packet.field.id);
+			}
 		}
 	}
 	

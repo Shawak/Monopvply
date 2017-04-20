@@ -21,6 +21,11 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 	var buyButton=undefined;
 	var currentField;
 	
+	this.isMoving = function()
+	{
+		return busyMoving;
+	}
+	
 	this.setBuyButton=function(button)
 	{
 		buyButton=button;
@@ -102,6 +107,19 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 		money=newMoney;
 	}
 	
+	this.ownsField = function (fieldId)
+	{
+		var fields=fieldCardManager.getAllOwnedFields();
+		for(var i=0;i<fields.length;i++)
+		{
+			if(fields[i].getId()==fieldId)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	this.getAllOwnedFields=function()
 	{
 		return fieldCardManager.getAllOwnedFields();
@@ -135,14 +153,14 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 
 	    boardFigure = new Konva.Circle(
 	    {
-	      x: gameMap.getWidthField()/2,
-	      y: gameMap.getHeightField()/2,
-	      radius: gameMap.getWidthField()/4,
+	      x: gameMap.getWidthField()/2+Math.floor(Math.random() * 12) - 6 ,
+	      y: gameMap.getHeightField()/2+Math.floor(Math.random() * 12) - 6,
+	      radius: gameMap.getWidthField()/4.5,
 	      stroke: playerColor,
 		  rotation:180,
 		  fillPatternImage: imageObj,
-		  fillPatternOffset: { x : gameMap.getWidthField()/4, y : gameMap.getWidthField()/4},
-	      strokeWidth: 4
+		  fillPatternOffset: { x : gameMap.getWidthField()/4.5, y : gameMap.getWidthField()/4.5},
+	      strokeWidth: 5
 	    });
 	    gameMap.addKonvaObj(boardFigure);
 		boardFigure.moveToTop();
@@ -231,6 +249,24 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 		if(field!= undefined)
 		{
 			fieldCardManager.addCard(field);
+			field.setBought(true,this);
+			return true;
+		}
+		return false;
+	}
+	
+	this.removeCard = function(id)
+	{
+		if(id!= undefined)
+		{
+			fieldCardManager.removeCardById(id);
+			
+			var field=gameMap.getFieldById(id);
+			if(field!= undefined)
+			{
+				field.setBought(false);
+			}
+			
 			return true;
 		}
 		return false;
@@ -249,6 +285,7 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 		{
 			fieldCardManager.addCard(field);
 			that.updateMoney(money-field.getCosts(),animation);
+			field.setBought(true,this);
 			return true;
 		}
 		busy=false;

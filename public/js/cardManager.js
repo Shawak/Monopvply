@@ -50,6 +50,28 @@ function CardManager(playerObj, gameMap, ingameMenu, informationMenu, xStart, yS
 		return realFields;
 	}
 
+	this.removeCardById=function(fieldId)
+	{
+		var idx=undefined;
+		for(var i=0;i<ownedFields.length;i++)
+		{
+			if(fieldId==ownedFields[i].getId())
+			{
+				idx=i;
+				break;
+			}
+		}
+		
+		if(idx!=undefined)
+		{
+			ownedFields.splice(index, 1);
+			reorder();
+			return true;
+		}
+		
+		return false;
+	}
+	
 	this.addCard = function(field)
 	{
 		if(field==undefined)
@@ -59,6 +81,7 @@ function CardManager(playerObj, gameMap, ingameMenu, informationMenu, xStart, yS
 		
 		if(typeof xStart === 'undefined')
 		{
+			ownedFields.push([field,undefined]);
 			return true;
 		}
 		

@@ -38,6 +38,8 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 	var parentLayer;
 	var buyable=true;
 	var highPerformance=true;
+	var boughtObj;
+	var bought=false;
 	
 	this.setHighPerformanceMode=function(performance)
 	{
@@ -89,6 +91,32 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 		layer.draw();
 		parentLayer.draw();
 		charged=charge;
+	}
+	
+	this.setBought = function(bought, player)
+	{
+		var color="gray";
+		
+		if(player!=undefined)
+		{
+			color=player.getColor();
+		}
+		boughtObj.fill(color);
+		
+		
+		if(bought==true)
+		{
+			boughtObj.show();
+		}
+		else
+		{
+			boughtObj.hide();
+		}
+		fieldGroup.cache();
+		layer.cache();
+		layer.draw();
+		parentLayer.draw();
+		bought=bought;
 	}
 	
 	this.getRent = function () 
@@ -295,6 +323,18 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 		
 		// add the shapes to the layer
 		fieldGroup.add(img);
+		
+		boughtObj= new Konva.Circle(
+		{
+			x: width/9,
+			y: heightRect+heightImg-width/9,
+			radius: width/9,
+			fill: 'red',
+			stroke: 'black',
+			strokeWidth: 4
+		});
+		boughtObj.hide();
+		fieldGroup.add(boughtObj);
 		
 		chargeObj = new Konva.Text(
 		{

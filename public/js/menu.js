@@ -110,7 +110,7 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 		}
 	}
 	
-	this.addImage = function(x, y, width, height, imgSrc)
+	this.addImage = function(x, y, width, height, imgSrc, borderColor)
 	{
 		var imageObj = new Image();
 		imageObj.src = imgSrc;
@@ -119,18 +119,17 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 		var img = new Konva.Image(
 		{
 			image: imageObj,
-			x: x,
-			y: y,
+			x: x+((borderColor==undefined) ? 1 : 5),
+			y: y+((borderColor==undefined) ? 1 : 5),
 			align: 'center',
-			width: width,
-			height: height,
+			width: width - ((borderColor==undefined) ? 1 : 5)*2,
+			height: height - ((borderColor==undefined) ? 1 : 5)*2,
 			listening : false,
 			opacity: (highPerformance==true) ? undefined : 0.9,
-			cornerRadius: 4,
-			stroke: strokeColorMenu,
-			strokeWidth: 1,
+			stroke: (borderColor==undefined) ? strokeColorMenu : borderColor,
+			strokeWidth: (borderColor==undefined) ? 1 : 6,
 			perfectDrawEnabled : false,
-				transformsEnabled : 'position'
+			transformsEnabled : 'position'
 		});
 	
 		groupDrag.add(img);
@@ -631,9 +630,9 @@ function Menu(konvaStage,queueManager,fillColorMenu,strokeColorMenu,buttonColor,
 			fill: textColor,
 			width: width,
 			padding: 4,
-			shadowColor: (highPerformance==true) ? undefined : "black",
-			shadowBlur: (highPerformance==true) ? undefined : 4,
-			shadowOffset: (highPerformance==true) ? undefined : [10, 10],
+			shadowColor: "black",
+			shadowBlur:  4,
+			shadowOffset: [10, 10],
 			shadowOpacity: (highPerformance==true) ? undefined : 0.9,
 			align: 'center',
 			listening : listening,

@@ -550,7 +550,7 @@ function setUpStandardMenu(ingameMenu, diceMenu, generalMenu, gameMap, user, ene
 	var margin=profileImageMargin;
 
 	ingameMenu.addMenuBackground(profileImageMargin, profileImageMargin, profileImageSize, profileImageSize+30);
-	ingameMenu.addImage(profileImageMargin, profileImageMargin, profileImageSize, profileImageSize, user.imgSrc);
+	ingameMenu.addImage(profileImageMargin, profileImageMargin, profileImageSize, profileImageSize, user.imgSrc,user.getColor());
 
 	var textMoney=ingameMenu.addText(profileImageMargin, profileImageMargin+profileImageSize, profileImageSize, "1500 "+GLOBAL_MONEY_VAR);
 	user.setMoneyTextbox(textMoney);
@@ -566,7 +566,7 @@ function setUpStandardMenu(ingameMenu, diceMenu, generalMenu, gameMap, user, ene
 		var x=containerWidth-profileImageMargin-profileImageSizeEnemy;
 		var y=(margin+profileImageSizeEnemy+68)*i+marginHeight;
 		ingameMenu.addMenuBackground(x, y, profileImageSizeEnemy, profileImageSizeEnemy+30);
-		ingameMenu.addImage(x, y, profileImageSizeEnemy, profileImageSizeEnemy, enemyArray[i].imgSrc);
+		ingameMenu.addImage(x, y, profileImageSizeEnemy, profileImageSizeEnemy, enemyArray[i].imgSrc,enemyArray[i].getColor());
 
 		textMoneyEnemy=ingameMenu.addText(x, y+profileImageSizeEnemy, profileImageSizeEnemy, "1500 "+GLOBAL_MONEY_VAR);
 		enemyArray[i].setMoneyTextbox(textMoneyEnemy);
@@ -580,9 +580,9 @@ function setUpStandardMenu(ingameMenu, diceMenu, generalMenu, gameMap, user, ene
 
 	function buyField(player)
 	{
-		if(player.isBusy())
+		if(player.isBusy() || player.isMoving())
 		{
-			return false;
+			return true;
 		}
 
 		if(buyFieldCallback!=undefined)
