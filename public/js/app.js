@@ -14,9 +14,13 @@
     var dices;
     var client = new Client();
 	var highPerformance=true;
+	var afkIterations=0;
+	var stopAfkCheck=true;
+	var maxSecAfk=30;
 	
     function endTurn() 
 	{
+		stopAfkCheck=true;
         client.send(new PlayerEndTurnPacket());
     }
 
@@ -33,6 +37,7 @@
 	
     function startGame(packet) 
 	{
+		$(document).mousemove(function(e) {afkIterations=0;});
 		$("#btn-chat").click(getAndSendMessage);
 		
         document.getElementById("loading-img").addEventListener('load', startRendering)
@@ -87,6 +92,7 @@
                 enemies[i].createCardManager();
                 enemies[i].addBoardFigure("");
             }
+			
         }
     }
 
@@ -157,10 +163,33 @@
         });
     }
 
+	
+	function afkCheck()
+	{
+		if(stopAfkCheck==true)
+		{
+			return;
+		}
+
+		afkIterations++;
+		if(afkIterations>=maxSecAfk)
+		{
+			afkIterations=0;
+			endTurn();
+		}
+		window.setTimeout(afkCheck,1000);
+	}
+	
     function onNextTurnPacket(sender, packet) {
         // TODO
         // update gui buttons (disable them)
         queue.add(nextTurnState.bind(null, packet, ingameMenu, user));
+		
+		if(packet.player.id==user.getId())
+		{
+			stopAfkCheck=false;
+			afkCheck();
+		}
     }
 
     function onUpdatePlayerPacket(sender, packet) {
