@@ -100,7 +100,7 @@ class Monopvply {
             new TaxField(id++, 'Pay more taxes!', 'img/events/3_tax.jpg', '#ff471a', 300),
             new Street(id++, 'Console Games', 'img/streets/1_gaming/2_consoles.jpg', 2, 'pink', 280, 100, 100, [10, 50, 150, 450, 625, 750]),
             new Street(id++, 'Browser Games', 'img/streets/1_gaming/3_browser_games.jpg', 2, 'pink', 320, 100, 100, [12, 60, 180, 500, 700, 900]),
-            new Station(id++, 'Luke', 'img/stations/2_luke.jpg', 10,  'red', 400, 'red'),
+            new Station(id++, 'Luke', 'img/stations/2_luke.jpg', 10, 'red', 400, 'red'),
             new Street(id++, 'Battlefield', 'img/streets/3_shooter/1_battlefield.jpg', 3, 'orange', 240, 100, 100, [14, 70, 200, 550, 750, 950]),
             new CommunityField(id++, 'img/events/2_community.jpg'),
             new Street(id++, 'Counter Strike', 'img/streets/3_shooter/2_counter_strike.jpg', 3, 'orange', 360, 100, 100, [14, 70, 200, 550, 750, 950]),
@@ -111,7 +111,7 @@ class Monopvply {
             new ActionField(id++, 'img/events/1_action.jpg'),
             new Street(id++, 'Complaint Area', 'img/streets/6_general/2_complaint_area.jpg', 4, 'red', 440, 150, 150, [18, 90, 250, 700, 875, 1050]),
             new Street(id++, 'Black Market Support', 'img/streets/6_general/3_the_black_market_support.jpg', 4, 'red', 480, 150, 150, [20, 100, 300, 750, 925, 1100]),
-            new Station(id++, 'MrSm!th', 'img/stations/3_smith.jpg', 10,  'red', 400, 'red'),
+            new Station(id++, 'MrSm!th', 'img/stations/3_smith.jpg', 10, 'red', 400, 'red'),
             new Street(id++, 'World of Warcraft', 'img/streets/4_major_1/1_wow.jpg', 5, 'yellow', 520, 150, 150, [22, 110, 330, 800, 975, 1150]),
             new Street(id++, 'Diablo 3', 'img/streets/4_major_1/2_diablo_3.jpg', 5, 'yellow', 520, 150, 150, [22, 110, 330, 800, 975, 1150]),
             new TaxField(id++, 'Taxes! Taxes! Taxes!', 'img/events/3_tax.jpg', '#ff471a', 300),
@@ -169,7 +169,7 @@ class Monopvply {
             game.msg('You are already the owner.', player);
             return;
         }
-		
+
         if (field.owner != null) {
             game.msg('Someone already owns this field.', player);
             return;
@@ -187,28 +187,53 @@ class Monopvply {
     }
 
     onTrade(game, accept, from, offer, to, receive) {
-        if(!accept) {
+        if (!accept) {
             game.msg(to.name + ' did not accept the trade.', from);
             return;
         }
 
-        from.money -= offer.money;
-        from.money += receive.money;
-        
-        to.money += offer.money;
-        to.money -= receive.money;
+        let tradeIsOkay = false;
+        for (let id of offer.streets) {
+            if (this.fields[id].owner != from) {
+                tradeIsOkay = false;
+                break;
+            }
+        }
+        for (let id of receive.streets) {
+            if (this.fields[id].owner != to) {
+                tradeIsOkay = false;
+                break;
+            }
+        }
+        if (from.money < offer.money || to.money < receive.money) {
+            tradeIsOkay = false;
+        }
 
-        for(let id of offer.streets) {
+        if (!tradeIsOkay) {
+            console.log('invalid trade from player ' + from.name);
+            return;
+        }
+
+        for (let id of offer.streets) {
             if (this.fields[id].owner == from) {
                 this.fields[id].owner = to;
             }
         }
 
-        for(let id of receive.streets) {
-            if (this.fields[id].owner == receive) {
+        for (let id of receive.streets) {
+            if (this.fields[id].owner == to) {
                 this.fields[id].owner = from;
             }
         }
+
+        from.money -= offer.money;
+        from.money += receive.money;
+
+        to.money += offer.money;
+        to.money -= receive.money;
+
+        game.update(from);
+        game.update(to);
     }
 
     onMortgage(game, player, fieldID) {
@@ -234,13 +259,13 @@ class Monopvply {
             return;
         }
 
-        if(!field.mortgaged) {
+        if (!field.mortgaged) {
             game.msg('This field is not mortgaged.', player);
             return;
         }
 
         let cost = Math.floor((Math.floor(field.price / 2)) * 1.1);
-        if(player.money < cost) {
+        if (player.money < cost) {
             game.msg('You don\'t have enough money to unmortgage this field.', player);
             return;
         }
