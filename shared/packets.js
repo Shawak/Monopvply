@@ -48,6 +48,36 @@ exports.RequestLobbiesPacket = RequestLobbiesPacket;
 exports.ListLobbiesPacket = ListLobbiesPacket;
 
 
+/* Trade */
+
+function TradeOfferPacket(from, offer /*{money, streets (array)}*/, to, receive /*{money, streets (array)}*/) {
+    this.tradeID = null; // set by server
+    this.from = from;
+    this.offer = offer;
+    this.to = to;
+    this.receive = receive;
+
+    // fix compiler warnings
+    if(!this.offer) {
+        this.offer = {};
+    }
+    if (!this.offer.receive) {
+        this.offer.receive = [];
+    }
+    if (!this.offer.streets) {
+        this.offer.streets = [];
+    }
+}
+
+function TradeAnswerPacket(tradeID, accept) {
+    this.tradeID = tradeID;
+    this.accept = accept;
+}
+
+exports.TradeOfferPacket = TradeOfferPacket;
+exports.TradeAnswerPacket = TradeAnswerPacket;
+
+
 /* Other */
 
 function PingPacket() {
@@ -90,28 +120,12 @@ function ChatMessagePacket(from, message) {
     this.message = message;
 }
 
-function TradeOfferPacket(from, offer /*{money, streets (array)}*/, to, receive /*{money, streets (array)}*/) {
-    this.tradeID = null; // set by server
-    this.from = from;
-    this.offer = offer;
-    this.to = to;
-    this.receive = receive;
-
-    // fix compiler warnings
-    if(!this.offer) {
-        this.offer = {};
-    }
-    if (!this.offer.receive) {
-        this.offer.receive = [];
-    }
-    if (!this.offer.streets) {
-        this.offer.streets = [];
-    }
+function PlayerMortgagePacket(fieldID) {
+    this.fieldID = fieldID;
 }
 
-function TradeAnswerPacket(tradeID, accept) {
-    this.tradeID = tradeID;
-    this.accept = accept;
+function PlayerUnmortgagePacket(fieldID) {
+    this.fieldID = fieldID;
 }
 
 exports.PingPacket = PingPacket;
@@ -123,5 +137,5 @@ exports.PlayerBuyPacket = PlayerBuyPacket;
 exports.UpdatePlayerPacket = UpdatePlayerPacket;
 exports.UpdateFieldPacket = UpdateFieldPacket;
 exports.ChatMessagePacket = ChatMessagePacket;
-exports.TradeOfferPacket = TradeOfferPacket;
-exports.TradeAnswerPacket = TradeAnswerPacket;
+exports.PlayerMortgagePacket = PlayerMortgagePacket;
+exports.PlayerUnmortgagePacket = PlayerUnmortgagePacket;

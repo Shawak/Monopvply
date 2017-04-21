@@ -24,6 +24,8 @@ class Game {
             client.network.link(Packets.ChatMessagePacket, this.onChatMessagePacket, this);
             client.network.link(Packets.TradeOfferPacket, this.onTradeOfferPacket, this);
             client.network.link(Packets.TradeAnswerPacket, this.onTradeAnswerPacket, this);
+            client.network.link(Packets.PlayerMortgagePacket, this.onPlayerMortgagePacket, this);
+            client.network.link(Packets.PlayerUnmortgagePacket, this.onPlayerUnmortgagePacket, this);
         }
         this.map = new Monopvply(this, this.getPlayers());
     }
@@ -163,8 +165,24 @@ class Game {
             return;
         }
 
-        this.map.onTrade(packet.accept, packet.from, packet.offer, packet.to, packet.receive);
+        this.map.onTrade(this, packet.accept, packet.from, packet.offer, packet.to, packet.receive);
         this.trades.splice(this.trades.indexOf(packet), 1);
+    }
+
+    onPlayerMortgagePacket(sender, packet) {
+        let player = this.senderToPlayer(sender);
+        if (player != this.getCurrentPlayer())
+            return;
+
+        this.map.onMortgage(this, player, packet.fieldID);
+    }
+
+    onPlayerUnmortgagePacket(sender, packet) {
+        let player = this.senderToPlayer(sender);
+        if (player != this.getCurrentPlayer())
+            return;
+
+        this.map.onUnmortgage(this, player, packet.fieldID);
     }
 
 }
