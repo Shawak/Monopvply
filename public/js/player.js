@@ -206,8 +206,12 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 			
 			anim = new Konva.Animation(function(frame) 
 			{
-				currX-=(fieldBefore.getX()-currField.getX())/stepsPerStreet;
-				currY-=(fieldBefore.getY()-currField.getY())/stepsPerStreet;
+				if(currField!=undefined)
+				{
+					currX-=(fieldBefore.getX()-currField.getX())/stepsPerStreet;
+					currY-=(fieldBefore.getY()-currField.getY())/stepsPerStreet;
+				}
+				
 				
 				boardFigure.setPosition(
 				{
