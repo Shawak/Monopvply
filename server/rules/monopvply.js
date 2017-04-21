@@ -192,7 +192,7 @@ class Monopvply {
             return;
         }
 
-        let tradeIsOkay = false;
+        let tradeIsOkay = true;
         for (let id of offer.streets) {
             if (this.fields[id].owner != from) {
                 tradeIsOkay = false;
@@ -217,22 +217,23 @@ class Monopvply {
         for (let id of offer.streets) {
             if (this.fields[id].owner == from) {
                 this.fields[id].owner = to;
+                game.update(this.fields[id]);
             }
         }
 
         for (let id of receive.streets) {
             if (this.fields[id].owner == to) {
                 this.fields[id].owner = from;
+                game.update(this.fields[id]);
             }
         }
 
         from.money -= offer.money;
         from.money += receive.money;
+        game.update(from);
 
         to.money += offer.money;
         to.money -= receive.money;
-
-        game.update(from);
         game.update(to);
     }
 
