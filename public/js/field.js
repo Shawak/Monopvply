@@ -144,12 +144,18 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 	{
 		for(var i=0;i<housesImg.length;i++)
 		{
-			housesImg[i].show();
+			housesImg[i].hide();
 			if(amountHouses==maxHouses)
 			{
 				housesImg[i].fill("#990012");
 			}
 		}
+		
+		for(var i=0;i<amountHouses;i++)
+		{
+			housesImg[i].show();
+		}
+		
 		fieldGroup.cache();
 		layer.cache();
 		layer.draw();
