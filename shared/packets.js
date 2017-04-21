@@ -98,6 +98,9 @@ function TradeOfferPacket(from, offer /*{money, streets (array)}*/, to, receive 
     this.receive = receive;
 
     // fix compiler warnings
+    if(!this.offer) {
+        this.offer = {};
+    }
     if (!this.offer.receive) {
         this.offer.receive = [];
     }
@@ -121,3 +124,4 @@ exports.UpdatePlayerPacket = UpdatePlayerPacket;
 exports.UpdateFieldPacket = UpdateFieldPacket;
 exports.ChatMessagePacket = ChatMessagePacket;
 exports.TradeOfferPacket = TradeOfferPacket;
+exports.TradeAnswerPacket = TradeAnswerPacket;

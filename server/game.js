@@ -23,7 +23,7 @@ class Game {
             client.network.link(Packets.PlayerBuyPacket, this.onPlayerBuyPacket, this);
             client.network.link(Packets.ChatMessagePacket, this.onChatMessagePacket, this);
             client.network.link(Packets.TradeOfferPacket, this.onTradeOfferPacket, this);
-            client.network.link(Packet.TradeAnswerPacket, this.onTradeAnswerPacket, this);
+            client.network.link(Packets.TradeAnswerPacket, this.onTradeAnswerPacket, this);
         }
         this.map = new Monopvply(this, this.getPlayers());
     }
