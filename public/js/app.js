@@ -1,3 +1,5 @@
+var client;
+
 (function () {
 
     for (var prop in window.exports) {
@@ -12,7 +14,7 @@
     var user;
     var enemies;
     var dices;
-    var client = new Client();
+    client = new Client();
 	var highPerformance=true;
 	var afkIterations=0;
 	var stopAfkCheck=true;
