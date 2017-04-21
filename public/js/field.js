@@ -1,8 +1,7 @@
    
-function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, costsPerHouse, sellPerHouseRatio, hypothekRatio , onClickCallback, costsColor, textColor)
+function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, costsPerHouse, priceHouse, hypothekRatio , onClickCallback, costsColor, textColor)
 {
-	sellPerHouseRatio = typeof sellPerHouseRatio !== 'undefined' ? sellPerHouseRatio : 0.90;
-	hypothekRatio = typeof hypothekRatio !== 'undefined' ? hypothekRatio : 0.90;
+	hypothekRatio = typeof hypothekRatio !== 'undefined' ? hypothekRatio : 0.50;
 	onClickCallback = typeof onClickCallback !== 'undefined' ? onClickCallback : undefined;
 	costsColor = typeof costsColor !== 'undefined' ? costsColor : '#FFF';
 	textColor = typeof textColor !== 'undefined' ? textColor : "#DDD";
@@ -27,8 +26,8 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 	var streeGroup=streeGroup;
 	var amountHouses=0;
 	var maxHouses=5;
-	var costsPerHouse=costsPerHouse;
-	var sellPerHouse=(costsPerHouse*sellPerHouseRatio)|0;
+	var costsPerHouse=priceHouse;
+	var sellPerHouse=priceHouse*0.5;
 	var rent=[0,0,0,0,0];
 	var colisionRect;
 	var charged=false;

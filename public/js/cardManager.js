@@ -92,31 +92,13 @@ function CardManager(playerObj, gameMap, ingameMenu, informationMenu, xStart, yS
 		
 		var chargeCallback=function()
 		{
-			var money=player.getMoney();
 			if(field.isCharged())
 			{
-				if(money>=field.getCosts())
-				{
-					player.updateMoney(money-field.getCosts(),true);
-					var chargeObj = newCard[1];
-					if(chargeObj!=undefined)
-					{
-						chargeObj.hide();
-					}
-					newCard[0].cache();
-					field.setCharged(false);
-				}
+				client.send(new PlayerUnmortgagePacket(field.getId()));
 			}
 			else
 			{
-				player.updateMoney(money+field.getHypothekWorth(),true);
-				var chargeObj = newCard[1];
-				if(chargeObj!=undefined)
-				{
-					chargeObj.show();
-				}
-				newCard[0].cache();
-				field.setCharged(true);
+				client.send(new PlayerMortgagePacket(field.getId()));
 			}
 			return true;
 		};
