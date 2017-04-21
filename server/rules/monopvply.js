@@ -2,7 +2,7 @@ const Player = require('./../player.js');
 const Field = require('./../field.js');
 
 class Street extends Field {
-    constructor(id, name, img, group, color, price, priceHouse, priceHotel, rent) {
+    constructor(id, name, img, group, color, price, priceHouse, priceHotel, rents) {
         super(id, name, img);
 
         this.group = group;
@@ -10,7 +10,7 @@ class Street extends Field {
         this.price = price;
         this.priceHouse = priceHouse;
         this.priceHotel = priceHotel;
-        this.rent = rent;
+        this.rents = rents;
 
         this.mortgaged = false;
         this.owner = null;
@@ -19,7 +19,7 @@ class Street extends Field {
 
     onEnter(game, player) {
         if (this.owner != player) {
-            player.money -= this.rent[this.houses == null ? 0 : this.houses];
+            player.money -= this.rents[this.houses == null ? 0 : this.houses];
             game.update(player);
         }
     }
