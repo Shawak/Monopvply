@@ -63,6 +63,10 @@ class Station extends Field {
         super(id, name, img, group, null, price, null, null);
         this.textColor = textColor;
     }
+
+    onEnter(game, player) {
+
+    }
 }
 
 class Monopvply {
