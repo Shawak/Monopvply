@@ -144,6 +144,12 @@ class Monopvply {
         }
     }
 
+    onEndTurn(game, player) {
+        if (player.money < 0) {
+            // TODO eliminate player
+        }
+    }
+
     onBuy(game, player, fieldID) {
         let field = this.fields[fieldID];
         if (player.money < field.price) {
@@ -174,6 +180,7 @@ class Monopvply {
 
     onTrade(game, accept, from, offer, to, receive) {
         if(!accept) {
+            game.msg(to.name + ' did not accept the trade.', from);
             return;
         }
 

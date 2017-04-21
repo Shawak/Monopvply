@@ -10,6 +10,7 @@ class Game {
     constructor(clients) {
         this.playerInfo = [];
         this.currentPlayerIndex = 0;
+        this.turnCount = 0;
         this.playerCanEndTurn = false;
         this.trades = [];
 
@@ -81,13 +82,19 @@ class Game {
             clearTimeout(this.turnTimeout);
         }
 
+        if (this.turnCount != 0) {
+            this.map.onEndTurn(this, this.getCurrentPlayer());
+        }
+
+        this.turnCount++;
+
         let turnTime = 5 * 60 * 1000;
         this.turnTimeout = setTimeout(() => this.nextTurn(), turnTime);
 
         this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.playerInfo.length;
         let player = this.getCurrentPlayer();
 
-        this.broadcast(new Packets.NextTurnPacket(player, turnTime));
+        this.broadcast(new Packets.NextTurnPacket(player, turnTime, new Date().getTime()));
         this.map.onTurn(this, player);
 
         setTimeout(() => this.playerCanEndTurn = true, 2000);
