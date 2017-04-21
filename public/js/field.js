@@ -40,6 +40,7 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 	var highPerformance=true;
 	var boughtObj;
 	var bought=false;
+	var housesImg=[];
 	
 	this.setHighPerformanceMode=function(performance)
 	{
@@ -139,11 +140,28 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
         return sellPerHouse;
     };
 	
+	function showHouses()
+	{
+		for(var i=0;i<housesImg.length;i++)
+		{
+			housesImg[i].show();
+			if(amountHouses==maxHouses)
+			{
+				housesImg[i].fill("#990012");
+			}
+		}
+		fieldGroup.cache();
+		layer.cache();
+		layer.draw();
+		parentLayer.draw();
+	}
+	
 	this.addHouse = function (amount) 
 	{
 		if(amountHouses+amount<=maxHouses && amountHouses+amount>=0)
 		{
 			amountHouses+=amount;
+			showHouses();
 			return true;
 		}
         return false;
@@ -323,6 +341,30 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 		
 		// add the shapes to the layer
 		fieldGroup.add(img);
+			
+		var starX=0;
+		var starXPerStar=Math.min(width/maxHouses,heightRect);
+		starXPerStar-=starXPerStar/(maxHouses*2);
+		for(var i=0;i<maxHouses;i++)
+		{
+			var star = new Konva.Star(
+			{
+				x: starXPerStar/2+starX+8,
+				y: starXPerStar/2+6,
+				numPoints: 6,
+				innerRadius: starXPerStar/4,
+				outerRadius: starXPerStar/2-2,
+				fill: '#E18700',
+				stroke: 'black',
+				strokeWidth: 2
+			});
+			star.hide();
+			fieldGroup.add(star);
+			starX+=starXPerStar;
+			housesImg.push(star);
+		}
+		// add the shapes to the layer
+		fieldGroup.add(star);
 		
 		boughtObj= new Konva.Circle(
 		{

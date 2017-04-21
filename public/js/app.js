@@ -175,7 +175,7 @@
 		if(afkIterations>=maxSecAfk)
 		{
 			afkIterations=0;
-			endTurn();
+			//endTurn();
 		}
 		window.setTimeout(afkCheck,1000);
 	}
