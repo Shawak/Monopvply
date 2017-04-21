@@ -90,9 +90,10 @@ function GameStartPacket(players, field, yourPlayerID) {
     this.yourPlayerID = yourPlayerID;
 }
 
-function NextTurnPacket(player, turnTime) {
+function NextTurnPacket(player, turnTime, timestamp) {
     this.player = player;
     this.turnTime = turnTime;
+    this.timestamp = timestamp;
 }
 
 function PlayerEndTurnPacket() {
