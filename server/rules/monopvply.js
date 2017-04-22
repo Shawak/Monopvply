@@ -58,9 +58,9 @@ class CommunityField extends Field {
     }
 }
 
-class Station extends Field {
+class Station extends Street {
     constructor(id, name, img, group, textColor, price) {
-        super(id, name, img, group, null, price, null, null);
+        super(id, name, img, group, null, price, null, null, []);
         this.textColor = textColor;
     }
 
