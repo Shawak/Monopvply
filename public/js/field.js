@@ -41,6 +41,11 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 	var bought=false;
 	var housesImg=[];
 	
+	this.isCharged = function()
+	{
+		return charged;
+	}
+	
 	this.setHighPerformanceMode=function(performance)
 	{
 		highPerformance=performance;
