@@ -199,21 +199,30 @@ function updateFieldState(packet,user, enemies)
 {	
 	var ownerBefore=undefined;
 
-	for(var i=0;i<enemies.length;i++)
+	if(packet.owner!==null)
 	{
-		if (enemies[i].ownsField(packet.field.id))
+		for(var i=0;i<enemies.length;i++)
 		{
-			ownerBefore=enemies[i];
-			break;
+			if (enemies[i].ownsField(packet.field.id))
+			{
+				ownerBefore=enemies[i];
+				break;
+			}
+		}
+		
+		if (user.ownsField(packet.field.id))
+		{
+			ownerBefore=user;
+		}	
+		
+		if(ownerBefore!=undefined)
+		{
+			ownerBefore.setCharged(packet.field.id,packet.field.mortgaged);
 		}
 	}
 	
-	if (user.ownsField(packet.field.id))
-	{
-		ownerBefore=user;
-	}
 	
-	if(packet.field.houses==null && packet.field.owner!=null)
+	if(packet.field.houses==null && packet.field.owner!==null && (ownerBefore==undefined || ownerBefore.getId()!=packet.owner.id))
 	{
 		for(var i=0;i<enemies.length;i++)
 		{
@@ -221,11 +230,11 @@ function updateFieldState(packet,user, enemies)
 			{
 				if (enemies[i].ownsField(packet.field.id)==false)
 				{
-					if(ownerBefore!=undefined)
-					{
-						ownerBefore.removeCard(packet.field.id);
-					}
-					return enemies[i].addCard(packet.field.id);
+						if(ownerBefore!=undefined)
+						{
+							ownerBefore.removeCard(packet.field.id);
+						}
+						return enemies[i].addCard(packet.field.id);
 				}
 			}
 		}
@@ -242,6 +251,8 @@ function updateFieldState(packet,user, enemies)
 			}
 		}
 	}
+	
+	
 	
 	return true;
 }

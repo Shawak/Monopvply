@@ -34,6 +34,19 @@ function CardManager(playerObj, gameMap, ingameMenu, informationMenu, xStart, yS
 		//cardBackground.width(cardBackground.width()+cardWidth/overlapFactor);
 	}
 	
+	this.getCard=function(fieldId)
+	{
+		for(var i=0;i<ownedFields.length;i++)
+		{
+			if(fieldId==ownedFields[i][0].getId())
+			{
+				return ownedFields[i];
+			}
+			
+		}
+		return undefined;
+	}
+	
 	this.addCardById = function(id)
 	{
 		var field=gameMap.getFieldById(id);
@@ -55,7 +68,7 @@ function CardManager(playerObj, gameMap, ingameMenu, informationMenu, xStart, yS
 		var idx=undefined;
 		for(var i=0;i<ownedFields.length;i++)
 		{
-			if(fieldId==ownedFields[i].getId())
+			if(fieldId==ownedFields[i][0].getId())
 			{
 				idx=i;
 				break;

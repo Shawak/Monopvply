@@ -31,6 +31,32 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 		buyButton=button;
 	}
 	
+	this.setCharged=function(fieldId,charge)
+	{
+		var newCard=fieldCardManager.getCard(fieldId);
+		var field=newCard[0];
+		if(charge==false && field.isCharged())
+		{
+			var chargeObj = newCard[1];
+			if(chargeObj!=undefined)
+			{
+				chargeObj.hide();
+			}
+			newCard[0].cache();
+			field.setCharged(false);
+		}
+		else if(charge==true && field.isCharged()==false)
+		{
+			var chargeObj = newCard[1];
+			if(chargeObj!=undefined)
+			{
+				chargeObj.show();
+			}
+			newCard[0].cache();
+			field.setCharged(true);
+		}
+	}
+	
 	this.getCurrentField=function()
 	{
 		return currentField;
@@ -110,11 +136,14 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 	this.ownsField = function (fieldId)
 	{
 		var fields=fieldCardManager.getAllOwnedFields();
-		for(var i=0;i<fields.length;i++)
+		if(fields!=undefined)
 		{
-			if(fields[i].getId()==fieldId)
+			for(var i=0;i<fields.length;i++)
 			{
-				return true;
+				if(fields[i].getId()==fieldId)
+				{
+					return true;
+				}
 			}
 		}
 		return false;
