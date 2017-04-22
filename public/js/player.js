@@ -162,13 +162,14 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 		var success=true;
 		if(state.money!=money)
 		{
-			success&=that.updateMoney(state.money);
+			success=success && that.updateMoney(state.money);
 		}
 		
 		if(state.position!=gameMap.getFieldByPosition(currFieldPosition))
 		{
-			success&=that.moveTo(state.position);
+			success=success && that.moveTo(state.position);
 		}
+		console.log(success);
 		return success;
 	}
 	

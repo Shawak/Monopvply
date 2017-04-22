@@ -16,7 +16,13 @@ function setUpStandardMap(packet, queueManager, gameMap, informationMenu)
 		}
 		else
 		{
-			gameMap.addSideField(new Field(queueManager,currField.id,currField.group,currField.img, currField.color, currField.name, currField.price || currField.tax ,currField.costsPerHouse,currField.houseSellRatio,currField.mortgageRatio,undefined,currField.priceTextColor,currField.textColor));
+			var field=new Field(queueManager,currField.id,currField.group,currField.img, currField.color, currField.name, currField.price || currField.tax ,currField.priceHouse,currField.mortgageRatio,undefined,currField.priceTextColor,currField.textColor);
+			gameMap.addSideField(field);
+			if(packet.field.rents!=undefined)
+			{
+				field.setRent(packet.field.rents);
+			}
+			
 		}
 	}
 	

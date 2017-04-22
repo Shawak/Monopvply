@@ -1,5 +1,5 @@
    
-function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, costsPerHouse, priceHouse, hypothekRatio , onClickCallback, costsColor, textColor)
+function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs,priceHouse , hypothekRatio , onClickCallback, costsColor, textColor)
 {
 	hypothekRatio = typeof hypothekRatio !== 'undefined' ? hypothekRatio : 0.50;
 	onClickCallback = typeof onClickCallback !== 'undefined' ? onClickCallback : undefined;
@@ -28,7 +28,7 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 	var maxHouses=5;
 	var costsPerHouse=priceHouse;
 	var sellPerHouse=priceHouse*0.5;
-	var rent=[0,0,0,0,0];
+	var rent=[0,0,0,0,0,0];
 	var colisionRect;
 	var charged=false;
 	var chargeObj;
@@ -40,6 +40,11 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 	var boughtObj;
 	var bought=false;
 	var housesImg=[];
+	
+	this.setRents =function(rents)
+	{
+		rent=rents;
+	}
 	
 	this.isCharged = function()
 	{
@@ -152,6 +157,10 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs, cos
 			if(amountHouses==maxHouses)
 			{
 				housesImg[i].fill("#990012");
+			}
+			else
+			{
+				housesImg[i].fill("#E18700");
 			}
 		}
 		
