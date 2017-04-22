@@ -222,7 +222,7 @@ function updateFieldState(packet,user, enemies)
 	}
 	
 	
-	if(packet.field.houses==null && packet.field.owner!==null && (ownerBefore==undefined || ownerBefore.getId()!=packet.owner.id))
+	if(packet.field.houses==null && packet.field.owner!==null && (ownerBefore==undefined ||  (packet.owner!==undefined && packet.owner!==null && ownerBefore.getId()!=packet.owner.id)))
 	{
 		for(var i=0;i<enemies.length;i++)
 		{

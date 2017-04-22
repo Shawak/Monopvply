@@ -33,8 +33,10 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 	
 	this.setCharged=function(fieldId,charge)
 	{
-		var newCard=fieldCardManager.getCard(fieldId);
-		var field=newCard[0];
+		var card=fieldCardManager.getCard(fieldId);
+		var field=card[0];
+		var newCard=card[1];
+		
 		if(charge==false && field.isCharged())
 		{
 			var chargeObj = newCard[1];
@@ -48,6 +50,7 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 		else if(charge==true && field.isCharged()==false)
 		{
 			var chargeObj = newCard[1];
+			console.log(chargeObj);
 			if(chargeObj!=undefined)
 			{
 				chargeObj.show();
