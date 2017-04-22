@@ -60,7 +60,7 @@ class CommunityField extends Field {
 
 class Station extends Street {
     constructor(id, name, img, group, textColor, price) {
-        super(id, name, img, group, null, price, null, null, []);
+        super(id, name, img, group, undefined, price, undefined, undefined, []);
         this.textColor = textColor;
     }
 
@@ -100,7 +100,7 @@ class Monopvply {
             new TaxField(id++, 'Pay more taxes!', 'img/events/3_tax.jpg', '#ff471a', 300),
             new Street(id++, 'Console Games', 'img/streets/1_gaming/2_consoles.jpg', 2, 'pink', 280, 100, 100, [10, 50, 150, 450, 625, 750]),
             new Street(id++, 'Browser Games', 'img/streets/1_gaming/3_browser_games.jpg', 2, 'pink', 320, 100, 100, [12, 60, 180, 500, 700, 900]),
-            new Station(id++, 'Luke', 'img/stations/2_luke.jpg', 10, 'red', 400, 'red'),
+            new Station(id++, 'Luke', 'img/stations/2_luke.jpg', 10, 'red', 400),
             new Street(id++, 'Battlefield', 'img/streets/3_shooter/1_battlefield.jpg', 3, 'orange', 240, 100, 100, [14, 70, 200, 550, 750, 950]),
             new CommunityField(id++, 'img/events/2_community.jpg'),
             new Street(id++, 'Counter Strike', 'img/streets/3_shooter/2_counter_strike.jpg', 3, 'orange', 360, 100, 100, [14, 70, 200, 550, 750, 950]),
@@ -111,7 +111,7 @@ class Monopvply {
             new ActionField(id++, 'img/events/1_action.jpg'),
             new Street(id++, 'Complaint Area', 'img/streets/6_general/2_complaint_area.jpg', 4, 'red', 440, 150, 150, [18, 90, 250, 700, 875, 1050]),
             new Street(id++, 'Black Market Support', 'img/streets/6_general/3_the_black_market_support.jpg', 4, 'red', 480, 150, 150, [20, 100, 300, 750, 925, 1100]),
-            new Station(id++, 'MrSm!th', 'img/stations/3_smith.jpg', 10, 'red', 400, 'red'),
+            new Station(id++, 'MrSm!th', 'img/stations/3_smith.jpg', 10, 'red', 400),
             new Street(id++, 'World of Warcraft', 'img/streets/4_major_1/1_wow.jpg', 5, 'yellow', 520, 150, 150, [22, 110, 330, 800, 975, 1150]),
             new Street(id++, 'Diablo 3', 'img/streets/4_major_1/2_diablo_3.jpg', 5, 'yellow', 520, 150, 150, [22, 110, 330, 800, 975, 1150]),
             new TaxField(id++, 'Taxes! Taxes! Taxes!', 'img/events/3_tax.jpg', '#ff471a', 300),
@@ -122,7 +122,7 @@ class Monopvply {
             new CommunityField(id++, 'img/events/2_community.jpg'),
             new Street(id++, 'Aion', 'img/streets/5_major_2/2_aion.jpg', 6, 'green', 600, 200, 200, [26, 130, 390, 900, 1100, 1275]),
             new Street(id++, 'Star Wars: The Old Republic', 'img/streets/5_major_2/3_swtor.jpg', 6, 'green', 640, 200, 200, [28, 150, 450, 1000, 1200, 1400]),
-            new Station(id++, 'Muddy Waters', 'img/stations/4_muddy_waters.jpg', 10, 'red', 400, 'red'),
+            new Station(id++, 'Muddy Waters', 'img/stations/4_muddy_waters.jpg', 10, 'red', 400),
             new ActionField(id++, 'img/events/1_action.jpg'),
             new Street(id++, 'Conquer Online', 'img/streets/8_major_4/1_conquer_online.jpg', 7, 'purple', 700, 200, 200, [35, 175, 500, 1100, 1300, 1500]),
             new TaxField(id++, 'Taxing!', 'img/events/3_tax.jpg', '#ff471a', 200),
