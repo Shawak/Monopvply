@@ -150,3 +150,4 @@ exports.UpdateFieldPacket = UpdateFieldPacket;
 exports.ChatMessagePacket = ChatMessagePacket;
 exports.PlayerMortgagePacket = PlayerMortgagePacket;
 exports.PlayerUnmortgagePacket = PlayerUnmortgagePacket;
+exports.PlayerBuildPacket = PlayerBuildPacket;
