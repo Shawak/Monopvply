@@ -65,7 +65,14 @@ class Station extends Street {
     }
 
     onEnter(game, player) {
-
+        let count = 0;
+        for (let field of game.fields) {
+            if (field instanceof Station && field.owner == this.owner) {
+                count++;
+            }
+        }
+        player.money -= Math.pow(2, count) * 25;
+        game.update(player);
     }
 }
 
