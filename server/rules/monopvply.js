@@ -14,7 +14,7 @@ class Street extends Field {
 
         this.mortgaged = false;
         this.owner = null;
-        this.houses = null;
+        this.houses = 0;
     }
 
     onEnter(game, player) {
@@ -128,6 +128,14 @@ class Monopvply {
             new TaxField(id++, 'Taxing!', 'img/events/3_tax.jpg', '#ff471a', 200),
             new Street(id++, 'Silkroad', 'img/streets/8_major_4/2_silkroad_online.jpg', 7, 'purple', 800, 200, 200, [50, 200, 600, 1400, 1700, 2000]),
         ];
+    }
+
+    getPlayers() {
+        return this.players;
+    }
+
+    getFields() {
+        return this.fields;
     }
 
     onStart(game) {

@@ -32,6 +32,13 @@ class Game {
         this.map = new Monopvply(this, this.getPlayers());
     }
 
+    getGameState() {
+        return JSON.stringify({
+            players: this.map.getPlayers(),
+            fields: this.map.getFields()
+        });
+    }
+
     start() {
         this.map.onStart(this);
         let packet = new Packets.GameStartPacket(this.map.players, this.map.fields, -1);
@@ -120,7 +127,7 @@ class Game {
     }
 
     update(obj) {
-        if(obj instanceof Player) {
+        if (obj instanceof Player) {
             this.broadcast(new Packets.UpdatePlayerPacket(obj));
         } else if (obj instanceof Field) {
             this.broadcast(new Packets.UpdateFieldPacket(obj));
@@ -160,7 +167,7 @@ class Game {
         }
 
         let tradeID = 0;
-        while(this.trades.find(trade => trade.id == tradeID))
+        while (this.trades.find(trade => trade.id == tradeID))
             tradeID++;
         packet.tradeID = tradeID;
         this.trades.push(packet);
