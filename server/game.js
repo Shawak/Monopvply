@@ -27,6 +27,7 @@ class Game {
             client.network.link(Packets.TradeAnswerPacket, this.onTradeAnswerPacket, this);
             client.network.link(Packets.PlayerMortgagePacket, this.onPlayerMortgagePacket, this);
             client.network.link(Packets.PlayerUnmortgagePacket, this.onPlayerUnmortgagePacket, this);
+            client.network.link(Packets.PlayerBuildPacket, this.onPlayerBuildPacket, this);
         }
         this.map = new Monopvply(this, this.getPlayers());
     }
@@ -192,6 +193,13 @@ class Game {
         this.map.onUnmortgage(this, player, packet.fieldID);
     }
 
+    onPlayerBuildPacket(sender, packet) {
+        let player = this.senderToPlayer(sender);
+        if (player != this.getCurrentPlayer())
+            return;
+
+        this.map.onBuild(this, packet.player, packet.houses);
+    }
 }
 
 module.exports = Game;

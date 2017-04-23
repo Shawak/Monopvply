@@ -210,6 +210,7 @@ class Monopvply {
         }
 
         if (!tradeIsOkay) {
+            game.msg('This trade is not valid', from);
             console.log('invalid trade from player ' + from.name);
             return;
         }
@@ -274,6 +275,33 @@ class Monopvply {
         player.money -= cost;
         game.update(player);
         field.mortgaged = false;
+        game.update(field);
+    }
+
+    onBuild(game, player, fieldID, house) {
+        let field = this.fields[fieldID];
+        if (!field || !(house > 0 && house < field.rents) || field.houses >= house) {
+            return;
+        }
+
+        for (let oField of this.fields)
+            if (oField.group == field.group && oField.owner != field.owner) {
+                game.msg('You need to own all streets of this type to build on it.', player);
+                return;
+            }
+
+        let cost = 0;
+        for (let i = field.houses; i < house; i++)
+            cost += i < 5 ? field.priceHouse : field.priceHotel;
+
+        if (player.money < cost) {
+            game.msg('You don\'t have enough money to do this.', player);
+            return;
+        }
+
+        player.money -= cost;
+        game.update(player);
+        field.houses = house;
         game.update(field);
     }
 

@@ -108,6 +108,16 @@ function PlayerBuyPacket(fieldID) {
     this.fieldID = fieldID;
 }
 
+/* house contains to house to build (eg 1-5 [5=hotel])
+   so for example a three stands for three houses to build
+   but a four would only build one house if there are already
+   four houses on the field
+ */
+function PlayerBuildPacket(fieldID, house) {
+    this.fieldID = fieldID;
+    this.house = house;
+}
+
 function UpdateFieldPacket(field) {
     this.field = field;
 }
