@@ -297,7 +297,10 @@ class Monopvply {
 		console.log(fieldID+" "+player);
         let field = this.fields[fieldID];
         if (!field || !(house > 0 && house < field.rents.length) || field.houses >= house) {
+<<<<<<< HEAD
 			console.log('Nooooooob!');
+=======
+>>>>>>> origin/master
             return;
         }
 
