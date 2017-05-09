@@ -79,6 +79,15 @@ class Game {
         return this.playerInfo[this.currentPlayerIndex].player;
     }
 
+    getPlayerByID(id) {
+        for (let info of this.playerInfo) {
+            if (id == info.player.id) {
+                return info.player;
+            }
+        }
+        return null;
+    }
+
     // min & max inclusive
     random(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min);
@@ -157,11 +166,9 @@ class Game {
 
     onTradeOfferPacket(sender, packet) {
         let player = this.senderToPlayer(sender);
-        if (player != packet.from) {
-            return;
-        }
+        packet.from = player.id;
 
-        let otherPlayer = this.playerInfo.find(player => player.id == packet.to.id);
+        let otherPlayer = this.getPlayerByID(packet.to);
         if (!otherPlayer) {
             return;
         }
@@ -180,7 +187,9 @@ class Game {
             return;
         }
 
-        this.map.onTrade(this, packet.accept, packet.from, packet.offer, packet.to, packet.receive);
+        let from = this.getPlayerByID(packet.from);
+        let to = this.getPlayerByID(packet.to);
+        this.map.onTrade(this, packet.accept, from, packet.offer, to, packet.receive);
         this.trades.splice(this.trades.indexOf(packet), 1);
     }
 
