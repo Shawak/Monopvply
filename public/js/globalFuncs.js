@@ -222,7 +222,7 @@ function updateFieldState(packet,user, enemies)
 	}
 	
 	
-	if(packet.field.houses==0 && packet.field.owner!==null && (ownerBefore==undefined ||  (packet.owner!==undefined && packet.owner!==null && ownerBefore.getId()!=packet.owner.id)))
+	if(packet.field.houses==0 && packet.field.owner!==null && (ownerBefore==undefined ||  (packet.field.owner!==undefined && packet.field.owner!==null && ownerBefore.getId()!=packet.field.owner.id)))
 	{
 		for(var i=0;i<enemies.length;i++)
 		{
@@ -251,7 +251,7 @@ function updateFieldState(packet,user, enemies)
 			}
 		}
 	}
-	else if(packet.field.owner!==null && packet.owner!==undefined && packet.owner!==null && ownerBefore!=undefined && ownerBefore.getId()==packet.owner.id)
+	else if(packet.field.owner!==null && ownerBefore!=undefined && ownerBefore.getId()==packet.field.owner.id)
 	{
 		var field=ownerBefore.getFieldById(packet.field.id);
 		if(field!=undefined)
