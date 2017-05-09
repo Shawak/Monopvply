@@ -21,6 +21,22 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 	var buyButton=undefined;
 	var currentField;
 	
+	this.getFieldById = function(fieldId)
+	{
+		var fields=fieldCardManager.getAllOwnedFields();
+		if(fields!=undefined)
+		{
+			for(var i=0;i<fields.length;i++)
+			{
+				if(fields[i].getId()==fieldId)
+				{
+					return fields[i];
+				}
+			}
+		}
+		return undefined;
+	}
+	
 	this.isMoving = function()
 	{
 		return busyMoving;

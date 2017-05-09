@@ -192,6 +192,7 @@ function Field(queueManager,id, streeGroup,imageSrc, fillColor, text, costs,pric
 	
 	this.setHouses = function (houses) {
         amountHouses=houses;
+		showHouses();
     };
 	
 	this.getGroup=function()

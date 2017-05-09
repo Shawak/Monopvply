@@ -30,6 +30,15 @@ var client;
 	{
         client.send(new PlayerBuyPacket(fieldId));
     }
+	
+	function buyHousesSend(user) 
+	{
+		var fields=user.getAllOwnedFields();
+		for(var i=0;i<fields.length;i++)
+		{
+			client.send(new PlayerBuildPacket(fields[i].getId(),fields[i].getHouses()));
+		}
+    }
 
 	function getAndSendMessage()
 	{
@@ -77,7 +86,7 @@ var client;
                 }
             }
 
-            var houseBuildingMenu = houseBuildingWindow.bind(null, generalMenu, gameMap, 5, user, "Accept", "Cancel");
+            var houseBuildingMenu = houseBuildingWindow.bind(null, generalMenu, gameMap, 5, user, "Accept", "Cancel",buyHousesSend.bind(null,user));
 
             var menuEntities = setUpStandardMenu(ingameMenu, diceMenu, generalMenu, gameMap, user, enemies, houseBuildingMenu, endTurn,buyFieldSend);
             setUpStandardMap(packet, queue, gameMap, informationMenu);

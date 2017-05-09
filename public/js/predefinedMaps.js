@@ -18,9 +18,9 @@ function setUpStandardMap(packet, queueManager, gameMap, informationMenu)
 		{
 			var field=new Field(queueManager,currField.id,currField.group,currField.img, currField.color, currField.name, currField.price || currField.tax ,currField.priceHouse,currField.mortgageRatio,undefined,currField.priceTextColor,currField.textColor);
 			gameMap.addSideField(field);
-			if(packet.field.rents!=undefined)
+			if(currField.rents!=undefined)
 			{
-				field.setRent(packet.field.rents);
+				field.setRents(currField.rents);
 			}
 			
 		}
