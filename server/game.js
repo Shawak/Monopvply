@@ -41,10 +41,8 @@ class Game {
 
     start() {
         this.map.onStart(this);
-        let packet = new Packets.GameStartPacket(this.map.players, this.map.fields, -1);
         for (let info of this.playerInfo) {
-            packet.yourPlayerID = info.player.id;
-            info.client.send(packet);
+            info.client.send(new Packets.GameStartPacket(this.map.players, this.map.fields, info.player.id));
         }
         setTimeout(() => this.nextTurn(), 2000); // TODO fix client to be able to receive faster
     }
