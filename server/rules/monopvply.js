@@ -294,13 +294,8 @@ class Monopvply {
     }
 
     onBuild(game, player, fieldID, house) {
-		console.log(fieldID+" "+player);
         let field = this.fields[fieldID];
-        if (!field || !(house > 0 && house < field.rents.length) || field.houses >= house) {
-<<<<<<< HEAD
-			console.log('Nooooooob!');
-=======
->>>>>>> origin/master
+        if (!field || house <= 0 || house >= field.rents.length || field.houses >= house) {
             return;
         }
 
