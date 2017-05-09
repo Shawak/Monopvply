@@ -295,7 +295,7 @@ class Monopvply {
 
     onBuild(game, player, fieldID, house) {
         let field = this.fields[fieldID];
-        if (!field || !(house > 0 && house < field.rents) || field.houses >= house) {
+        if (!field || !(house > 0 && house < field.rents.length) || field.houses >= house) {
             return;
         }
 
