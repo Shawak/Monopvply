@@ -4,10 +4,14 @@ function tradingWindow(generalMenu, playerObj, enemyObj, textOffer, textCancel, 
 	{ 
 		return true;
 	}
+
 	playerObj.setBusy(true);
 	generalMenu.setBusy(true);
 	enemyObj.setBusy(true);
 
+	var offerArray={streets:[], money:0,id:playerObj.getId()};
+	var requestArray={streets:[], money:0,id:enemyObj.getId()};
+	
 	offerCallback = typeof offerCallback !== 'undefined' ? offerCallback : undefined;
 	cancelCallback = typeof cancelCallback !== 'undefined' ? cancelCallback : undefined;
 	
@@ -55,6 +59,8 @@ function tradingWindow(generalMenu, playerObj, enemyObj, textOffer, textCancel, 
 	
 	function sendCard(i)
 	{
+		offerArray.streets[i]=ownedFields[i];
+		
 		cards[i][0].hide();
 		cardsTrading[i][0].show();
 		generalMenu.draw();
@@ -62,6 +68,8 @@ function tradingWindow(generalMenu, playerObj, enemyObj, textOffer, textCancel, 
 	
 	function dontSendCard(i)
 	{
+		offerArray.streets[i]=undefined;
+		
 		cards[i][0].show();
 		cardsTrading[i][0].hide();
 		generalMenu.draw();
@@ -97,6 +105,8 @@ function tradingWindow(generalMenu, playerObj, enemyObj, textOffer, textCancel, 
 	
 	function getCard(i)
 	{
+		requestArray.streets[i]=ownedFields[i];
+		
 		enemyCards[i][0].hide();
 		enemyCardsTrading[i][0].show();
 		generalMenu.draw();
@@ -104,6 +114,8 @@ function tradingWindow(generalMenu, playerObj, enemyObj, textOffer, textCancel, 
 	
 	function dontGetCard(i)
 	{
+		requestArray.streets[i]=undefined;
+		
 		enemyCards[i][0].show();
 		enemyCardsTrading[i][0].hide();
 		generalMenu.draw();
@@ -149,11 +161,17 @@ function tradingWindow(generalMenu, playerObj, enemyObj, textOffer, textCancel, 
 		
 		if(currMoney>0)
 		{
+			offerArray.money=0;
+			requestArray.money=Math.abs(currMoney);
+			
 			enemyBox.text(Math.abs(currMoney));
 			myBox.text("");
 		}
 		else
 		{
+			offerArray.money=Math.abs(currMoney);
+			requestArray.money=0;
+			
 			myBox.text(Math.abs(currMoney));
 			enemyBox.text("");
 		}
@@ -229,7 +247,7 @@ function tradingWindow(generalMenu, playerObj, enemyObj, textOffer, textCancel, 
 		
 		if(offerCallback!=undefined)
 		{
-			offerCallback();
+			offerCallback(offerArray,requestArray);
 		}
 		return true;
 	}
