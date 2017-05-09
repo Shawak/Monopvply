@@ -205,7 +205,7 @@ class Game {
         if (player != this.getCurrentPlayer())
             return;
 
-        this.map.onBuild(this, player, packet.fieldID, packet.houses);
+        this.map.onBuild(this, player, packet.fieldID, packet.house);
     }
 }
 
