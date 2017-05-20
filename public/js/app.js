@@ -26,7 +26,57 @@ var client;
         client.send(new PlayerEndTurnPacket());
     }
 
-    function buyFieldSend(fieldId) 
+    function onTradeReceive(packet)
+    {
+        var fromEnemy=-1;
+        for (var i =  0; i <enemies.length; i++) 
+        {
+            if(enemies[i].getId()==packet.from)
+            {
+                fromEnemy=i;
+                break;
+            }
+        }
+
+        if(user.getId()==packet.to && fromEnemy!=-1)
+        {
+            var yesCallback=tradeAnswerSend(null,packet.tradeID,true);
+            var noCallback=tradeAnswerSend(null,packet.tradeID,false);
+
+            acceptTradeWindow(generalMenu, gameMap, enemies[fromEnemy], user, packet.offer, packet.receive,yesCallback,noCallback);
+            
+        }
+
+        // else los trade to chat
+
+    }
+
+    function tradeRequestSend(offerArray,requestArray) 
+	{
+		var offer = {money:offerArray.money, streets:[]};
+		var receive = {money:requestArray.money, streets:[]};
+		
+		for(var i=0;i<gameMap.getSideFields().length+4;i++)
+		{
+			if(offerArray.streets[i]!=undefined)
+			{
+				offer.streets.push(offerArray.streets[i].getId());
+			}
+			if(requestArray.streets[i]!=undefined)
+			{
+				receive.streets.push(requestArray.streets[i].getId());
+			}
+		}
+		
+        client.send(new TradeOfferPacket(offerArray.id, offer, requestArray.id, receive));
+    }
+	
+	function tradeAnswerSend(tradeID,accept)
+	{
+		client.send(new TradeAnswerPacket(tradeID, accept));
+	}
+	
+	function buyFieldSend(fieldId) 
 	{
         client.send(new PlayerBuyPacket(fieldId));
     }
@@ -88,7 +138,7 @@ var client;
 
             var houseBuildingMenu = houseBuildingWindow.bind(null, generalMenu, gameMap, 5, user, "Accept", "Cancel",buyHousesSend.bind(null,user));
 
-            var menuEntities = setUpStandardMenu(ingameMenu, diceMenu, generalMenu, gameMap, user, enemies, houseBuildingMenu, endTurn,buyFieldSend);
+            var menuEntities = setUpStandardMenu(ingameMenu, diceMenu, generalMenu, gameMap, user, enemies, houseBuildingMenu, endTurn,buyFieldSend, tradeRequestSend);
             setUpStandardMap(packet, queue, gameMap, informationMenu);
 
             dices = menuEntities.dices;
@@ -103,6 +153,7 @@ var client;
                 enemies[i].createCardManager();
                 enemies[i].addBoardFigure("");
             }
+			
 			
         }
     }

@@ -253,10 +253,10 @@ function tradingWindow(generalMenu, playerObj, enemyObj, textOffer, textCancel, 
 	}
 	
 	buttonX=menuOffsetX+menuWidth/4+margin*2;
-	generalMenu.addButton(buttonX, currY, menuWidth/4-2*margin, 30, textOffer, callbackClose);
+	generalMenu.addButton(buttonX, currY, menuWidth/4-2*margin, 30, textOffer, callbackOffer);
 	
 	buttonX=menuOffsetX+menuWidth/4*2+margin*2;
-	generalMenu.addButton(buttonX, currY, menuWidth/4-2*margin, 30, textCancel, callbackOffer);
+	generalMenu.addButton(buttonX, currY, menuWidth/4-2*margin, 30, textCancel, callbackClose);
 	
 	currY+=30+margin;
 	
@@ -498,6 +498,125 @@ function houseBuildingWindow(generalMenu, gameMap, maxHouses, playerObj, textAcc
 	generalMenu.draw();
 }
 
+function acceptTradeWindow(generalMenu, gameMap,sendingPlayer, receivingPlayer, otherPlayerOffers, otherPlayerRequests, yesCallback, noCallback)
+{   
+	if(generalMenu.isBusy())
+	{
+		return false;
+	}
+	
+	generalMenu.setBusy(true);
+	
+	generalMenu.hideAll(false);
+	generalMenu.setDraggable(true);
+	generalMenu.clear();
+	var width = window.innerWidth;
+    var height = window.innerHeight;
+	
+	var menuWidth=400;
+	
+	var okCallbackHide=function()
+	{
+		generalMenu.hideAll(true);
+		if(yesCallback!=undefined)
+		{
+			if(yesCallback()===false)
+			{
+				return false;
+			}
+		}
+		generalMenu.setBusy(false);
+		return true;
+	}
+	
+	var notOkCallbackHide=function()
+	{
+		generalMenu.hideAll(true);
+		if(noCallback!=undefined)
+		{
+			if(noCallback()===false)
+			{
+				return false;
+			}
+		}
+		generalMenu.setBusy(false);
+		return true;
+	}
+	
+	var xMenu=width/2-menuWidth/2;
+	var yMenu=height/6;
+	var xPlayer1=xMenu+20;
+	var xPlayer2=xMenu+menuWidth/2+20;
+	var textFieldWidth=(menuWidth-80)/2;
+	
+	
+	
+	var tradeRequestText=generalMenu.addText(xPlayer1,10+yMenu,menuWidth-40, "Accept Trading-Offer?");
+	var tradingAreaY=tradeRequestText.getHeight()+10;
+	
+	var sendingPlayerName=generalMenu.addTextInRect(xPlayer1,10+yMenu+tradingAreaY,menuWidth-40, sendingPlayer.getName(), sendingPlayer.getColor());
+	tradingAreaY+=sendingPlayerName[0].getHeight()+20;
+	
+	var originaltradingAreaY=tradingAreaY
+	
+	var textOffers=generalMenu.addText(xPlayer1,tradingAreaY+yMenu+4,menuWidth/2-40, "Offers");
+	generalMenu.addText(xPlayer2,tradingAreaY+yMenu+4,menuWidth/2-40, "Wants");
+
+	tradingAreaY+=textOffers.getHeight()+4;
+	
+	generalMenu.addLine(xMenu+10, yMenu+tradingAreaY+8,xMenu+menuWidth-10, yMenu+tradingAreaY+8);
+	
+	
+	var currHeight=tradingAreaY+20;
+	var maxHeight=0;
+	for(var i=0;i<otherPlayerOffers.streets.length;i++)
+	{
+		var currField=gameMap.getFieldById(otherPlayerOffers.streets[i]);
+		var fieldNameOffer=generalMenu.addTextInRect(xPlayer1,currHeight+yMenu,textFieldWidth, currField.getText(), currField.getColor(),true);
+		var fieldHeight=fieldNameOffer[0].getHeight();
+		
+		currHeight+=fieldHeight+8;
+	}
+	maxHeight=currHeight;
+	
+	currHeight=tradingAreaY+20;
+	for(var i=0;i<otherPlayerRequests.streets.length;i++)
+	{
+		var currField=gameMap.getFieldById(otherPlayerRequests.streets[i]);
+		var fieldNameRequest=generalMenu.addTextInRect(xPlayer2,currHeight+yMenu,textFieldWidth, currField.getText(), currField.getColor(),true);
+		var fieldHeight=fieldNameRequest[0].getHeight();
+		
+		currHeight+=fieldHeight+8;
+	}
+
+	maxHeight=Math.max(maxHeight,currHeight);
+	generalMenu.addLine(xMenu+10, yMenu+maxHeight+8,xMenu+menuWidth-10, yMenu+maxHeight+8);
+	
+	maxHeight+=8;
+	var moneyText;
+	if(otherPlayerOffers.money!=0)
+	{
+		moneyText=generalMenu.addText(xPlayer1,yMenu+maxHeight+8,menuWidth/2-40, otherPlayerOffers.money+" eg");
+	}
+	else if(otherPlayerRequests.money!=0)
+	{
+		moneyText=generalMenu.addText(xPlayer2,yMenu+maxHeight+8,menuWidth/2-40, otherPlayerRequests.money+" eg");
+	}
+	
+	maxHeight+=moneyText.getHeight()+8;
+	
+	generalMenu.addLine(xMenu+10, yMenu+maxHeight+4,xMenu+menuWidth-10, yMenu+maxHeight+4);
+	
+	generalMenu.addButton(xMenu+20, yMenu+maxHeight+16, 60, 30, "No", notOkCallbackHide, "");
+	generalMenu.addButton(xMenu+menuWidth-20-60, yMenu+maxHeight+16, 60, 30, "Yes", okCallbackHide, "");
+	
+	generalMenu.addLine(xMenu+menuWidth/2, yMenu+originaltradingAreaY+8,xMenu+menuWidth/2,yMenu+maxHeight+16+30);
+	
+	generalMenu.addMenuBackground(xMenu,yMenu,menuWidth,maxHeight+58);
+	
+	generalMenu.draw();
+}
+
 function acceptWindow(generalMenu, text, yesCallback, noCallback)
 {   
 	if(generalMenu.isBusy())
@@ -553,7 +672,7 @@ function acceptWindow(generalMenu, text, yesCallback, noCallback)
 	generalMenu.draw();
 }
 
-function setUpStandardMenu(ingameMenu, diceMenu, generalMenu, gameMap, user, enemyArray, buildingMenuCallback, endTurnCallback, buyFieldCallback)
+function setUpStandardMenu(ingameMenu, diceMenu, generalMenu, gameMap, user, enemyArray, buildingMenuCallback, endTurnCallback, buyFieldCallback, sendTradeRequestCallback)
 {
 	var container = document.querySelector('#stage-parent');
 	var containerWidth = container.offsetWidth;
@@ -589,7 +708,7 @@ function setUpStandardMenu(ingameMenu, diceMenu, generalMenu, gameMap, user, ene
 		textMoneyEnemy=ingameMenu.addText(x, y+profileImageSizeEnemy, profileImageSizeEnemy, "1500 "+GLOBAL_MONEY_VAR);
 		enemyArray[i].setMoneyTextbox(textMoneyEnemy);
 		
-		ingameMenu.addButton(x+16, y+profileImageSizeEnemy+8+textMoneyEnemy.getHeight(), profileImageSizeEnemy-32, 30, "Trade", tradingWindow.bind(null, generalMenu,user,enemyArray[i],"Offer", "Cancel"), "Start a trade with this player");
+		ingameMenu.addButton(x+16, y+profileImageSizeEnemy+8+textMoneyEnemy.getHeight(), profileImageSizeEnemy-32, 30, "Trade", tradingWindow.bind(null, generalMenu,user,enemyArray[i],"Offer", "Cancel",sendTradeRequestCallback), "Start a trade with this player");
 	}
 	
 	ingameMenu.addButton(profileImageMargin, profileImageMargin+profileImageSize+16+textMoney.getHeight(), profileImageSize, 30, "Building Menu", buildingMenuCallback, "Opens menu to buy and sell houses");
