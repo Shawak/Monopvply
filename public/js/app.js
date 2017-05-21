@@ -29,26 +29,52 @@ var client;
     function onTradeReceive(packet)
     {
         var fromEnemy=-1;
+        var toEnemy=-1;
         for (var i =  0; i <enemies.length; i++) 
         {
             if(enemies[i].getId()==packet.from)
             {
                 fromEnemy=i;
-                break;
+            }
+            if(enemies[i].getId()==packet.to)
+            {
+                toEnemy=i;
             }
         }
 
-        if(user.getId()==packet.to && fromEnemy!=-1)
+        if(fromEnemy!=-1)
         {
-            var yesCallback=tradeAnswerSend(null,packet.tradeID,true);
-            var noCallback=tradeAnswerSend(null,packet.tradeID,false);
+            if(user.getId()==packet.to)
+            {
+                var yesCallback=tradeAnswerSend(null,packet.tradeID,true);
+                var noCallback=tradeAnswerSend(null,packet.tradeID,false);
 
-            acceptTradeWindow(generalMenu, gameMap, enemies[fromEnemy], user, packet.offer, packet.receive,yesCallback,noCallback);
-            
+                acceptTradeWindow(generalMenu, gameMap, enemies[fromEnemy], user, packet.offer, packet.receive,yesCallback,noCallback);
+            }
+            else if(user.getId()!=packet.from && toEnemy!=-1)
+            {
+                var otherPlayerOffers=packet.offer;
+                var otherPlayerRequests=packet.receive;
+                var msg="Trade Request: "+enemies[fromEnemy].getName()+" offers ";
+
+                for(var i=0;i<otherPlayerOffers.streets.length;i++)
+                {
+                    var currField=gameMap.getFieldById(otherPlayerOffers.streets[i]);
+                    msg+='<font color="'+currField.getColor()+'">'+currField.getText()+"</font>, ";
+                }
+                msg+=otherPlayerOffers.money+"eg";
+
+                msg+=" and wants ";
+                for(var i=0;i<otherPlayerRequests.streets.length;i++)
+                {
+                    var currField=gameMap.getFieldById(otherPlayerRequests.streets[i]);
+                    msg+='<font color="'+currField.getColor()+'">'+currField.getText()+"</font>, ";
+                }
+                msg+=otherPlayerRequests.money+"eg";
+                msg+=" from "+enemies[toEnemy].getName()+".";
+                addChatMessage('<font color="red">'+"System"+"</font>", "", msg);
+            }
         }
-
-        // else los trade to chat
-
     }
 
     function tradeRequestSend(offerArray,requestArray) 
