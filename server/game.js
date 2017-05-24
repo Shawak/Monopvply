@@ -176,7 +176,7 @@ class Game {
             tradeID++;
         packet.tradeID = tradeID;
         this.trades.push(packet);
-        this.playerToClient(otherPlayer).send(packet);
+        this.broadcast(packet);
     }
 
     onTradeAnswerPacket(sender, packet) {
@@ -186,7 +186,7 @@ class Game {
         }
 
         let from = this.getPlayerByID(packet.from);
-        this.playerToClient(from).send(packet);
+        this.broadcast(packet);
 
         let to = this.getPlayerByID(packet.to);
         this.map.onTrade(this, packet.accept, from, packet.offer, to, packet.receive);

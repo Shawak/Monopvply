@@ -25,6 +25,13 @@ class Street extends Field {
     }
 }
 
+
+class SpecialField extends Field {
+    super(id, name, img, onEnter) {
+        this.onEnter = onEnter;
+    }
+}
+
 class TaxField extends Field {
     constructor(id, name, img, textColor, price) {
         super(id, name, img);
@@ -66,7 +73,7 @@ class Station extends Street {
 
     onEnter(game, player) {
         let count = 0;
-        for (let field of game.fields) {
+        for (let field of game.map.fields) {
             if (field instanceof Station && field.owner == this.owner) {
                 count++;
             }
@@ -88,7 +95,7 @@ class Monopvply {
 
         let id = 0;
         this.fields = [
-            new Field(id++, 'Start', 'img/corner/1_start.jpg', (game, player) => {
+            new SpecialField(id++, 'Start', 'img/corner/1_start.jpg', (game, player) => {
                 player.money += 400;
                 game.update(player);
             }),
@@ -102,7 +109,7 @@ class Monopvply {
             new Street(id++, 'Last Chaos', 'img/streets/2_mmorpg/2_last_chaos.jpg', 1, 'lightblue', 200, 50, 50, [6, 30, 90, 270, 400, 550]),
             new Street(id++, 'Tera', 'img/streets/2_mmorpg/3_tera.jpg', 1, 'lightblue', 240, 50, 50, 120, [8, 40, 100, 300, 450, 600]),
 
-            new Field(id++, 'Prison', 'img/corner/2_prison.jpg'),
+            new SpecialField(id++, 'Prison', 'img/corner/2_prison.jpg'),
             new Street(id++, 'General Gaming', 'img/streets/1_gaming/1_general_gaming.jpg', 2, 'pink', 240, 100, 100, [10, 50, 150, 450, 625, 750]),
             new TaxField(id++, 'Pay more taxes!', 'img/events/3_tax.jpg', '#ff471a', 300),
             new Street(id++, 'Console Games', 'img/streets/1_gaming/2_consoles.jpg', 2, 'pink', 280, 100, 100, [10, 50, 150, 450, 625, 750]),
@@ -113,7 +120,7 @@ class Monopvply {
             new Street(id++, 'Counter Strike', 'img/streets/3_shooter/2_counter_strike.jpg', 3, 'orange', 360, 100, 100, [14, 70, 200, 550, 750, 950]),
             new Street(id++, 'Arma', 'img/streets/3_shooter/3_arma.jpg', 3, 'orange', 400, 200, 100, [16, 80, 220, 600, 800, 1000]),
 
-            new Field(id++, 'Cash Out', 'img/corner/3_cash_out.jpg'),
+            new SpecialField(id++, 'Cash Out', 'img/corner/3_cash_out.jpg'),
             new Street(id++, 'Joining Epvp', 'img/streets/6_general/1_joining_epvp.jpg', 4, 'red', 440, 150, 150, [18, 90, 250, 700, 875, 1050]),
             new ActionField(id++, 'img/events/1_action.jpg'),
             new Street(id++, 'Complaint Area', 'img/streets/6_general/2_complaint_area.jpg', 4, 'red', 440, 150, 150, [18, 90, 250, 700, 875, 1050]),
@@ -124,7 +131,7 @@ class Monopvply {
             new TaxField(id++, 'Taxes! Taxes! Taxes!', 'img/events/3_tax.jpg', '#ff471a', 300),
             new Street(id++, 'League of Legends', 'img/streets/4_major_1/3_lol.jpg', 5, 'yellow', 560, 150, 150, [24, 120, 360, 850, 1025, 1200]),
 
-            new Field(id++, 'Busted!', 'img/corner/4_go_to_prison.jpg'),
+            new SpecialField(id++, 'Busted!', 'img/corner/4_go_to_prison.jpg'),
             new Street(id++, 'Guild Wars 2', 'img/streets/5_major_2/1_guild_wars_2.jpg', 6, 'green', 600, 200, 200, [26, 130, 390, 900, 1100, 1275]),
             new CommunityField(id++, 'img/events/2_community.jpg'),
             new Street(id++, 'Aion', 'img/streets/5_major_2/2_aion.jpg', 6, 'green', 600, 200, 200, [26, 130, 390, 900, 1100, 1275]),
