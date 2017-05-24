@@ -26,7 +26,83 @@ var client;
         client.send(new PlayerEndTurnPacket());
     }
 
-    function buyFieldSend(fieldId) 
+    function onTradeReceive(packet)
+    {
+        var fromEnemy=-1;
+        var toEnemy=-1;
+        for (var i =  0; i <enemies.length; i++) 
+        {
+            if(enemies[i].getId()==packet.from)
+            {
+                fromEnemy=i;
+            }
+            if(enemies[i].getId()==packet.to)
+            {
+                toEnemy=i;
+            }
+        }
+
+        if(fromEnemy!=-1)
+        {
+            if(user.getId()==packet.to)
+            {
+                var yesCallback=tradeAnswerSend(null,packet.tradeID,true);
+                var noCallback=tradeAnswerSend(null,packet.tradeID,false);
+
+                acceptTradeWindow(generalMenu, gameMap, enemies[fromEnemy], user, packet.offer, packet.receive,yesCallback,noCallback);
+            }
+            else if(user.getId()!=packet.from && toEnemy!=-1)
+            {
+                var otherPlayerOffers=packet.offer;
+                var otherPlayerRequests=packet.receive;
+                var msg="Trade Request: "+enemies[fromEnemy].getName()+" offers ";
+
+                for(var i=0;i<otherPlayerOffers.streets.length;i++)
+                {
+                    var currField=gameMap.getFieldById(otherPlayerOffers.streets[i]);
+                    msg+='<font color="'+currField.getColor()+'">'+currField.getText()+"</font>, ";
+                }
+                msg+=otherPlayerOffers.money+"eg";
+
+                msg+=" and wants ";
+                for(var i=0;i<otherPlayerRequests.streets.length;i++)
+                {
+                    var currField=gameMap.getFieldById(otherPlayerRequests.streets[i]);
+                    msg+='<font color="'+currField.getColor()+'">'+currField.getText()+"</font>, ";
+                }
+                msg+=otherPlayerRequests.money+"eg";
+                msg+=" from "+enemies[toEnemy].getName()+".";
+                addChatMessage('<font color="red">'+"System"+"</font>", "", msg);
+            }
+        }
+    }
+
+    function tradeRequestSend(offerArray,requestArray) 
+	{
+		var offer = {money:offerArray.money, streets:[]};
+		var receive = {money:requestArray.money, streets:[]};
+		
+		for(var i=0;i<gameMap.getSideFields().length+4;i++)
+		{
+			if(offerArray.streets[i]!=undefined)
+			{
+				offer.streets.push(offerArray.streets[i].getId());
+			}
+			if(requestArray.streets[i]!=undefined)
+			{
+				receive.streets.push(requestArray.streets[i].getId());
+			}
+		}
+		
+        client.send(new TradeOfferPacket(offerArray.id, offer, requestArray.id, receive));
+    }
+	
+	function tradeAnswerSend(tradeID,accept)
+	{
+		client.send(new TradeAnswerPacket(tradeID, accept));
+	}
+	
+	function buyFieldSend(fieldId) 
 	{
         client.send(new PlayerBuyPacket(fieldId));
     }
@@ -88,7 +164,7 @@ var client;
 
             var houseBuildingMenu = houseBuildingWindow.bind(null, generalMenu, gameMap, 5, user, "Accept", "Cancel",buyHousesSend.bind(null,user));
 
-            var menuEntities = setUpStandardMenu(ingameMenu, diceMenu, generalMenu, gameMap, user, enemies, houseBuildingMenu, endTurn,buyFieldSend);
+            var menuEntities = setUpStandardMenu(ingameMenu, diceMenu, generalMenu, gameMap, user, enemies, houseBuildingMenu, endTurn,buyFieldSend, tradeRequestSend);
             setUpStandardMap(packet, queue, gameMap, informationMenu);
 
             dices = menuEntities.dices;
@@ -103,6 +179,7 @@ var client;
                 enemies[i].createCardManager();
                 enemies[i].addBoardFigure("");
             }
+			
 			
         }
     }
