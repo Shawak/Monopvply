@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo.png" />
+</p>
+
 # Monopvply
 
 description
@@ -11,7 +15,7 @@ description
 
 ### Installing
 
-    git clone https://github.com/epvpsyc/Monopvply monopvply -b <branch>
+    git clone http://gitlab.syc.wtf/Syc/Monopvply.git monopvply -b <branch>
     cd monopvply && docker-compose up --build
     
 ### Updating
