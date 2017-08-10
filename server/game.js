@@ -190,8 +190,8 @@ class Game {
         this.broadcast(packet);
 
         let to = this.getPlayerByID(packet.to);
-        this.map.onTrade(this, packet.accept, from, packet.offer, to, packet.receive);
-        this.trades.splice(this.trades.indexOf(packet), 1);
+        this.map.onTrade(this, packet.accept, from, trade.offer, to, trade.receive);
+        this.trades.splice(this.trades.indexOf(trade), 1);
     }
 
     onPlayerMortgagePacket(sender, packet) {
