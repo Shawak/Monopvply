@@ -18,16 +18,18 @@ class Street extends Field {
     }
 
     onEnter(game, player) {
-        if (this.owner != player) {
-            player.money -= this.rents[this.houses == null ? 0 : this.houses];
-            game.update(player);
+        if(this.owner == player || this.owner === null) {
+            return;
         }
+
+        player.money -= this.rents[this.houses == null ? 0 : this.houses];
+        game.update(player);
     }
 }
 
-
 class SpecialField extends Field {
-    super(id, name, img, onEnter) {
+    constructor(id, name, img, onEnter) {
+        super(id, name, img);
         this.onEnter = onEnter;
     }
 }
@@ -72,6 +74,10 @@ class Station extends Street {
     }
 
     onEnter(game, player) {
+        if(this.owner == player || this.owner === null) {
+            return;
+        }
+
         let count = 0;
         for (let field of game.map.fields) {
             if (field instanceof Station && field.owner == this.owner) {
