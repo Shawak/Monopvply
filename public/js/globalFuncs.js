@@ -230,11 +230,11 @@ function updateFieldState(packet,user, enemies)
 			{
 				if (enemies[i].ownsField(packet.field.id)==false)
 				{
-						if(ownerBefore!=undefined)
-						{
-							ownerBefore.removeCard(packet.field.id);
-						}
-						return enemies[i].addCard(packet.field.id);
+					if(ownerBefore!=undefined)
+					{
+						ownerBefore.removeCard(packet.field.id);
+					}
+					return enemies[i].addCard(packet.field.id);
 				}
 			}
 		}
