@@ -243,6 +243,15 @@ class Monopvply {
             return;
         }
 
+        if(from === null) {
+            console.log('could not find from player on trade.');
+            return;
+        }
+        if(to === null) {
+            console.log('could not find from player on trade.');
+            return;
+        }
+
         if(receive.money === null) {
             receive.money = 0;
         }
