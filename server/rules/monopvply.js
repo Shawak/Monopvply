@@ -42,7 +42,7 @@ class TaxField extends Field {
     }
 
     onEnter(game, player) {
-        player.tax -= this.tax;
+        player.money -= this.tax;
         game.update(player);
     }
 }
