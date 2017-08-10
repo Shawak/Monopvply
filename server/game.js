@@ -28,6 +28,7 @@ class Game {
             client.network.link(Packets.PlayerMortgagePacket, this.onPlayerMortgagePacket, this);
             client.network.link(Packets.PlayerUnmortgagePacket, this.onPlayerUnmortgagePacket, this);
             client.network.link(Packets.PlayerBuildPacket, this.onPlayerBuildPacket, this);
+            client.network.link(Packets.PlayerJailAnswer, this.onPlayerJailAnswer, this);
         }
         this.map = new Monopvply(this, this.getPlayers());
     }
@@ -215,6 +216,14 @@ class Game {
             return;
 
         this.map.onBuild(this, player, packet.fieldID, packet.house);
+    }
+
+    onPlayerJailAnswer(sender, packet) {
+        let player = this.senderToPlayer(sender);
+        if (player != this.getCurrentPlayer())
+            return;
+
+        this.map.onJail(this, player, packet.buyFree);
     }
 }
 

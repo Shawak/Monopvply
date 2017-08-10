@@ -143,7 +143,11 @@ class Monopvply {
             new TaxField(id++, 'Taxes! Taxes! Taxes!', 'img/events/3_tax.jpg', '#ff471a', 300),
             new Street(id++, 'League of Legends', 'img/streets/4_major_1/3_lol.jpg', 5, 'yellow', 560, 150, 150, [24, 120, 360, 850, 1025, 1200]),
 
-            new SpecialField(id++, 'Busted!', 'img/corner/4_go_to_prison.jpg'),
+            new SpecialField(id++, 'Busted!', 'img/corner/4_go_to_prison.jpg', (game, player) => {
+                player.jailed = true;
+                player.position = 10;
+                game.update(player);
+            }),
             new Street(id++, 'Guild Wars 2', 'img/streets/5_major_2/1_guild_wars_2.jpg', 6, 'green', 600, 200, 200, [26, 130, 390, 900, 1100, 1275]),
             new CommunityField(id++, 'img/events/2_community.jpg'),
             new Street(id++, 'Aion', 'img/streets/5_major_2/2_aion.jpg', 6, 'green', 600, 200, 200, [26, 130, 390, 900, 1100, 1275]),
@@ -168,7 +172,20 @@ class Monopvply {
 
     }
 
-    onTurn(game, player) {
+    onTurn(game, player, prisonRolls) {
+        if(prisonRolls) {
+            for(let i = 0; i < 3; i++) {
+                let rolls = [game.random(1, 6), game.random(1, 6)];
+                game.sendDices(rolls);
+                if(rolls[0] == rolls[1]) {
+                    player.jailed = false;
+                }
+            }
+            if(player.jailed) {
+                return;
+            }
+        }
+
         let rolls = [game.random(1, 6), game.random(1, 6)];
         game.sendDices(rolls);
 
@@ -337,6 +354,17 @@ class Monopvply {
         game.update(player);
         field.houses = house;
         game.update(field);
+    }
+
+    onJail(game, player, buyFree) {
+        if(buyFree && player.jailed && player.money >= 200) {
+            player.money -= 200;
+            player.jailed = false;
+            game.update(player);
+            this.onTurn(game, player, true);
+        } else {
+            this.onTurn(game, player, false);
+        }
     }
 
 }
