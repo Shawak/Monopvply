@@ -139,7 +139,7 @@ function PlayerUnmortgagePacket(fieldID) {
     this.fieldID = fieldID;
 }
 
-function PlayerJailPacket(buyFree) {
+function PlayerJailAnswerPacket(buyFree) {
     this.buyFree = buyFree;
 }
 
@@ -155,4 +155,4 @@ exports.ChatMessagePacket = ChatMessagePacket;
 exports.PlayerMortgagePacket = PlayerMortgagePacket;
 exports.PlayerUnmortgagePacket = PlayerUnmortgagePacket;
 exports.PlayerBuildPacket = PlayerBuildPacket;
-exports.PlayerJailPacket = PlayerJailPacket;
+exports.PlayerJailAnswerPacket = PlayerJailAnswerPacket;
