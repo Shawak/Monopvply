@@ -248,7 +248,7 @@ class Monopvply {
             return;
         }
         if(to === null) {
-            console.log('could not find from player on trade.');
+            console.log('could not find to player on trade.');
             return;
         }
 
