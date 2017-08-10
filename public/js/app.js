@@ -26,7 +26,7 @@ var client;
         client.send(new PlayerEndTurnPacket());
     }
 
-    function onTradeReceive(packet)
+    function onTradeReceive(sender, packet)
     {
         var fromEnemy=-1;
         var toEnemy=-1;
@@ -46,8 +46,8 @@ var client;
         {
             if(user.getId()==packet.to)
             {
-                var yesCallback=tradeAnswerSend(null,packet.tradeID,true);
-                var noCallback=tradeAnswerSend(null,packet.tradeID,false);
+                var yesCallback=tradeAnswerSend.bind(null,packet.tradeID,true);
+                var noCallback=tradeAnswerSend.bind(null,packet.tradeID,false);
 
                 acceptTradeWindow(generalMenu, gameMap, enemies[fromEnemy], user, packet.offer, packet.receive,yesCallback,noCallback);
             }
@@ -370,6 +370,7 @@ var client;
     client.network.link(DiceResultPacket, onDiceResultPacket, this);
     client.network.link(ListLobbiesPacket, onListLobbiesPacket, this);
     client.network.link(UpdateLobbyPacket, onUpdateLobbyPacket, this);
+	client.network.link(TradeOfferPacket, onTradeReceive, this);
     client.start();
 
     window.changePage = changePage;

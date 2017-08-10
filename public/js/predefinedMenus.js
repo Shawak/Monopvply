@@ -612,7 +612,7 @@ function acceptTradeWindow(generalMenu, gameMap,sendingPlayer, receivingPlayer, 
 	
 	generalMenu.addLine(xMenu+menuWidth/2, yMenu+originaltradingAreaY+8,xMenu+menuWidth/2,yMenu+maxHeight+16+30);
 	
-	generalMenu.addMenuBackground(xMenu,yMenu,menuWidth,maxHeight+58);
+	generalMenu.addMenuBackground(xMenu,yMenu,menuWidth,maxHeight+58,"","black",true);
 	
 	generalMenu.draw();
 }
