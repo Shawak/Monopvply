@@ -173,7 +173,7 @@ class Game {
         }
 
         let tradeID = 0;
-        while (this.trades.find(trade => trade.id == tradeID))
+        while (this.trades.find(trade => trade.tradeID == tradeID))
             tradeID++;
         packet.tradeID = tradeID;
         this.trades.push(packet);
@@ -181,7 +181,7 @@ class Game {
     }
 
     onTradeAnswerPacket(sender, packet) {
-        let trade = this.trades.find(trade => trade.id == packet.tradeID);
+        let trade = this.trades.find(trade => trade.tradeID == packet.tradeID);
         if (!trade) {
             return;
         }
