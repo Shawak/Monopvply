@@ -243,8 +243,15 @@ class Monopvply {
             return;
         }
 
+        if(receive.money === null) {
+            receive.money = 0;
+        }
+        if(offer.money === null) {
+            offer.money = 0;
+        }
+
         let tradeIsOkay = true;
-        if(offer.streets) {
+        if(offer.streets != null) {
             for (let id of offer.streets) {
                 if (this.fields[id].owner != from) {
                     tradeIsOkay = false;
@@ -252,7 +259,7 @@ class Monopvply {
                 }
             }
         }
-        if(receive.streets) {
+        if(receive.streets != null) {
             for (let id of receive.streets) {
                 if (this.fields[id].owner != to) {
                     tradeIsOkay = false;

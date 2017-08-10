@@ -186,9 +186,9 @@ class Game {
             return;
         }
 
-        let from = this.getPlayerByID(packet.from);
         this.broadcast(packet);
 
+        let from = this.getPlayerByID(packet.from);
         let to = this.getPlayerByID(packet.to);
         this.map.onTrade(this, packet.accept, from, trade.offer, to, trade.receive);
         this.trades.splice(this.trades.indexOf(trade), 1);
