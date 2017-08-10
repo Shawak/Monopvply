@@ -43,6 +43,7 @@ class TaxField extends Field {
 
     onEnter(game, player) {
         player.money -= this.tax;
+        game.map.taxes += this.tax;
         game.update(player);
     }
 }
@@ -94,6 +95,7 @@ class Monopvply {
     constructor(game, players) {
         this.game = game;
         this.players = players;
+        this.taxes = 0;
 
         for (let player of this.players) {
             player.money += 1500;
@@ -126,7 +128,11 @@ class Monopvply {
             new Street(id++, 'Counter Strike', 'img/streets/3_shooter/2_counter_strike.jpg', 3, 'orange', 360, 100, 100, [14, 70, 200, 550, 750, 950]),
             new Street(id++, 'Arma', 'img/streets/3_shooter/3_arma.jpg', 3, 'orange', 400, 200, 100, [16, 80, 220, 600, 800, 1000]),
 
-            new SpecialField(id++, 'Cash Out', 'img/corner/3_cash_out.jpg'),
+            new SpecialField(id++, 'Cash Out', 'img/corner/3_cash_out.jpg', (game, player) => {
+                player.money += game.map.taxes;
+                game.map.taxes = 0;
+                game.update(player);
+            }),
             new Street(id++, 'Joining Epvp', 'img/streets/6_general/1_joining_epvp.jpg', 4, 'red', 440, 150, 150, [18, 90, 250, 700, 875, 1050]),
             new ActionField(id++, 'img/events/1_action.jpg'),
             new Street(id++, 'Complaint Area', 'img/streets/6_general/2_complaint_area.jpg', 4, 'red', 440, 150, 150, [18, 90, 250, 700, 875, 1050]),
