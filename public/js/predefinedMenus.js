@@ -593,17 +593,25 @@ function acceptTradeWindow(generalMenu, gameMap,sendingPlayer, receivingPlayer, 
 	generalMenu.addLine(xMenu+10, yMenu+maxHeight+8,xMenu+menuWidth-10, yMenu+maxHeight+8);
 	
 	maxHeight+=8;
-	var moneyText;
+	var moneyText=undefined;
 	if(otherPlayerOffers.money!=0)
 	{
 		moneyText=generalMenu.addText(xPlayer1,yMenu+maxHeight+8,menuWidth/2-40, otherPlayerOffers.money+" eg");
 	}
-	else if(otherPlayerRequests.money!=0)
+	if(otherPlayerRequests.money!=0)
 	{
 		moneyText=generalMenu.addText(xPlayer2,yMenu+maxHeight+8,menuWidth/2-40, otherPlayerRequests.money+" eg");
 	}
 	
-	maxHeight+=moneyText.getHeight()+8;
+	if(moneyText!=undefined)
+	{
+		maxHeight+=moneyText.getHeight()+8;
+	}
+	else
+	{
+		maxHeight+=16;
+	}
+	
 	
 	generalMenu.addLine(xMenu+10, yMenu+maxHeight+4,xMenu+menuWidth-10, yMenu+maxHeight+4);
 	

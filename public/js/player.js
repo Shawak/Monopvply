@@ -313,13 +313,6 @@ function Player(playerId, gameMap, ingameMenuLayer, informationMenu, money, colo
 		if(id!= undefined)
 		{
 			fieldCardManager.removeCardById(id);
-			
-			var field=gameMap.getFieldById(id);
-			if(field!= undefined)
-			{
-				field.setBought(false);
-			}
-			
 			return true;
 		}
 		return false;

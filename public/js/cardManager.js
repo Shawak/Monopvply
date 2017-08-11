@@ -77,7 +77,14 @@ function CardManager(playerObj, gameMap, ingameMenu, informationMenu, xStart, yS
 		
 		if(idx!=undefined)
 		{
-			ownedFields.splice(index, 1);
+			if(ownedFields[idx][1]!=undefined)
+			{
+				ownedFields[idx][1][0].destroyChildren();
+				ownedFields[idx][1][0].clearCache();
+				ownedFields[idx][1][1].clearCache();
+			}
+
+			ownedFields.splice(idx, 1);
 			reorder();
 			return true;
 		}
