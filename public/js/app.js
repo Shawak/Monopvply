@@ -102,6 +102,11 @@ var client;
 		client.send(new TradeAnswerPacket(tradeID, accept));
 	}
 	
+	function sendJailAnswerPacket(buyFree)
+	{
+		client.send(new PlayerJailAnswerPacket(buyFree));
+	}
+	
 	function buyFieldSend(fieldId) 
 	{
         client.send(new PlayerBuyPacket(fieldId));
@@ -271,13 +276,25 @@ var client;
     function onNextTurnPacket(sender, packet) {
         // TODO
         // update gui buttons (disable them)
-        queue.add(nextTurnState.bind(null, packet, ingameMenu, user));
 		
-		if(packet.player.id==user.getId())
+		if(packet.player.jailed==true)
 		{
-			stopAfkCheck=false;
-			afkCheck();
+			var yesCallback=sendJailAnswerPacket.bind(null,true);
+			var noCallback=sendJailAnswerPacket.bind(null,false);
+					
+			acceptWindow(generalMenu, "You are in jail! If you pay 50eg you get free instantly, otherwise you have to throw doublets. You can try throwing doublets a maximum of three times after this you have to pay!",  noCallback, yesCallback,"Pay 50eg", "Doublets");
 		}
+		else
+		{		
+			queue.add(nextTurnState.bind(null, packet, ingameMenu, user));
+			
+			if(packet.player.id==user.getId())
+			{
+				stopAfkCheck=false;
+				afkCheck();
+			}
+		}
+
     }
 
     function onUpdatePlayerPacket(sender, packet) {
@@ -289,7 +306,7 @@ var client;
 
         queue.add(updatePlayerState.bind(null, packet, user, enemies));
     }
-
+	
     function onUpdateFieldPacket(sender, packet) {
         // TODO
         // update field

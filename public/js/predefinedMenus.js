@@ -625,8 +625,11 @@ function acceptTradeWindow(generalMenu, gameMap,sendingPlayer, receivingPlayer, 
 	generalMenu.draw();
 }
 
-function acceptWindow(generalMenu, text, yesCallback, noCallback)
+function acceptWindow(generalMenu, text, yesCallback, noCallback, noButtonText, yesButtonText)
 {   
+	yesButtonText = typeof yesButtonText !== 'undefined' ? yesButtonText : "Yes";
+	noButtonText = typeof noButtonText !== 'undefined' ? noButtonText : "No";
+	
 	if(generalMenu.isBusy())
 	{
 		return false;
@@ -640,7 +643,7 @@ function acceptWindow(generalMenu, text, yesCallback, noCallback)
 	var width = window.innerWidth;
     var height = window.innerHeight;
 	
-	var menuWidth=Math.max(text.length*5,150);
+	var menuWidth=Math.min(Math.max(text.length*4,250),500);
 	
 	var okCallbackHide=function()
 	{
@@ -672,10 +675,10 @@ function acceptWindow(generalMenu, text, yesCallback, noCallback)
 	
 	var textObj=generalMenu.addText(width/2-menuWidth/2+8,height/3+8,menuWidth-16,text);
 	
-	generalMenu.addMenuBackground(width/2-menuWidth/2,height/3,menuWidth,textObj.getHeight()+58);
+	generalMenu.addMenuBackground(width/2-menuWidth/2,height/3,menuWidth,textObj.getHeight()+74,"","black");
 	
-	generalMenu.addButton(width/2-menuWidth/2+20, height/3+textObj.getHeight()+16, 60, 30, "Yes", okCallbackHide, "");
-	generalMenu.addButton(width/2+menuWidth/2-80, height/3+textObj.getHeight()+16, 60, 30, "No", notOkCallbackHide, "");
+	generalMenu.addButton(width/2-menuWidth/2+20, height/3+textObj.getHeight()+32, 100, 30, yesButtonText, okCallbackHide, "");
+	generalMenu.addButton(width/2+menuWidth/2-120, height/3+textObj.getHeight()+32, 100, 30, noButtonText, notOkCallbackHide, "");
 	
 	generalMenu.draw();
 }
