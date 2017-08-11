@@ -362,6 +362,7 @@ class Monopvply {
                 if (rolls[0] == rolls[1]) {
                     player.jailed = false;
                     game.update(player);
+                    break;
                 }
             }
         }
