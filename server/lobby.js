@@ -21,7 +21,7 @@ class Lobby {
 
     getUsers() {
         let ret = [];
-        for(let client of this.clients) {
+        for (let client of this.clients) {
             ret.push(client.user);
         }
         return ret;
@@ -52,7 +52,7 @@ class Lobby {
         client.onDisconnect.remove(this.onClientDisconnect, this);
         client.network.unlink(Packets.StartLobbyPacket, this.onStartLobbyPacket, this);
         client.network.unlink(Packets.LeaveLobbyPacket, this.onLeaveLobbyPacket, this);
-        if(this.clients.length == 0) {
+        if (this.clients.length == 0) {
             this.server.removeLobby(this);
         }
     }
@@ -62,7 +62,7 @@ class Lobby {
     }
 
     onStartLobbyPacket(sender, packet) {
-        if(sender == this.getOwner()) {
+        if (sender == this.getOwner()) {
             this.game = new Game(this.clients);
             this.game.start();
         }
@@ -73,7 +73,7 @@ class Lobby {
     }
 
     broadcast(packet) {
-        for(let client of this.clients) {
+        for (let client of this.clients) {
             client.send(packet);
         }
     }

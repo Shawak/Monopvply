@@ -14,12 +14,12 @@ class GameServer {
                 name: 'dev'
             }
         }).then(user => {
-           if(!user) {
-               this.db.User.create({
-                   name: 'dev',
-                   password: 'dev'
-               });
-           }
+            if (!user) {
+                this.db.User.create({
+                    name: 'dev',
+                    password: 'dev'
+                });
+            }
         });
 
         this.clients = [];

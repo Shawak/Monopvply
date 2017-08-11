@@ -172,6 +172,27 @@ class Game {
             return;
         }
 
+        if (packet.from === null) {
+            console.log('could not find from player on trade.');
+            return;
+        }
+        if (packet.to === null) {
+            console.log('could not find to player on trade.');
+            return;
+        }
+        if (packet.receive.money === null) {
+            packet.receive.money = 0;
+        }
+        if (packet.offer.money === null) {
+            packet.offer.money = 0;
+        }
+        if (packet.offer.streets === null) {
+            packet.offer.streets = [];
+        }
+        if (packet.receive.streets === null) {
+            packet.receive.streets = [];
+        }
+
         let tradeID = 0;
         while (this.trades.find(trade => trade.tradeID == tradeID))
             tradeID++;

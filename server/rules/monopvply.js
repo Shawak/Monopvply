@@ -18,7 +18,7 @@ class Street extends Field {
     }
 
     onEnter(game, player) {
-        if(this.owner == player || this.owner === null) {
+        if (this.owner == player || this.owner === null) {
             return;
         }
 
@@ -75,7 +75,7 @@ class Station extends Street {
     }
 
     onEnter(game, player) {
-        if(this.owner == player || this.owner === null) {
+        if (this.owner == player || this.owner === null) {
             return;
         }
 
@@ -172,18 +172,9 @@ class Monopvply {
 
     }
 
-    onTurn(game, player, prisonRolls) {
-        if(prisonRolls) {
-            for(let i = 0; i < 3; i++) {
-                let rolls = [game.random(1, 6), game.random(1, 6)];
-                game.sendDices(rolls);
-                if(rolls[0] == rolls[1]) {
-                    player.jailed = false;
-                }
-            }
-            if(player.jailed) {
-                return;
-            }
+    onTurn(game, player) {
+        if (player.jailed) {
+            return;
         }
 
         let rolls = [game.random(1, 6), game.random(1, 6)];
@@ -243,37 +234,17 @@ class Monopvply {
             return;
         }
 
-        if(from === null) {
-            console.log('could not find from player on trade.');
-            return;
-        }
-        if(to === null) {
-            console.log('could not find to player on trade.');
-            return;
-        }
-
-        if(receive.money === null) {
-            receive.money = 0;
-        }
-        if(offer.money === null) {
-            offer.money = 0;
-        }
-
         let tradeIsOkay = true;
-        if(offer.streets != null) {
-            for (let id of offer.streets) {
-                if (this.fields[id].owner != from) {
-                    tradeIsOkay = false;
-                    break;
-                }
+        for (let id of offer.streets) {
+            if (this.fields[id].owner != from) {
+                tradeIsOkay = false;
+                break;
             }
         }
-        if(receive.streets != null) {
-            for (let id of receive.streets) {
-                if (this.fields[id].owner != to) {
-                    tradeIsOkay = false;
-                    break;
-                }
+        for (let id of receive.streets) {
+            if (this.fields[id].owner != to) {
+                tradeIsOkay = false;
+                break;
             }
         }
         if (from.money < offer.money || to.money < receive.money) {
@@ -286,7 +257,7 @@ class Monopvply {
             return;
         }
 
-        if(offer.streets) {
+        if (offer.streets) {
             for (let id of offer.streets) {
                 if (this.fields[id].owner == from) {
                     this.fields[id].owner = to;
@@ -294,7 +265,7 @@ class Monopvply {
                 }
             }
         }
-        if(receive.streets) {
+        if (receive.streets) {
             for (let id of receive.streets) {
                 if (this.fields[id].owner == to) {
                     this.fields[id].owner = from;
@@ -380,14 +351,21 @@ class Monopvply {
     }
 
     onJail(game, player, buyFree) {
-        if(buyFree && player.jailed && player.money >= 200) {
+        if (buyFree && player.jailed && player.money >= 200) {
             player.money -= 200;
             player.jailed = false;
             game.update(player);
-            this.onTurn(game, player, true);
         } else {
-            this.onTurn(game, player, false);
+            for (let i = 0; i < 3; i++) {
+                let rolls = [game.random(1, 6), game.random(1, 6)];
+                game.sendDices(rolls);
+                if (rolls[0] == rolls[1]) {
+                    player.jailed = false;
+                    game.update(player);
+                }
+            }
         }
+        this.onTurn(game, player);
     }
 
 }

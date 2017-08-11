@@ -29,10 +29,10 @@ class Database {
 
     login(username, password) {
         return this.User.findOne({
-           where: {
-               name: username,
-               password: password
-           }
+            where: {
+                name: username,
+                password: password
+            }
         });
     }
 

@@ -15,7 +15,7 @@ class Event {
     }
 
     dispatch() {
-        for(let handler of this.handlers) {
+        for (let handler of this.handlers) {
             handler[0].call(handler[1], this.sender);
         }
     }

@@ -13,7 +13,7 @@ class Client {
         this.user = null;
         this.onDisconnect = new Event(this);
         this.onDisconnect.add(() => {
-            if(this.user) {
+            if (this.user) {
                 console.log(this.user.name + ' logged out!')
             }
         }, this);
@@ -39,7 +39,7 @@ class Client {
     onLoginPacket(sender, packet) {
         if (!this.user) {
             this.server.db.login(packet.username, packet.password).then(user => {
-                if(user) {
+                if (user) {
                     this.user = {
                         id: user.id,
                         name: user.name
