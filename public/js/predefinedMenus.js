@@ -717,6 +717,8 @@ function setUpStandardMenu(ingameMenu, diceMenu, generalMenu, gameMap, user, ene
 	ingameMenu.addButton(containerWidth/2+30, 0, 60, 30, "»", gameMap.rotateRight, "Rotate whole map by +90°");
 	ingameMenu.addButton(containerWidth/2-30, 0, 60, 30, "«", gameMap.rotateLeft, "Rotate whole map by -90°");
 
+	ingameMenu.addText(profileImageMargin, profileImageMargin+profileImageSize, profileImageSize, "1500 "+GLOBAL_MONEY_VAR);
+
 	user.createCardManager(ingameMenu, containerWidth/4, containerHeight-124, 100, 140);
 
 	var textMoneyEnemy;

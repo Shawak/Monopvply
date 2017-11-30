@@ -14,11 +14,13 @@ var client;
     var user;
     var enemies;
     var dices;
+	var countDownBox;
+	var countDownMenu;
     client = new Client();
 	var highPerformance=true;
 	var afkIterations=0;
 	var stopAfkCheck=true;
-	var maxSecAfk=30;
+	var maxMSecAfk=180000;
 	
     function endTurn() 
 	{
@@ -129,7 +131,6 @@ var client;
 	
     function startGame(packet) 
 	{
-		$(document).mousemove(function(e) {afkIterations=0;});
 		$("#btn-chat").click(getAndSendMessage);
 		
         document.getElementById("loading-img").addEventListener('load', startRendering)
@@ -158,6 +159,14 @@ var client;
 			diceMenu.setHighPerformanceMode(highPerformance);
             enemies = [];
 
+			countDownMenu = new Menu(stage, queue);
+			countDownMenu.setHighPerformanceMode(highPerformance);
+
+			var container = document.querySelector('#stage-parent');
+			var containerWidth = container.offsetWidth;
+			countDownBox=countDownMenu.addText(containerWidth/2-30, 40, 120,"00:00");
+	
+			
             for (var i = 0; i < packet.players.length; i++) {
                 if (packet.players[i].id == packet.yourPlayerID) {
                     user = new Player(packet.players[i].id, gameMap, ingameMenu.getLayer(), informationMenu, packet.players[i].money, packet.players[i].color, "./img/test.jpg", "./img/test.jpg");
@@ -255,6 +264,34 @@ var client;
         });
     }
 
+	function updateCounter()
+	{
+		var diff=maxMSecAfk-afkIterations*500;
+		var mins=(diff/1000/60)|0;
+		var secs=((diff/1000)|0)%60;
+		
+		if(mins<10)
+		{
+			mins="0"+mins;
+		}
+		
+		if(secs<10)
+		{
+			secs="0"+secs;
+		}
+		
+		countDownBox.text(mins+":"+secs);
+		
+		if(mins == 0 && secs < 15)
+		{
+			countDownBox.fill("red");
+		}
+		else
+		{
+			countDownBox.fill("white");
+		}
+		countDownMenu.draw();
+	}
 	
 	function afkCheck()
 	{
@@ -264,12 +301,18 @@ var client;
 		}
 
 		afkIterations++;
-		if(afkIterations>=maxSecAfk)
+		
+		if(afkIterations%2==0)
+		{
+			updateCounter();
+		}
+		if(afkIterations>maxMSecAfk/500)
 		{
 			afkIterations=0;
-			//endTurn();
+			endTurn();
+			return;
 		}
-		window.setTimeout(afkCheck,1000);
+		window.setTimeout(afkCheck,500);
 	}
 	
     function onNextTurnPacket(sender, packet) {
