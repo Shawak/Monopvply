@@ -184,8 +184,7 @@ var client;
                 enemies[i].createCardManager();
                 enemies[i].addBoardFigure("");
             }
-			
-			
+
         }
     }
 
@@ -277,7 +276,7 @@ var client;
         // TODO
         // update gui buttons (disable them)
 		
-		if(packet.player.jailed==true)
+		if(packet.player.jailed==true && packet.player.id==user.getId())
 		{
 			var yesCallback=sendJailAnswerPacket.bind(null,true);
 			var noCallback=sendJailAnswerPacket.bind(null,false);

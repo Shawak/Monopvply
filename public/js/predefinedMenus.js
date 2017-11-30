@@ -677,8 +677,19 @@ function acceptWindow(generalMenu, text, yesCallback, noCallback, noButtonText, 
 	
 	generalMenu.addMenuBackground(width/2-menuWidth/2,height/3,menuWidth,textObj.getHeight()+74,"","black");
 	
-	generalMenu.addButton(width/2-menuWidth/2+20, height/3+textObj.getHeight()+32, 100, 30, yesButtonText, okCallbackHide, "");
-	generalMenu.addButton(width/2+menuWidth/2-120, height/3+textObj.getHeight()+32, 100, 30, noButtonText, notOkCallbackHide, "");
+	if(yesButtonText!="" && noButtonText!="")
+	{
+		generalMenu.addButton(width/2-menuWidth/2+20, height/3+textObj.getHeight()+32, 100, 30, yesButtonText, okCallbackHide, "");
+		generalMenu.addButton(width/2+menuWidth/2-120, height/3+textObj.getHeight()+32, 100, 30, noButtonText, notOkCallbackHide, "");
+	}
+	else if(yesButtonText!="")
+	{
+		generalMenu.addButton(width/2-50, height/3+textObj.getHeight()+32, 100, 30, yesButtonText, okCallbackHide, "");
+	}
+	else if(noButtonText!="")
+	{
+		generalMenu.addButton(width/2-50, height/3+textObj.getHeight()+32, 100, 30, noButtonText, notOkCallbackHide, "");
+	}
 	
 	generalMenu.draw();
 }
